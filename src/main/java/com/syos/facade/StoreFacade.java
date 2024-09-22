@@ -1,0 +1,18 @@
+package com.syos.facade;
+
+import com.syos.enums.TransactionType;
+import com.syos.model.BillItem;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+public interface StoreFacade {
+  void generateBill(List<BillItem> billItems, String transactionType, BigDecimal cashTendered, Integer userId);
+
+  void restockItem(String itemCode, int quantity, String shelfType);
+
+  void updateInventoryStock(String itemCode, int quantity, String shelfType);
+
+  void generateReport(String reportType, LocalDate date, TransactionType transactionMode);
+}
