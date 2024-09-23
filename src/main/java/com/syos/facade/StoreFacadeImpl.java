@@ -1,6 +1,7 @@
 package com.syos.facade;
 
 import com.syos.command.GenerateBillCommand;
+import com.syos.enums.ReportType;
 import com.syos.enums.TransactionType;
 import com.syos.model.BillItem;
 import com.syos.service.ReportService;
@@ -47,7 +48,7 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-    public void generateReport(String reportType, LocalDate date, TransactionType transactionMode) {
+    public void generateReport(ReportType reportType, LocalDate date, TransactionType transactionMode) {
     reportService.generateReport(reportType, date, transactionMode);
   }
 }

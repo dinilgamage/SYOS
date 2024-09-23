@@ -1,5 +1,6 @@
 package com.syos.factory;
 
+import com.syos.enums.ReportType;
 import com.syos.report.*;
 import com.syos.dao.InventoryDao;
 import com.syos.dao.TransactionDao;
@@ -15,17 +16,18 @@ public class ReportFactory {
    * @param stockBatchDao - DAO for stock batch-related data.
    * @return - The specific Report object for the requested report type.
    */
-  public static Report createReport(String reportType, InventoryDao inventoryDao, TransactionDao transactionDao, StockBatchDao stockBatchDao) {
-    switch (reportType.toLowerCase()) {
-      case "totalsales":
+  public static Report createReport(ReportType reportType, InventoryDao inventoryDao, TransactionDao transactionDao,
+    StockBatchDao stockBatchDao) {
+    switch (reportType) {
+      case TOTAL_SALES:
         return new TotalSalesReport(transactionDao);
-      case "reshelve":
+      case RESHELVE:
         return new ReshelveReport(inventoryDao);
-      case "reorder":
+      case REORDER:
         return new ReorderReport(inventoryDao);
-      case "bill":
+      case BILL:
         return new BillReport(transactionDao);
-      case "stock":
+      case STOCK:
         return new StockReport(stockBatchDao);
       default:
         throw new IllegalArgumentException("Invalid report type: " + reportType);

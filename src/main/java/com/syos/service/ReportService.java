@@ -1,5 +1,6 @@
 package com.syos.service;
 
+import com.syos.enums.ReportType;
 import com.syos.enums.TransactionType;
 import com.syos.report.Report;
 import com.syos.factory.ReportFactory;
@@ -28,7 +29,7 @@ public class ReportService {
    * @param date - Optional: The date for the report (used for date-sensitive reports like TotalSales).
    * @param transactionType - Optional: The type of transaction (used for reports filtered by transaction type).
    */
-  public void generateReport(String reportType, LocalDate date, TransactionType transactionType) {
+  public void generateReport(ReportType reportType, LocalDate date, TransactionType transactionType) {
     // Create the appropriate report using the factory
     Report report = ReportFactory.createReport(reportType, inventoryDao, transactionDao, stockBatchDao);
 

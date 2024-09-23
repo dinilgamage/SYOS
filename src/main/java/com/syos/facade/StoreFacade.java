@@ -1,5 +1,6 @@
 package com.syos.facade;
 
+import com.syos.enums.ReportType;
 import com.syos.enums.TransactionType;
 import com.syos.model.BillItem;
 
@@ -14,5 +15,5 @@ public interface StoreFacade {
 
   void updateInventoryStock(String itemCode, int quantity, String shelfType);
 
-  void generateReport(String reportType, LocalDate date, TransactionType transactionMode);
+  void generateReport(ReportType reportType, LocalDate date, TransactionType transactionMode);
 }
