@@ -1,14 +1,14 @@
 package com.syos.facade;
 
 import com.syos.command.GenerateBillCommand;
+import com.syos.dao.InventoryDao;
 import com.syos.enums.ReportType;
 import com.syos.enums.TransactionType;
-import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.BillItem;
+import com.syos.model.Inventory;
 import com.syos.service.ReportService;
 import com.syos.service.BillService;
 import com.syos.service.InventoryService;
-import com.syos.strategy.DiscountStrategy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,11 +19,15 @@ public class StoreFacadeImpl implements StoreFacade {
   private final InventoryService inventoryService;
   private final BillService billService;
   private final ReportService reportService;
+  private final InventoryDao inventoryDao;
 
-  public StoreFacadeImpl(InventoryService inventoryService, BillService billService, ReportService reportService) {
+
+  public StoreFacadeImpl(InventoryService inventoryService, BillService billService, ReportService reportService,
+    InventoryDao inventoryDao) {
     this.inventoryService = inventoryService;
     this.billService = billService;
     this.reportService = reportService;
+    this.inventoryDao = inventoryDao;
   }
 
   @Override
@@ -55,12 +59,21 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public void addDiscount(String itemCode, BigDecimal discountValue, String strategyType) {
-    // Get the appropriate discount strategy using the factory
-    DiscountStrategy discountStrategy = DiscountStrategyFactory.getDiscountStrategy(strategyType, discountValue);
+  public void addDiscount(String itemCode, BigDecimal discountValue, String discountType) {
+    // Retrieve the item from the inventory
+    Inventory inventory = inventoryDao.getItemByCode(itemCode);
 
-    // Apply the discount strategy to the item
-    inventoryService.applyDiscount(itemCode, discountStrategy);
+    if (inventory != null) {
+      // Set the discount type and value
+      inventory.setDiscountType(discountType);
+      inventory.setDiscountValue(discountValue);
+
+      // Update the inventory record with the new discount
+      inventoryDao.updateInventory(inventory);
+    } else {
+      throw new IllegalArgumentException("Item not found with code: " + itemCode);
+    }
   }
+
 
 }

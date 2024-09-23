@@ -1,21 +1,25 @@
 package com.syos.factory;
 
+import java.math.BigDecimal;
+import com.syos.model.Inventory;
 import com.syos.strategy.DiscountStrategy;
 import com.syos.strategy.FixedDiscountStrategy;
 import com.syos.strategy.PercentageDiscountStrategy;
 
-import java.math.BigDecimal;
-
 public class DiscountStrategyFactory {
 
-  public static DiscountStrategy getDiscountStrategy(String strategyType, BigDecimal value) {
-    switch (strategyType.toLowerCase()) {
-      case "percentage":
-        return new PercentageDiscountStrategy(value);
-      case "fixed":
-        return new FixedDiscountStrategy(value);
-      default:
-        throw new IllegalArgumentException("Invalid discount strategy: " + strategyType);
+  // Factory method to create the appropriate DiscountStrategy
+  public static DiscountStrategy getDiscountStrategy(Inventory inventory) {
+    String discountType = inventory.getDiscountType();
+    BigDecimal discountValue = inventory.getDiscountValue();
+
+    if ("fixed".equalsIgnoreCase(discountType)) {
+      return new FixedDiscountStrategy(discountValue);
+    } else if ("percentage".equalsIgnoreCase(discountType)) {
+      return new PercentageDiscountStrategy(discountValue);
+    } else {
+      // Return a strategy that applies no discount if none is found
+      return totalAmount -> totalAmount; // No discount applied
     }
   }
 }

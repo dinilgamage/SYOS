@@ -3,6 +3,8 @@ package com.syos.service;
 import com.syos.builder.BillBuilder;
 import com.syos.dao.BillDao;
 import com.syos.dao.BillItemDao;
+import com.syos.dao.InventoryDao;
+import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
@@ -20,12 +22,15 @@ public class BillService {
   private BillItemDao billItemDao;
   private TransactionService transactionService;
   private InventoryService inventoryService;  // To get item information including discounts
+  private final InventoryDao inventoryDao;
 
-  public BillService(BillDao billDao, BillItemDao billItemDao, TransactionService transactionService, InventoryService inventoryService) {
+  public BillService(BillDao billDao, BillItemDao billItemDao, TransactionService transactionService,
+    InventoryService inventoryService, InventoryDao inventoryDao) {
     this.billDao = billDao;
     this.billItemDao = billItemDao;
     this.transactionService = transactionService;
     this.inventoryService = inventoryService;  // Inject InventoryService
+    this.inventoryDao = inventoryDao;
   }
 
   // For online transactions (with userId), without cashTendered or changeAmount
@@ -50,16 +55,18 @@ public class BillService {
 
     // Add items to the bill, and apply any discount strategy if it exists
     for (BillItem item : items) {
-      Inventory inventoryItem = inventoryService.getItemById(item.getItemId());  // Get item from inventory
+      // Retrieve the inventory item to get discount details
+      Inventory inventory = inventoryDao.getItemById(item.getItemId());
 
-      if (inventoryItem != null && inventoryItem.getDiscountStrategy() != null) {
-        // Apply the discount based on the strategy
-        DiscountStrategy discountStrategy = inventoryItem.getDiscountStrategy();
-        BigDecimal discountedPrice = discountStrategy.applyDiscount(item.getTotalPrice());
-        item.setTotalPrice(discountedPrice);  // Update the item's price with the discount
-      }
+      // Use the factory to get the appropriate discount strategy
+      DiscountStrategy discountStrategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
 
-      billBuilder.addItem(item);  // Add item to the bill
+      // Apply the discount to the total price of the item
+      BigDecimal discountedPrice = discountStrategy.applyDiscount(item.getTotalPrice());
+      item.setTotalPrice(discountedPrice);
+
+      // Add the item to the bill
+      billBuilder.addItem(item);
     }
 
     // For in-store (over-the-counter) transactions, handle cash tendered and change amount

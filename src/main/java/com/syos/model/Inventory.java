@@ -1,7 +1,5 @@
 package com.syos.model;
 
-import com.syos.strategy.DiscountStrategy;
-
 import java.math.BigDecimal;
 
 public class Inventory {
@@ -9,20 +7,22 @@ public class Inventory {
   private String itemCode;
   private String name;
   private BigDecimal price;
+  private BigDecimal discountValue;
+  private String discountType; // "fixed" or "percentage"
   private Integer storeStock;
   private Integer onlineStock;
   private int shelfCapacity;
-  private DiscountStrategy discountStrategy;  // New field for discount strategy
 
   // Constructors
-  public Inventory(String itemCode, String name, BigDecimal price, Integer storeStock, Integer onlineStock,
-    int shelfCapacity) {
+  public Inventory(String itemCode, String name, BigDecimal price, Integer storeStock, Integer onlineStock, int shelfCapacity) {
     this.itemCode = itemCode;
     this.name = name;
     this.price = price;
     this.storeStock = storeStock;
     this.onlineStock = onlineStock;
     this.shelfCapacity = shelfCapacity;
+    this.discountValue = BigDecimal.ZERO; // Default to no discount
+    this.discountType = ""; // Default to no discount type
   }
 
   // Getters and Setters
@@ -58,6 +58,22 @@ public class Inventory {
     this.price = price;
   }
 
+  public BigDecimal getDiscountValue() {
+    return discountValue;
+  }
+
+  public void setDiscountValue(BigDecimal discountValue) {
+    this.discountValue = discountValue;
+  }
+
+  public String getDiscountType() {
+    return discountType;
+  }
+
+  public void setDiscountType(String discountType) {
+    this.discountType = discountType;
+  }
+
   public Integer getStoreStock() {
     return storeStock;
   }
@@ -82,20 +98,5 @@ public class Inventory {
     this.shelfCapacity = shelfCapacity;
   }
 
-  public DiscountStrategy getDiscountStrategy() {
-    return discountStrategy;
-  }
-
-  public void setDiscountStrategy(DiscountStrategy discountStrategy) {
-    this.discountStrategy = discountStrategy;
-  }
-
-  // Method to apply the discount based on the strategy
-  public BigDecimal applyDiscount(BigDecimal totalAmount) {
-    if (discountStrategy != null) {
-      return discountStrategy.applyDiscount(totalAmount);
-    }
-    return totalAmount;
-  }
 }
 

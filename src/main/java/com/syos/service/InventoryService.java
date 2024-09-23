@@ -72,19 +72,6 @@ public class InventoryService implements StockSubject {
     return inventoryDao.getItemById(itemId);
   }
 
-  public void applyDiscount(String itemCode, DiscountStrategy discountStrategy) {
-    Inventory item = inventoryDao.getItemByCode(itemCode);
-
-    if (item != null) {
-      // Save the discount strategy in the Inventory item
-      item.setDiscountStrategy(discountStrategy);
-      inventoryDao.updateInventory(item);
-    } else {
-      throw new IllegalArgumentException("Item not found: " + itemCode);
-    }
-  }
-
-
   /**
    * Updates the stock of an inventory item after a purchase.
    * This updates both the shelf and overall store stock.

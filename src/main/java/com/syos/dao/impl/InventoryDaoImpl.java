@@ -12,7 +12,7 @@ import java.util.List;
 public class InventoryDaoImpl implements InventoryDao {
 
   private static final String SELECT_ITEM_BY_CODE = "SELECT * FROM Inventory WHERE item_code = ?";
-  private static final String UPDATE_INVENTORY_SQL = "UPDATE Inventory SET store_stock = ?, online_stock = ? WHERE item_code = ?";
+  private static final String UPDATE_INVENTORY_SQL = "UPDATE Inventory SET store_stock = ?, online_stock = ?, discount_type = ?, discount_value = ? WHERE item_code = ?";
   private static final String SELECT_LOW_STOCK_ITEMS = "SELECT * FROM Inventory WHERE store_stock < ? OR online_stock < ?";
   private static final String SELECT_ITEMS_TO_RESHELVE_FOR_IN_STORE = "SELECT * FROM Inventory WHERE store_stock < shelf_capacity";
   private static final String SELECT_ITEMS_TO_RESHELVE_FOR_ONLINE = "SELECT * FROM Inventory WHERE online_stock < shelf_capacity";
@@ -55,27 +55,16 @@ public class InventoryDaoImpl implements InventoryDao {
     return inventory;
   }
 
-
   @Override
   public void updateInventory(Inventory inventory) {
     try (Connection connection = DatabaseConnection.getInstance().getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_INVENTORY_SQL)) {
 
-      // Only update store stock if it's initialized
-      if (inventory.getStoreStock() != null) {
-        preparedStatement.setInt(1, inventory.getStoreStock());
-      } else {
-        preparedStatement.setNull(1, Types.INTEGER);  // Or retain current value
-      }
-
-      // Only update online stock if it's initialized
-      if (inventory.getOnlineStock() != null) {
-        preparedStatement.setInt(2, inventory.getOnlineStock());
-      } else {
-        preparedStatement.setNull(2, Types.INTEGER);  // Or retain current value
-      }
-
-      preparedStatement.setString(3, inventory.getItemCode());
+      preparedStatement.setInt(1, inventory.getStoreStock());
+      preparedStatement.setInt(2, inventory.getOnlineStock());
+      preparedStatement.setString(3, inventory.getDiscountType());
+      preparedStatement.setBigDecimal(4, inventory.getDiscountValue());
+      preparedStatement.setString(5, inventory.getItemCode());
 
       int rowsUpdated = preparedStatement.executeUpdate();
       if (rowsUpdated == 0) {
@@ -122,16 +111,7 @@ public class InventoryDaoImpl implements InventoryDao {
 
       ResultSet rs = preparedStatement.executeQuery();
       while (rs.next()) {
-        Inventory item = new Inventory(
-          rs.getString("item_code"),  // itemCode
-          rs.getString("name"),       // name
-          rs.getBigDecimal("price"),  // price
-          rs.getInt("store_stock"),   // storeStock
-          rs.getInt("online_stock"),  // onlineStock
-          rs.getInt("shelf_capacity") // shelfCapacity
-        );
-        item.setItemId(rs.getInt("item_id"));  // Set the itemId
-
+        Inventory item = mapRowToInventory(rs);
         items.add(item);
       }
     } catch (SQLException e) {
@@ -164,16 +144,7 @@ public class InventoryDaoImpl implements InventoryDao {
          ResultSet rs = preparedStatement.executeQuery()) {
 
       while (rs.next()) {
-        Inventory item = new Inventory(
-          rs.getString("item_code"),  // itemCode
-          rs.getString("name"),       // name
-          rs.getBigDecimal("price"),  // price
-          rs.getInt("store_stock"),   // storeStock
-          rs.getInt("online_stock"),  // onlineStock
-          rs.getInt("shelf_capacity") // shelfCapacity
-        );
-        item.setItemId(rs.getInt("item_id"));  // Set the itemId
-
+        Inventory item = mapRowToInventory(rs);
         items.add(item);
       }
     } catch (SQLException e) {
@@ -182,7 +153,6 @@ public class InventoryDaoImpl implements InventoryDao {
     return items;
   }
 
-
   // Helper method to map a ResultSet row to an Inventory object
   private Inventory mapRowToInventory(ResultSet rs) throws SQLException {
     int itemId = rs.getInt("item_id");
@@ -190,11 +160,17 @@ public class InventoryDaoImpl implements InventoryDao {
     String name = rs.getString("name");
     BigDecimal price = rs.getBigDecimal("price");
     BigDecimal discount = rs.getBigDecimal("discount");
+    String discountType = rs.getString("discount_type");
+    BigDecimal discountValue = rs.getBigDecimal("discount_value");
     int storeStock = rs.getInt("store_stock");
     int onlineStock = rs.getInt("online_stock");
     int shelfCapacity = rs.getInt("shelf_capacity");
 
-    return new Inventory(itemCode, name, price, storeStock, onlineStock, shelfCapacity);
+    Inventory inventory = new Inventory(itemCode, name, price, storeStock, onlineStock, shelfCapacity);
+    inventory.setDiscountType(discountType);
+    inventory.setDiscountValue(discountValue);
+    inventory.setItemId(itemId);
+
+    return inventory;
   }
 }
-
