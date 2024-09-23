@@ -1,5 +1,7 @@
 package com.syos.model;
 
+import com.syos.strategy.DiscountStrategy;
+
 import java.math.BigDecimal;
 
 public class Inventory {
@@ -7,10 +9,10 @@ public class Inventory {
   private String itemCode;
   private String name;
   private BigDecimal price;
-  private BigDecimal discount;
   private Integer storeStock;
   private Integer onlineStock;
   private int shelfCapacity;
+  private DiscountStrategy discountStrategy;  // New field for discount strategy
 
   // Constructors
   public Inventory(String itemCode, String name, BigDecimal price, Integer storeStock, Integer onlineStock,
@@ -21,7 +23,6 @@ public class Inventory {
     this.storeStock = storeStock;
     this.onlineStock = onlineStock;
     this.shelfCapacity = shelfCapacity;
-    this.discount = BigDecimal.ZERO;
   }
 
   // Getters and Setters
@@ -57,14 +58,6 @@ public class Inventory {
     this.price = price;
   }
 
-  public BigDecimal getDiscount() {
-    return discount;
-  }
-
-  public void setDiscount(BigDecimal discount) {
-    this.discount = discount;
-  }
-
   public Integer getStoreStock() {
     return storeStock;
   }
@@ -87,6 +80,22 @@ public class Inventory {
 
   public void setShelfCapacity(int shelfCapacity) {
     this.shelfCapacity = shelfCapacity;
+  }
+
+  public DiscountStrategy getDiscountStrategy() {
+    return discountStrategy;
+  }
+
+  public void setDiscountStrategy(DiscountStrategy discountStrategy) {
+    this.discountStrategy = discountStrategy;
+  }
+
+  // Method to apply the discount based on the strategy
+  public BigDecimal applyDiscount(BigDecimal totalAmount) {
+    if (discountStrategy != null) {
+      return discountStrategy.applyDiscount(totalAmount);
+    }
+    return totalAmount;
   }
 }
 

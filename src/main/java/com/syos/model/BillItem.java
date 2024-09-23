@@ -74,6 +74,10 @@ public class BillItem {
     return totalPrice;
   }
 
+  public void setTotalPrice(BigDecimal totalPrice) {
+    this.totalPrice = totalPrice;
+  }
+
   public BigDecimal getDiscount() {
     return discount;
   }

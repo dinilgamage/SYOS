@@ -16,4 +16,5 @@ public interface StoreFacade {
   void updateInventoryStock(String itemCode, int quantity, String shelfType);
 
   void generateReport(ReportType reportType, LocalDate date, TransactionType transactionMode);
+  void addDiscount(String itemCode, BigDecimal discountValue, String strategyType);
 }

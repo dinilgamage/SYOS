@@ -38,6 +38,25 @@ public class InventoryDaoImpl implements InventoryDao {
   }
 
   @Override
+  public Inventory getItemById(int itemId) {
+    Inventory inventory = null;
+    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ITEM_BY_CODE)) {
+      preparedStatement.setInt(1, itemId);
+      ResultSet rs = preparedStatement.executeQuery();
+
+      if (rs.next()) {
+        inventory = mapRowToInventory(rs);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      // Error handling can be done here
+    }
+    return inventory;
+  }
+
+
+  @Override
   public void updateInventory(Inventory inventory) {
     try (Connection connection = DatabaseConnection.getInstance().getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_INVENTORY_SQL)) {

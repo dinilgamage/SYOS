@@ -5,8 +5,11 @@ import com.syos.dao.BillDao;
 import com.syos.dao.BillItemDao;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
+import com.syos.model.Inventory;
 import com.syos.model.Transaction;
 import com.syos.service.TransactionService;
+import com.syos.service.InventoryService;
+import com.syos.strategy.DiscountStrategy;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,11 +19,13 @@ public class BillService {
   private BillDao billDao;
   private BillItemDao billItemDao;
   private TransactionService transactionService;
+  private InventoryService inventoryService;  // To get item information including discounts
 
-  public BillService(BillDao billDao, BillItemDao billItemDao, TransactionService transactionService) {
+  public BillService(BillDao billDao, BillItemDao billItemDao, TransactionService transactionService, InventoryService inventoryService) {
     this.billDao = billDao;
     this.billItemDao = billItemDao;
     this.transactionService = transactionService;
+    this.inventoryService = inventoryService;  // Inject InventoryService
   }
 
   // For online transactions (with userId), without cashTendered or changeAmount
@@ -43,9 +48,18 @@ public class BillService {
     // Initialize the BillBuilder
     billBuilder.setTransactionId(transaction.getTransactionId());
 
-    // Add items to the bill
+    // Add items to the bill, and apply any discount strategy if it exists
     for (BillItem item : items) {
-      billBuilder.addItem(item);
+      Inventory inventoryItem = inventoryService.getItemById(item.getItemId());  // Get item from inventory
+
+      if (inventoryItem != null && inventoryItem.getDiscountStrategy() != null) {
+        // Apply the discount based on the strategy
+        DiscountStrategy discountStrategy = inventoryItem.getDiscountStrategy();
+        BigDecimal discountedPrice = discountStrategy.applyDiscount(item.getTotalPrice());
+        item.setTotalPrice(discountedPrice);  // Update the item's price with the discount
+      }
+
+      billBuilder.addItem(item);  // Add item to the bill
     }
 
     // For in-store (over-the-counter) transactions, handle cash tendered and change amount

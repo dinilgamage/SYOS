@@ -3,10 +3,12 @@ package com.syos.facade;
 import com.syos.command.GenerateBillCommand;
 import com.syos.enums.ReportType;
 import com.syos.enums.TransactionType;
+import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.BillItem;
 import com.syos.service.ReportService;
 import com.syos.service.BillService;
 import com.syos.service.InventoryService;
+import com.syos.strategy.DiscountStrategy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -51,4 +53,14 @@ public class StoreFacadeImpl implements StoreFacade {
     public void generateReport(ReportType reportType, LocalDate date, TransactionType transactionMode) {
     reportService.generateReport(reportType, date, transactionMode);
   }
+
+  @Override
+  public void addDiscount(String itemCode, BigDecimal discountValue, String strategyType) {
+    // Get the appropriate discount strategy using the factory
+    DiscountStrategy discountStrategy = DiscountStrategyFactory.getDiscountStrategy(strategyType, discountValue);
+
+    // Apply the discount strategy to the item
+    inventoryService.applyDiscount(itemCode, discountStrategy);
+  }
+
 }

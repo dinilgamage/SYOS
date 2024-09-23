@@ -6,6 +6,7 @@ import com.syos.model.Inventory;
 import com.syos.model.StockBatch;
 import com.syos.observer.StockObserver;
 import com.syos.observer.StockSubject;
+import com.syos.strategy.DiscountStrategy;
 
 import java.util.List;
 
@@ -60,6 +61,29 @@ public class InventoryService implements StockSubject {
   public Inventory getItemByCode(String itemCode) {
     return inventoryDao.getItemByCode(itemCode);
   }
+
+  /**
+   * Retrieves an inventory item by its unique code.
+   *
+   * @param itemId - The unique code for the inventory item.
+   * @return - The Inventory item if found, otherwise null.
+   */
+  public Inventory getItemById(int itemId) {
+    return inventoryDao.getItemById(itemId);
+  }
+
+  public void applyDiscount(String itemCode, DiscountStrategy discountStrategy) {
+    Inventory item = inventoryDao.getItemByCode(itemCode);
+
+    if (item != null) {
+      // Save the discount strategy in the Inventory item
+      item.setDiscountStrategy(discountStrategy);
+      inventoryDao.updateInventory(item);
+    } else {
+      throw new IllegalArgumentException("Item not found: " + itemCode);
+    }
+  }
+
 
   /**
    * Updates the stock of an inventory item after a purchase.
