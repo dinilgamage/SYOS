@@ -19,7 +19,7 @@ public class BillDaoImpl implements BillDao {
   @Override
   public Bill getBillById(int billId) {
     Bill bill = null;
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BILL_BY_ID)) {
       preparedStatement.setInt(1, billId);
       ResultSet rs = preparedStatement.executeQuery();
@@ -36,7 +36,7 @@ public class BillDaoImpl implements BillDao {
 
   @Override
   public void saveBill(Bill bill) {
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BILL_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
       preparedStatement.setInt(1, bill.getTransactionId());
@@ -64,7 +64,7 @@ public class BillDaoImpl implements BillDao {
   @Override
   public List<Bill> getBillsByDate(LocalDate date) {
     List<Bill> bills = new ArrayList<>();
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BILLS_BY_DATE)) {
       preparedStatement.setDate(1, Date.valueOf(date));
       ResultSet rs = preparedStatement.executeQuery();

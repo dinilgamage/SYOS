@@ -68,12 +68,17 @@ public class StoreMenu {
       int quantity = scanner.nextInt();
 
       // Fetch the item price and discount from the InventoryService
-      Inventory inventoryItem = storeFacade.getItemByCode(itemCode);  // Assuming this method is exposed in the facade
+      Inventory inventoryItem = storeFacade.getItemByCode(itemCode);
       if (inventoryItem != null) {
         BigDecimal itemPrice = inventoryItem.getPrice();
+        System.out.println("Price of item " + itemCode + ": " + itemPrice);
+
 
         // Create a new BillItem with complete details
         BillItem billItem = new BillItem(itemCode, quantity, itemPrice);
+        System.out.println("Added BillItem: Code = " + billItem.getItemCode() +
+          ", Quantity = " + billItem.getQuantity() +
+          ", Price = " + billItem.getItemPrice());
         billItems.add(billItem);
       } else {
         System.out.println("Item not found: " + itemCode);

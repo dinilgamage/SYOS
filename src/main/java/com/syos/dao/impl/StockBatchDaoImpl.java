@@ -20,7 +20,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
   public List<StockBatch> getBatchesForItem(int itemId) {
     List<StockBatch> batches = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BATCHES_BY_ITEM_ID)) {
       preparedStatement.setInt(1, itemId);
       ResultSet rs = preparedStatement.executeQuery();
@@ -38,7 +38,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
 
   @Override
   public void updateBatch(StockBatch batch) {
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BATCH_SQL)) {
 
       preparedStatement.setInt(1, batch.getQuantity());
@@ -56,7 +56,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
   public StockBatch getNearestExpiryBatch(int itemId) {
     StockBatch batch = null;
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NEAREST_EXPIRY_BATCH)) {
       preparedStatement.setInt(1, itemId);
       ResultSet rs = preparedStatement.executeQuery();
@@ -75,7 +75,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
   public List<StockBatch> getAllStockBatches() {
     List<StockBatch> stockBatches = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_STOCK_BATCHES);
          ResultSet rs = preparedStatement.executeQuery()) {
 

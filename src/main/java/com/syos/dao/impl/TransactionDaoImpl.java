@@ -22,11 +22,11 @@ public class TransactionDaoImpl implements TransactionDao {
 
   @Override
   public void saveTransaction(Transaction transaction) {
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TRANSACTION_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
       preparedStatement.setString(1, transaction.getTransactionType());
-      if (transaction.getUserId() == 0) {
+      if (transaction.getUserId() == null || transaction.getUserId() == 0) {
         preparedStatement.setNull(2, Types.INTEGER); // Null if it's an over-the-counter transaction
       } else {
         preparedStatement.setInt(2, transaction.getUserId());
@@ -53,7 +53,7 @@ public class TransactionDaoImpl implements TransactionDao {
   public List<Transaction> getTransactionsByDate(LocalDate date) {
     List<Transaction> transactions = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_TRANSACTIONS_BY_DATE)) {
 
       preparedStatement.setDate(1, Date.valueOf(date));
@@ -74,7 +74,7 @@ public class TransactionDaoImpl implements TransactionDao {
   public List<Transaction> getTransactionsByDateAndType(LocalDate date, String type) {
     List<Transaction> transactions = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_TRANSACTIONS_BY_DATE_AND_TYPE)) {
 
       preparedStatement.setDate(1, Date.valueOf(date));
@@ -107,7 +107,7 @@ public class TransactionDaoImpl implements TransactionDao {
   private List<Transaction> getTransactions(String query, String type) {
     List<Transaction> transactions = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
       if (type != null) {

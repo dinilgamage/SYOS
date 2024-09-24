@@ -11,20 +11,20 @@ import java.util.List;
 
 public class BillItemDaoImpl implements BillItemDao {
 
-  private static final String INSERT_BILL_ITEM_SQL = "INSERT INTO Bill_Items (bill_id, item_id, quantity, item_price, total_price, discount) VALUES (?, ?, ?, ?, ?, ?)";
+  private static final String INSERT_BILL_ITEM_SQL = "INSERT INTO Bill_Items (bill_id, item_id, quantity, item_price, total_price) VALUES (?, ?, ?, ?, ?)";
   private static final String SELECT_BILL_ITEMS_BY_BILL_ID = "SELECT * FROM Bill_Items WHERE bill_id = ?";
 
   @Override
   public void saveBillItem(BillItem billItem) {
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BILL_ITEM_SQL)) {
 
+      System.out.println("Item id" + billItem.getItemId());
       preparedStatement.setInt(1, billItem.getBillId());
       preparedStatement.setInt(2, billItem.getItemId());
       preparedStatement.setInt(3, billItem.getQuantity());
       preparedStatement.setBigDecimal(4, billItem.getItemPrice());
       preparedStatement.setBigDecimal(5, billItem.getTotalPrice());
-      preparedStatement.setBigDecimal(6, billItem.getDiscount());
 
       preparedStatement.executeUpdate();
     } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class BillItemDaoImpl implements BillItemDao {
   public List<BillItem> getBillItemsByBillId(int billId) {
     List<BillItem> billItems = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BILL_ITEMS_BY_BILL_ID)) {
 
       preparedStatement.setInt(1, billId);
@@ -62,9 +62,13 @@ public class BillItemDaoImpl implements BillItemDao {
     int quantity = rs.getInt("quantity");
     BigDecimal itemPrice = rs.getBigDecimal("item_price");
     BigDecimal totalPrice = rs.getBigDecimal("total_price");
-    BigDecimal discount = rs.getBigDecimal("discount");
 
-    return new BillItem(billId, itemId, quantity, itemPrice, discount);
+    // Create a BillItem object using the updated constructor
+    BillItem billItem = new BillItem(itemId, quantity, itemPrice);
+    billItem.setBillId(billId);  // Set the billId to associate it with the correct bill
+    billItem.setTotalPrice(totalPrice);  // Set the total price
+
+    return billItem;
   }
 }
 

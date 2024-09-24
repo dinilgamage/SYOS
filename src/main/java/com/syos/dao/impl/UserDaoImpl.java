@@ -14,7 +14,7 @@ public class UserDaoImpl implements UserDao {
 
   @Override
   public void saveUser(User user) {
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)) {
 
       preparedStatement.setString(1, user.getName());
@@ -32,7 +32,7 @@ public class UserDaoImpl implements UserDao {
   public User getUserByEmail(String email) {
     User user = null;
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_EMAIL)) {
 
       preparedStatement.setString(1, email);
@@ -52,7 +52,7 @@ public class UserDaoImpl implements UserDao {
   public boolean verifyUserCredentials(String email, String password) {
     boolean isValid = false;
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(VERIFY_USER_CREDENTIALS_SQL)) {
 
       preparedStatement.setString(1, email);

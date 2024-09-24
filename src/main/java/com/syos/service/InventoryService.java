@@ -8,6 +8,7 @@ import com.syos.observer.StockObserver;
 import com.syos.observer.StockSubject;
 import com.syos.strategy.DiscountStrategy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryService implements StockSubject {
@@ -20,6 +21,8 @@ public class InventoryService implements StockSubject {
   public InventoryService(InventoryDao inventoryDao, StockBatchDao stockBatchDao) {
     this.inventoryDao = inventoryDao;
     this.stockBatchDao = stockBatchDao;
+    this.observers = new ArrayList<>();
+
   }
 
   @Override
@@ -84,7 +87,7 @@ public class InventoryService implements StockSubject {
 
     if (item != null) {
       // Update stock based on shelf type
-      if ("store".equalsIgnoreCase(shelfType)) {
+      if ("over-the-counter".equalsIgnoreCase(shelfType)) {
         int updatedStoreStock = item.getStoreStock() - quantity;
         item.setStoreStock(updatedStoreStock);
       } else if ("online".equalsIgnoreCase(shelfType)) {

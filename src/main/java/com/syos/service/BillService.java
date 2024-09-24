@@ -12,6 +12,7 @@ import com.syos.model.Transaction;
 import com.syos.service.TransactionService;
 import com.syos.service.InventoryService;
 import com.syos.strategy.DiscountStrategy;
+import com.syos.strategy.NoDiscountStrategy;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -56,17 +57,25 @@ public class BillService {
     // Add items to the bill, and apply any discount strategy if it exists
     for (BillItem item : items) {
       // Retrieve the inventory item to get discount details
-      Inventory inventory = inventoryDao.getItemById(item.getItemId());
+      Inventory inventory = inventoryDao.getItemByCode(item.getItemCode());
+
+      System.out.println(inventory.getItemId());
+
+      // Ensure that the itemId is set in the BillItem before saving
+      item.setItemId(inventory.getItemId()); // Set the itemId after retrieving the inventory
 
       // Use the factory to get the appropriate discount strategy
       DiscountStrategy discountStrategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
 
       // Apply the discount to the total price of the item
-      BigDecimal discountedPrice = discountStrategy.applyDiscount(item.getTotalPrice());
-      item.setTotalPrice(discountedPrice);
+      BigDecimal discountedPrice = discountStrategy.applyDiscount(item.getItemPrice());
+      item.setItemPrice(discountedPrice);
 
-      // Add the item to the bill
+        // Add the item to the bill
       billBuilder.addItem(item);
+
+      // Update the inventory stock after the purchase
+      inventoryService.updateInventoryStock(item.getItemCode(), item.getQuantity(), transactionType);
     }
 
     // For in-store (over-the-counter) transactions, handle cash tendered and change amount
@@ -102,7 +111,7 @@ public class BillService {
   // Helper method to calculate total bill amount
   private BigDecimal calculateTotal(List<BillItem> items) {
     return items.stream()
-      .map(BillItem::getTotalPrice)
+      .map(BillItem::getItemPrice)
       .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }
