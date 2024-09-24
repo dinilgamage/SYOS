@@ -49,7 +49,7 @@ public class BillService {
     BillBuilder billBuilder = new BillBuilder();
 
     // Create a new transaction (pass userId for online, null for in-store)
-    Transaction transaction = transactionService.createTransaction(transactionType, calculateTotal(items), userId);
+    Transaction transaction = transactionService.createTransaction(transactionType, calculateTransactionTotal(items), userId);
 
     // Initialize the BillBuilder
     billBuilder.setTransactionId(transaction.getTransactionId());
@@ -114,4 +114,11 @@ public class BillService {
       .map(BillItem::getItemPrice)
       .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
+  // Helper method to calculate total transaction amount, including quantity
+  private BigDecimal calculateTransactionTotal(List<BillItem> items) {
+    return items.stream()
+      .map(item -> item.getItemPrice().multiply(BigDecimal.valueOf(item.getQuantity()))) // Price * Quantity
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
 }
