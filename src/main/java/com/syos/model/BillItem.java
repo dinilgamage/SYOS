@@ -6,12 +6,19 @@ public class BillItem {
   private int billItemId;
   private int billId;
   private int itemId;
+  private String itemCode; // Updated from itemId
   private int quantity;
   private BigDecimal itemPrice;
   private BigDecimal totalPrice;
   private BigDecimal discount;
 
   // Constructors
+  public BillItem(String itemCode, int quantity, BigDecimal itemPrice) {
+    this.itemCode = itemCode;
+    this.quantity = quantity;
+    this.itemPrice = itemPrice;
+  }
+
   public BillItem(int billId, int itemId, int quantity, BigDecimal itemPrice, BigDecimal discount) {
     this.billId = billId;
     this.itemId = itemId;
@@ -48,8 +55,12 @@ public class BillItem {
     return itemId;
   }
 
-  public void setItemId(int itemId) {
-    this.itemId = itemId;
+  public String getItemCode() {
+    return itemCode;
+  }
+
+  public void setItemCode(String itemCode) {
+    this.itemCode = itemCode;
   }
 
   public int getQuantity() {
@@ -63,11 +74,6 @@ public class BillItem {
 
   public BigDecimal getItemPrice() {
     return itemPrice;
-  }
-
-  public void setItemPrice(BigDecimal itemPrice) {
-    this.itemPrice = itemPrice;
-    this.totalPrice = calculateTotalPrice(); // Recalculate total price
   }
 
   public BigDecimal getTotalPrice() {

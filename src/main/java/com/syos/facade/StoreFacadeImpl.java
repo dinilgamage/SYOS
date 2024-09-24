@@ -31,6 +31,12 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
+  public Inventory getItemByCode(String itemCode) {
+    return inventoryService.getItemByCode(itemCode);
+  }
+
+
+  @Override
   public void generateBill(List<BillItem> billItems, String transactionType, BigDecimal cashTendered, Integer userId) {
     GenerateBillCommand generateBillCommand;
     if ("over-the-counter".equals(transactionType)) {

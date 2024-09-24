@@ -20,11 +20,11 @@ public class Main {
     // Initialize dependencies
     InventoryService inventoryService = new InventoryService(new InventoryDaoImpl(), new StockBatchDaoImpl());
     BillService billService = new BillService(new BillDaoImpl(), new BillItemDaoImpl(),
-      new TransactionService(new TransactionDaoImpl()), inventoryService);
+      new TransactionService(new TransactionDaoImpl()), inventoryService, new InventoryDaoImpl());
     ReportService reportService = new ReportService(new InventoryDaoImpl(), new TransactionDaoImpl(), new StockBatchDaoImpl());
 
     // Initialize the StoreFacade
-    StoreFacadeImpl storeFacade = new StoreFacadeImpl(inventoryService, billService, reportService);
+    StoreFacadeImpl storeFacade = new StoreFacadeImpl(inventoryService, billService, reportService, new InventoryDaoImpl());
 
     // Initialize the menus
     OnlineMenu onlineMenu = new OnlineMenu(storeFacade);
