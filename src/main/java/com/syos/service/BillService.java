@@ -59,8 +59,6 @@ public class BillService {
       // Retrieve the inventory item to get discount details
       Inventory inventory = inventoryDao.getItemByCode(item.getItemCode());
 
-      System.out.println(inventory.getItemId());
-
       // Ensure that the itemId is set in the BillItem before saving
       item.setItemId(inventory.getItemId()); // Set the itemId after retrieving the inventory
 

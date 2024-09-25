@@ -76,6 +76,27 @@ public class InventoryService implements StockSubject {
   }
 
   /**
+   * Checks if the available stock for a given inventory item meets the required quantity
+   * based on the transaction type (store or online).
+   *
+   * @param inventoryItem The inventory item being checked.
+   * @param quantity The quantity requested by the user.
+   * @param transactionType The type of transaction (store or online).
+   * @return true if sufficient stock is available, false otherwise.
+   */
+  public boolean checkAvailableStock(Inventory inventoryItem, int quantity, String transactionType) {
+    if ("over-the-counter".equals(transactionType)) {
+      // Check if store stock is available
+      return inventoryItem.getStoreStock() >= quantity;
+    } else if ("online".equals(transactionType)) {
+      // Check if online stock is available
+      return inventoryItem.getOnlineStock() >= quantity;
+    } else {
+      throw new IllegalArgumentException("Invalid transaction type: " + transactionType);
+    }
+  }
+
+  /**
    * Updates the stock of an inventory item after a purchase.
    * This updates both the shelf and overall store stock.
    *

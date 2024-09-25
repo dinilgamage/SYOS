@@ -35,6 +35,11 @@ public class StoreFacadeImpl implements StoreFacade {
     return inventoryService.getItemByCode(itemCode);
   }
 
+  @Override
+  public boolean checkAvailableStock(Inventory inventoryItem, int quantity, String transactionType) {
+    return inventoryService.checkAvailableStock(inventoryItem, quantity, transactionType);
+  }
+
 
   @Override
   public void generateBill(List<BillItem> billItems, String transactionType, BigDecimal cashTendered, Integer userId) {

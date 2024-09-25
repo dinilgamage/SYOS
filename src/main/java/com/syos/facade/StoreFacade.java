@@ -12,7 +12,7 @@ import java.util.List;
 public interface StoreFacade {
 
   Inventory getItemByCode(String itemCode);
-
+  boolean checkAvailableStock(Inventory inventoryItem, int quantity, String transactionType);
   void generateBill(List<BillItem> billItems, String transactionType, BigDecimal cashTendered, Integer userId);
 
   void restockItem(String itemCode, int quantity, String shelfType);

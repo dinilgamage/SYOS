@@ -59,38 +59,70 @@ public class StoreMenu {
   private void processBilling(Scanner scanner) {
     List<BillItem> billItems = new ArrayList<>();
     System.out.println("=== Billing ===");
+    boolean billingFailed = false; // Flag to track if any issue occurs
+    BigDecimal totalAmount = BigDecimal.ZERO; // Store the total amount of the bill
 
     String continueBilling;
     do {
       System.out.print("Enter Item Code: ");
       String itemCode = scanner.next();
+
+      // Check if item exists in the inventory
+      Inventory inventoryItem = storeFacade.getItemByCode(itemCode);
+      if (inventoryItem == null) {
+        System.out.println("Item not found: " + itemCode);
+        billingFailed = true; // Mark billing as failed if item doesn't exist
+        break; // Exit the loop as item is not found
+      }
+
       System.out.print("Enter Quantity: ");
       int quantity = scanner.nextInt();
 
-      // Fetch the item price and discount from the InventoryService
-      Inventory inventoryItem = storeFacade.getItemByCode(itemCode);
-      if (inventoryItem != null) {
-        BigDecimal itemPrice = inventoryItem.getPrice();
-        // Create a new BillItem with complete details
-        BillItem billItem = new BillItem(itemCode, quantity, itemPrice);
-        billItems.add(billItem);
-      } else {
-        System.out.println("Item not found: " + itemCode);
+      // Use StoreFacade to check if the stock is available
+      boolean isStockAvailable = storeFacade.checkAvailableStock(inventoryItem, quantity, "over-the-counter");
+      if (!isStockAvailable) {
+        System.out.println("Insufficient stock for item: " + itemCode);
+        billingFailed = true; // Mark billing as failed if stock is insufficient
+        break; // Exit the loop as stock is insufficient
       }
+
+      // Fetch item price and add to the bill if item exists and stock is sufficient
+      BigDecimal itemPrice = inventoryItem.getPrice();
+      BillItem billItem = new BillItem(itemCode, quantity, itemPrice);
+      billItems.add(billItem);
+
+      // Update the total amount based on the quantity and price
+      totalAmount = totalAmount.add(itemPrice.multiply(BigDecimal.valueOf(quantity)));
+      System.out.println("Added BillItem: Code = " + billItem.getItemCode() +
+        ", Quantity = " + billItem.getQuantity() +
+        ", Price = " + billItem.getItemPrice());
 
       System.out.print("Continue billing? (yes/no): ");
       continueBilling = scanner.next();
     } while ("yes".equalsIgnoreCase(continueBilling));
 
-    System.out.print("Enter Cash Tendered: ");
-    BigDecimal cashTendered = scanner.nextBigDecimal();
+    // Only proceed to enter cash tendered if all items have sufficient stock and exist in inventory
+    if (!billingFailed) {
+      BigDecimal cashTendered;
 
-    // Process bill via StoreFacade
-    storeFacade.generateBill(billItems, "over-the-counter", cashTendered, null);
-    System.out.println("Billing complete!");
+      // Keep prompting for cash tendered until it's sufficient to cover the total amount
+      do {
+        System.out.println("Total amount to be paid: " + totalAmount);
+        System.out.print("Enter Cash Tendered: ");
+        cashTendered = scanner.nextBigDecimal();
+
+        if (cashTendered.compareTo(totalAmount) < 0) {
+          System.out.println("Insufficient cash. Please enter an amount equal to or greater than the total bill.");
+        }
+      } while (cashTendered.compareTo(totalAmount) < 0); // Repeat if cash tendered is less than total
+
+      // Process the bill via StoreFacade
+      storeFacade.generateBill(billItems, "over-the-counter", cashTendered, null);
+      System.out.println("Billing complete!");
+    } else {
+      System.out.println("Billing process stopped due to issues with item availability or stock.");
+    }
   }
-
-
   private void restockShelf(Scanner scanner) {
     System.out.println("=== Restock Shelf ===");
     System.out.print("Enter Item Code: ");

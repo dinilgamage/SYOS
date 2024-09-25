@@ -19,7 +19,6 @@ public class BillItemDaoImpl implements BillItemDao {
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BILL_ITEM_SQL)) {
 
-      System.out.println("Item id" + billItem.getItemId());
       preparedStatement.setInt(1, billItem.getBillId());
       preparedStatement.setInt(2, billItem.getItemId());
       preparedStatement.setInt(3, billItem.getQuantity());

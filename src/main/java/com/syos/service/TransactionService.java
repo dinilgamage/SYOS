@@ -26,7 +26,6 @@ public class TransactionService {
    */
   public Transaction createTransaction(String transactionType, BigDecimal totalAmount, Integer userId) {
     // Use the factory to create the appropriate type of transaction
-    System.out.println("Total amount" + totalAmount);
     Transaction transaction = TransactionFactory.createTransaction(transactionType, totalAmount, userId);
 
     // Persist the transaction
