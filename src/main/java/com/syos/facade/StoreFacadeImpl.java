@@ -7,6 +7,7 @@ import com.syos.enums.TransactionType;
 import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
+import com.syos.service.DiscountService;
 import com.syos.service.ReportService;
 import com.syos.service.BillService;
 import com.syos.service.InventoryService;
@@ -22,14 +23,16 @@ public class StoreFacadeImpl implements StoreFacade {
   private final BillService billService;
   private final ReportService reportService;
   private final InventoryDao inventoryDao;
+  private final DiscountService discountService;
 
 
   public StoreFacadeImpl(InventoryService inventoryService, BillService billService, ReportService reportService,
-    InventoryDao inventoryDao) {
+    InventoryDao inventoryDao, DiscountService discountService) {
     this.inventoryService = inventoryService;
     this.billService = billService;
     this.reportService = reportService;
     this.inventoryDao = inventoryDao;
+    this.discountService = discountService;
   }
 
   @Override
@@ -43,13 +46,8 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public BigDecimal applyDiscount(Inventory inventory, BillItem billItem) {
-    // Use the discount strategy to apply any discount to the item
-    DiscountStrategy discountStrategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
-    BigDecimal discountedPrice = discountStrategy.applyDiscount(billItem.getItemPrice());
-
-    // Return the discounted price to be used in the total calculation
-    return discountedPrice;
+  public BigDecimal applyDiscount(Inventory inventoryItem, BillItem billItem) {
+    return discountService.applyDiscount(inventoryItem, billItem);
   }
 
   @Override

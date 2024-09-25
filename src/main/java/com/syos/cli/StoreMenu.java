@@ -122,9 +122,13 @@ public class StoreMenu {
         }
       } while (cashTendered.compareTo(totalAmount) < 0); // Repeat if cash tendered is less than total
 
+      // Calculate and display change amount
+      BigDecimal changeAmount = cashTendered.subtract(totalAmount);
+      System.out.println("Change to be returned: " + changeAmount);
+
       // Process the bill via StoreFacade
       storeFacade.generateBill(billItems, "over-the-counter", cashTendered, null);
-      System.out.println("Billing complete!");
+      System.out.println("Billing complete! Thanks for shopping with SYOS");
     } else {
       System.out.println("Billing process stopped due to issues with item availability or stock.");
     }
