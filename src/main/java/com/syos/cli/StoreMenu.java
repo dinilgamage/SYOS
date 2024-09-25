@@ -5,6 +5,7 @@ import com.syos.facade.StoreFacade;
 import com.syos.model.BillItem;
 import com.syos.enums.TransactionType;
 import com.syos.model.Inventory;
+import com.syos.util.InputUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -75,8 +76,8 @@ public class StoreMenu {
         break; // Exit the loop as item is not found
       }
 
-      System.out.print("Enter Quantity: ");
-      int quantity = scanner.nextInt();
+      // Use the utility method to validate and get the quantity
+      int quantity = InputUtils.getValidatedPositiveInt(scanner, "Enter Quantity: ");
 
       // Check if the stock is available
       boolean isStockAvailable = storeFacade.checkAvailableStock(inventoryItem, quantity, "over-the-counter");
@@ -138,8 +139,10 @@ public class StoreMenu {
     System.out.println("=== Restock Shelf ===");
     System.out.print("Enter Item Code: ");
     String itemCode = scanner.next();
-    System.out.print("Enter Quantity: ");
-    int quantity = scanner.nextInt();
+
+    // Use the utility method to validate and get the quantity
+    int quantity = InputUtils.getValidatedPositiveInt(scanner, "Enter Quantity: ");
+
     System.out.print("Enter Shelf Type (store/online): ");
     String shelfType = scanner.next();
 
