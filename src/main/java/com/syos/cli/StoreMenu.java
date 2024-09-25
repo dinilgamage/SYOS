@@ -185,20 +185,28 @@ public class StoreMenu {
     // Use the utility method to validate and get the item
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
-    System.out.print("Enter Discount Strategy (percentage/fixed): ");
-    String strategyType = scanner.next();
+    System.out.print("Enter Discount Strategy (percentage/fixed/none): ");
+    String strategyType = scanner.next().toLowerCase();
 
-    // Use the utility method to validate and get the discount value as a BigDecimal
-    BigDecimal discountValue = InputUtils.getValidatedPositiveBigDecimal(scanner, "Enter Discount Value: ");
+    BigDecimal discountValue;
 
-    // Validate the discount using the utility method
-    if (!InputUtils.validateDiscount(strategyType, discountValue, inventoryItem)) {
-      // If validation fails, return early and don't apply the discount
-      return;
+    if ("none".equals(strategyType)) {
+      // If the user enters "none", set the discount to zero and skip the discount value prompt
+      discountValue = BigDecimal.ZERO;
+    } else {
+      // Use the utility method to validate and get the discount value as a BigDecimal
+      discountValue = InputUtils.getValidatedPositiveBigDecimal(scanner, "Enter Discount Value: ");
+
+      // Validate the discount using the utility method
+      if (!InputUtils.validateDiscount(strategyType, discountValue, inventoryItem)) {
+        // If validation fails, return early and don't apply the discount
+        return;
+      }
     }
 
     // Call StoreFacade to apply the discount using the chosen strategy
     storeFacade.addDiscount(inventoryItem.getItemCode(), discountValue, strategyType);
     System.out.println("Discount added successfully!");
   }
+
 }
