@@ -65,16 +65,8 @@ public class StoreMenu {
 
     String continueBilling;
     do {
-      System.out.print("Enter Item Code: ");
-      String itemCode = scanner.next();
-
-      // Check if item exists in the inventory
-      Inventory inventoryItem = storeFacade.getItemByCode(itemCode);
-      if (inventoryItem == null) {
-        System.out.println("Item not found: " + itemCode);
-        billingFailed = true; // Mark billing as failed if item doesn't exist
-        break; // Exit the loop as item is not found
-      }
+      // Use the utility method to validate and get the item
+      Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
       // Use the utility method to validate and get the quantity
       int quantity = InputUtils.getValidatedPositiveInt(scanner, "Enter Quantity: ");
@@ -82,14 +74,14 @@ public class StoreMenu {
       // Check if the stock is available
       boolean isStockAvailable = storeFacade.checkAvailableStock(inventoryItem, quantity, "over-the-counter");
       if (!isStockAvailable) {
-        System.out.println("Insufficient stock for item: " + itemCode);
+        System.out.println("Insufficient stock for item: " + inventoryItem.getItemCode());
         billingFailed = true; // Mark billing as failed if stock is insufficient
         break; // Exit the loop as stock is insufficient
       }
 
       // Fetch item price and add to the bill if item exists and stock is sufficient
       BigDecimal itemPrice = inventoryItem.getPrice();
-      BillItem billItem = new BillItem(itemCode, quantity, itemPrice);
+      BillItem billItem = new BillItem(inventoryItem.getItemCode(), quantity, itemPrice);
 
       // Apply discount strategy to the item before calculating the total
       BigDecimal discountedPrice = storeFacade.applyDiscount(inventoryItem, billItem);
@@ -101,8 +93,7 @@ public class StoreMenu {
       totalAmount = totalAmount.add(discountedPrice.multiply(BigDecimal.valueOf(quantity)));
 
       System.out.println("Added BillItem: Code = " + billItem.getItemCode() +
-        ", Quantity = " + billItem.getQuantity() +
-        ", Discounted Price = " + billItem.getItemPrice());
+        ", Quantity = " + billItem.getQuantity());
 
       System.out.print("Continue billing? (yes/no): ");
       continueBilling = scanner.next();
@@ -110,18 +101,11 @@ public class StoreMenu {
 
     // Only proceed to enter cash tendered if all items have sufficient stock and exist in inventory
     if (!billingFailed) {
-      BigDecimal cashTendered;
 
-      // Keep prompting for cash tendered until it's sufficient to cover the total amount
-      do {
-        System.out.println("Total amount to be paid (including discounts): " + totalAmount);
-        System.out.print("Enter Cash Tendered: ");
-        cashTendered = scanner.nextBigDecimal();
+      System.out.println("Total amount to be paid (including discounts): " + totalAmount);
 
-        if (cashTendered.compareTo(totalAmount) < 0) {
-          System.out.println("Insufficient cash. Please enter an amount equal to or greater than the total bill.");
-        }
-      } while (cashTendered.compareTo(totalAmount) < 0); // Repeat if cash tendered is less than total
+      // Use the utility method to validate the cash tendered
+      BigDecimal cashTendered = InputUtils.getValidatedCashTendered(scanner, "Enter Cash Tendered: ", totalAmount);
 
       // Calculate and display change amount
       BigDecimal changeAmount = cashTendered.subtract(totalAmount);
@@ -137,8 +121,9 @@ public class StoreMenu {
 
   private void restockShelf(Scanner scanner) {
     System.out.println("=== Restock Shelf ===");
-    System.out.print("Enter Item Code: ");
-    String itemCode = scanner.next();
+
+    // Use the utility method to validate and get the item
+    Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
     // Use the utility method to validate and get the quantity
     int quantity = InputUtils.getValidatedPositiveInt(scanner, "Enter Quantity: ");
@@ -146,8 +131,9 @@ public class StoreMenu {
     System.out.print("Enter Shelf Type (store/online): ");
     String shelfType = scanner.next();
 
-    storeFacade.restockItem(itemCode, quantity, shelfType);
-    System.out.println("Restocking complete!");
+    // Restock the item using StoreFacade
+    storeFacade.restockItem(inventoryItem.getItemCode(), quantity, shelfType);
+    System.out.println("Restocking complete for Item: " + inventoryItem.getItemCode());
   }
 
   private void generateReports(Scanner scanner) {
