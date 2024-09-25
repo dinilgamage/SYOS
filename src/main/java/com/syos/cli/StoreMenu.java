@@ -128,8 +128,8 @@ public class StoreMenu {
     // Use the utility method to validate and get the quantity
     int quantity = InputUtils.getValidatedPositiveInt(scanner, "Enter Quantity: ");
 
-    System.out.print("Enter Shelf Type (store/online): ");
-    String shelfType = scanner.next();
+    // Use the utility method to validate shelf type (store or online)
+    String shelfType = InputUtils.getValidatedStringOption(scanner, "Enter Shelf Type (store/online): ", "store", "online");
 
     // Restock the item using StoreFacade
     storeFacade.restockItem(inventoryItem.getItemCode(), quantity, shelfType);
@@ -185,8 +185,9 @@ public class StoreMenu {
     // Use the utility method to validate and get the item
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
-    System.out.print("Enter Discount Strategy (percentage/fixed/none): ");
-    String strategyType = scanner.next().toLowerCase();
+    String strategyType = InputUtils.getValidatedStringOption(scanner,
+      "Enter Discount Strategy (percentage/fixed/none): ",
+      "percentage", "fixed", "none");
 
     BigDecimal discountValue;
 

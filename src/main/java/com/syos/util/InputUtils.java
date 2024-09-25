@@ -4,8 +4,10 @@ import com.syos.facade.StoreFacade;
 import com.syos.model.Inventory;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.Set;
 
 public class InputUtils {
 
@@ -125,5 +127,29 @@ public class InputUtils {
     }
 
     return true; // Return true if all validations pass
+  }
+
+  // New utility method to validate user input against multiple valid options
+  public static String getValidatedStringOption(Scanner scanner, String promptMessage, String... validOptions) {
+    Set<String> validOptionSet = new HashSet<>();
+    for (String option : validOptions) {
+      validOptionSet.add(option.toLowerCase());  // Normalize input
+    }
+
+    String input = "";
+    boolean validInput = false;
+
+    while (!validInput) {
+      System.out.print(promptMessage);
+      input = scanner.next().toLowerCase(); // Normalize input for case-insensitive comparison
+
+      if (validOptionSet.contains(input)) {
+        validInput = true; // If input is valid, break the loop
+      } else {
+        System.out.println("Invalid input. Please enter one of the following: " + String.join(", ", validOptions));
+      }
+    }
+
+    return input;
   }
 }
