@@ -60,7 +60,7 @@ public class StoreMenu {
     List<BillItem> billItems = new ArrayList<>();
     System.out.println("=== Billing ===");
     boolean billingFailed = false; // Flag to track if any issue occurs
-    BigDecimal totalAmount = BigDecimal.ZERO; // Store the total amount of the bill
+    BigDecimal totalAmount = BigDecimal.ZERO; // Store the total amount of the bill after discounts
 
     String continueBilling;
     do {
@@ -78,7 +78,7 @@ public class StoreMenu {
       System.out.print("Enter Quantity: ");
       int quantity = scanner.nextInt();
 
-      // Use StoreFacade to check if the stock is available
+      // Check if the stock is available
       boolean isStockAvailable = storeFacade.checkAvailableStock(inventoryItem, quantity, "over-the-counter");
       if (!isStockAvailable) {
         System.out.println("Insufficient stock for item: " + itemCode);
@@ -89,13 +89,19 @@ public class StoreMenu {
       // Fetch item price and add to the bill if item exists and stock is sufficient
       BigDecimal itemPrice = inventoryItem.getPrice();
       BillItem billItem = new BillItem(itemCode, quantity, itemPrice);
+
+      // Apply discount strategy to the item before calculating the total
+      BigDecimal discountedPrice = storeFacade.applyDiscount(inventoryItem, billItem);
+      billItem.setItemPrice(discountedPrice);  // Set the discounted price
+
       billItems.add(billItem);
 
-      // Update the total amount based on the quantity and price
-      totalAmount = totalAmount.add(itemPrice.multiply(BigDecimal.valueOf(quantity)));
+      // Update the total amount based on the discounted price and quantity
+      totalAmount = totalAmount.add(discountedPrice.multiply(BigDecimal.valueOf(quantity)));
+
       System.out.println("Added BillItem: Code = " + billItem.getItemCode() +
         ", Quantity = " + billItem.getQuantity() +
-        ", Price = " + billItem.getItemPrice());
+        ", Discounted Price = " + billItem.getItemPrice());
 
       System.out.print("Continue billing? (yes/no): ");
       continueBilling = scanner.next();
@@ -107,7 +113,7 @@ public class StoreMenu {
 
       // Keep prompting for cash tendered until it's sufficient to cover the total amount
       do {
-        System.out.println("Total amount to be paid: " + totalAmount);
+        System.out.println("Total amount to be paid (including discounts): " + totalAmount);
         System.out.print("Enter Cash Tendered: ");
         cashTendered = scanner.nextBigDecimal();
 
@@ -123,6 +129,7 @@ public class StoreMenu {
       System.out.println("Billing process stopped due to issues with item availability or stock.");
     }
   }
+
   private void restockShelf(Scanner scanner) {
     System.out.println("=== Restock Shelf ===");
     System.out.print("Enter Item Code: ");

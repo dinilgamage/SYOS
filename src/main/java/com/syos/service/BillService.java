@@ -54,31 +54,24 @@ public class BillService {
     // Initialize the BillBuilder
     billBuilder.setTransactionId(transaction.getTransactionId());
 
-    // Add items to the bill, and apply any discount strategy if it exists
+    // Add items to the bill (discounts have already been applied during processBilling in CLI)
     for (BillItem item : items) {
-      // Retrieve the inventory item to get discount details
+      // Retrieve the inventory item to get any additional details, if necessary
       Inventory inventory = inventoryDao.getItemByCode(item.getItemCode());
 
-      // Ensure that the itemId is set in the BillItem before saving
-      item.setItemId(inventory.getItemId()); // Set the itemId after retrieving the inventory
+      // Set itemId in BillItem
+      item.setItemId(inventory.getItemId());
 
-      // Use the factory to get the appropriate discount strategy
-      DiscountStrategy discountStrategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
-
-      // Apply the discount to the total price of the item
-      BigDecimal discountedPrice = discountStrategy.applyDiscount(item.getItemPrice());
-      item.setItemPrice(discountedPrice);
-
-        // Add the item to the bill
+      // Add the item to the bill (discounted price already set during processBilling)
       billBuilder.addItem(item);
 
       // Update the inventory stock after the purchase
       inventoryService.updateInventoryStock(item.getItemCode(), item.getQuantity(), transactionType);
     }
 
-    // For in-store (over-the-counter) transactions, handle cash tendered and change amount
+    // Handle cash tendered and change for in-store transactions
     if ("over-the-counter".equals(transactionType) && cashTendered != null) {
-      BigDecimal totalAmount = calculateTotal(items);
+      BigDecimal totalAmount = calculateTransactionTotal(items); // Ensure total includes discounted prices
       BigDecimal changeAmount = cashTendered.subtract(totalAmount);
 
       // Set cashTendered and changeAmount for in-store transactions
@@ -93,6 +86,7 @@ public class BillService {
 
     return bill;
   }
+
 
   // Method to save the bill
   public void saveBill(Bill bill) {

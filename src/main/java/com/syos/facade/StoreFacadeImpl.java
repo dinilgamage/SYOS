@@ -4,11 +4,13 @@ import com.syos.command.GenerateBillCommand;
 import com.syos.dao.InventoryDao;
 import com.syos.enums.ReportType;
 import com.syos.enums.TransactionType;
+import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
 import com.syos.service.ReportService;
 import com.syos.service.BillService;
 import com.syos.service.InventoryService;
+import com.syos.strategy.DiscountStrategy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -40,6 +42,15 @@ public class StoreFacadeImpl implements StoreFacade {
     return inventoryService.checkAvailableStock(inventoryItem, quantity, transactionType);
   }
 
+  @Override
+  public BigDecimal applyDiscount(Inventory inventory, BillItem billItem) {
+    // Use the discount strategy to apply any discount to the item
+    DiscountStrategy discountStrategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
+    BigDecimal discountedPrice = discountStrategy.applyDiscount(billItem.getItemPrice());
+
+    // Return the discounted price to be used in the total calculation
+    return discountedPrice;
+  }
 
   @Override
   public void generateBill(List<BillItem> billItems, String transactionType, BigDecimal cashTendered, Integer userId) {
