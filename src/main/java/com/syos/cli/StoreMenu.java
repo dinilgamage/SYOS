@@ -172,7 +172,7 @@ public class StoreMenu {
     String dateInput = scanner.next();
     LocalDate date = LocalDate.parse(dateInput);
 
-    System.out.print("Transaction Mode (online/in-store/both): ");
+    System.out.print("Transaction Mode (online/store/both): ");
     String transactionMode = scanner.next();
 
     // Process report via StoreFacade
@@ -181,15 +181,24 @@ public class StoreMenu {
 
   private void addDiscounts(Scanner scanner) {
     System.out.println("=== Add Discounts ===");
-    System.out.print("Enter Item Code: ");
-    String itemCode = scanner.next();
+
+    // Use the utility method to validate and get the item
+    Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
+
     System.out.print("Enter Discount Strategy (percentage/fixed): ");
     String strategyType = scanner.next();
-    System.out.print("Enter Discount Value: ");
-    BigDecimal discountValue = scanner.nextBigDecimal();
+
+    // Use the utility method to validate and get the discount value as a BigDecimal
+    BigDecimal discountValue = InputUtils.getValidatedPositiveBigDecimal(scanner, "Enter Discount Value: ");
+
+    // Validate the discount using the utility method
+    if (!InputUtils.validateDiscount(strategyType, discountValue, inventoryItem)) {
+      // If validation fails, return early and don't apply the discount
+      return;
+    }
 
     // Call StoreFacade to apply the discount using the chosen strategy
-    storeFacade.addDiscount(itemCode, discountValue, strategyType);
-    System.out.println("Discount added!");
+    storeFacade.addDiscount(inventoryItem.getItemCode(), discountValue, strategyType);
+    System.out.println("Discount added successfully!");
   }
 }

@@ -33,6 +33,30 @@ public class InputUtils {
     return number;
   }
 
+  // Method to validate and get a positive BigDecimal from the user
+  public static BigDecimal getValidatedPositiveBigDecimal(Scanner scanner, String promptMessage) {
+    BigDecimal value = BigDecimal.ZERO;
+    boolean validInput = false;
+
+    while (!validInput) {
+      try {
+        System.out.print(promptMessage);
+        value = scanner.nextBigDecimal();
+
+        if (value.compareTo(BigDecimal.ZERO) <= 0) {
+          System.out.println("Please enter a positive value.");
+        } else {
+          validInput = true;
+        }
+      } catch (InputMismatchException e) {
+        System.out.println("Invalid input. Please enter a valid numeric value.");
+        scanner.next(); // Clear the invalid input from the scanner
+      }
+    }
+
+    return value;
+  }
+
   // Method to check if the item exists in the inventory
   public static Inventory getValidatedInventoryItem(StoreFacade storeFacade, Scanner scanner, String promptMessage) {
     Inventory inventoryItem = null;
@@ -71,5 +95,35 @@ public class InputUtils {
     }
 
     return cashTendered;
+  }
+
+  // New method to validate discount based on the discount type (percentage/fixed)
+  public static boolean validateDiscount(String strategyType, BigDecimal discountValue, Inventory inventoryItem) {
+    strategyType = strategyType.toLowerCase(); // Normalize strategy type
+
+    // Ensure discount value is positive
+    if (discountValue.compareTo(BigDecimal.ZERO) <= 0) {
+      System.out.println("Discount value must be greater than 0.");
+      return false;
+    }
+
+    if ("fixed".equals(strategyType)) {
+      // For fixed, the discount cannot exceed the item price
+      if (discountValue.compareTo(inventoryItem.getPrice()) > 0) {
+        System.out.println("Discount cannot exceed the item's price for a fixed discount.");
+        return false;
+      }
+    } else if ("percentage".equals(strategyType)) {
+      // For percentage, the discount must not exceed 100
+      if (discountValue.compareTo(BigDecimal.valueOf(100)) > 0) {
+        System.out.println("Percentage discount cannot exceed 100%.");
+        return false;
+      }
+    } else {
+      System.out.println("Invalid discount strategy. Please enter either 'percentage' or 'fixed'.");
+      return false;
+    }
+
+    return true; // Return true if all validations pass
   }
 }
