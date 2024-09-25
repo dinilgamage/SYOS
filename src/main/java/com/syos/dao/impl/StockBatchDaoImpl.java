@@ -81,6 +81,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
 
       while (rs.next()) {
         StockBatch stockBatch = new StockBatch(
+          rs.getInt("batch_id"),
           rs.getInt("item_id"),               // itemId
           rs.getInt("quantity"),              // quantity
           rs.getDate("date_received").toLocalDate(), // dateReceived
@@ -103,7 +104,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
     LocalDate dateReceived = rs.getDate("date_received").toLocalDate();
     LocalDate expiryDate = rs.getDate("expiry_date").toLocalDate();
 
-    return new StockBatch(itemId, quantity, dateReceived, expiryDate);
+    return new StockBatch(batchId, itemId, quantity, dateReceived, expiryDate);
   }
 }
 
