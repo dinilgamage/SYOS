@@ -24,6 +24,7 @@ public class RestockCommand implements Command {
     try {
       // Delegate restocking to the InventoryService
       inventoryService.restockItem(itemCode, shelfType);
+      System.out.println("Restocking successful for item: " + itemCode);
     } catch (InsufficientStockException e) {
       System.out.println("Error during restocking: " + e.getMessage());
     }
