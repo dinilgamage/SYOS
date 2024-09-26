@@ -125,15 +125,11 @@ public class StoreMenu {
     // Use the utility method to validate and get the item
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
-    // Use the utility method to validate and get the quantity
-    int quantity = InputUtils.getValidatedPositiveInt(scanner, "Enter Quantity: ");
-
     // Use the utility method to validate shelf type (store or online)
     String shelfType = InputUtils.getValidatedStringOption(scanner, "Enter Shelf Type (store/online): ", "store", "online");
 
     // Restock the item using StoreFacade
-    storeFacade.restockItem(inventoryItem.getItemCode(), quantity, shelfType);
-    System.out.println("Restocking complete for Item: " + inventoryItem.getItemCode());
+    storeFacade.restockItem(inventoryItem.getItemCode(), shelfType);
   }
 
   private void generateReports(Scanner scanner) {

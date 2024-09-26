@@ -2,6 +2,7 @@ package com.syos.service;
 
 import com.syos.dao.InventoryDao;
 import com.syos.dao.StockBatchDao;
+import com.syos.exception.InsufficientStockException;
 import com.syos.model.Inventory;
 import com.syos.model.StockBatch;
 import com.syos.observer.StockObserver;
@@ -134,60 +135,84 @@ public class InventoryService implements StockSubject {
     }
   }
 
-
-  // Restock an item based on the shelf type (store or online), ensuring it doesn't exceed shelf capacity
-  public void restockItem(String itemCode, int quantity, String shelfType) {
+  // Restock an item based on the shelf type (store or online), replenishing until shelf capacity is reached
+  public void restockItem(String itemCode, String shelfType) {
     Inventory item = inventoryDao.getItemByCode(itemCode);
 
     if (item != null) {
-      // Get the nearest expiry batch for the item
-      StockBatch nearestBatch = stockBatchDao.getNearestExpiryBatch(item.getItemId());
+      // Get all batches sorted by expiry date for the item
+      List<StockBatch> batches = stockBatchDao.getBatchesForItem(item.getItemId());
+      int totalAvailableQuantity = batches.stream().mapToInt(StockBatch::getQuantity).sum();
 
-      if (nearestBatch != null && nearestBatch.getQuantity() >= quantity) {
-        // Check which shelf is being restocked
-        if ("store".equalsIgnoreCase(shelfType)) {
-          int currentStoreStock = item.getStoreStock();
-          int maxStoreRestock = item.getShelfCapacity() - currentStoreStock;
+      int maxRestockQuantity = getMaxRestockQuantity(item, shelfType);
 
-          // Ensure the restock quantity does not exceed shelf capacity
-          if (quantity > maxStoreRestock) {
-            quantity = maxStoreRestock;  // Adjust quantity to fit within the shelf capacity
-          }
-
-          // Update store stock
-          int updatedStoreStock = currentStoreStock + quantity;
-          item.setStoreStock(updatedStoreStock);
-
-        } else if ("online".equalsIgnoreCase(shelfType)) {
-          int currentOnlineStock = item.getOnlineStock();
-          int maxOnlineRestock = item.getShelfCapacity() - currentOnlineStock;
-
-          // Ensure the restock quantity does not exceed shelf capacity
-          if (quantity > maxOnlineRestock) {
-            quantity = maxOnlineRestock;  // Adjust quantity to fit within the shelf capacity
-          }
-
-          // Update online stock
-          int updatedOnlineStock = currentOnlineStock + quantity;
-          item.setOnlineStock(updatedOnlineStock);
-
-        } else {
-          throw new IllegalArgumentException("Invalid shelf type: " + shelfType);
-        }
-
-        // Update the stock batch quantity
-        int remainingBatchQuantity = nearestBatch.getQuantity() - quantity;
-        nearestBatch.setQuantity(remainingBatchQuantity);
-
-        // Save the changes to the inventory and stock batch
-        inventoryDao.updateInventory(item);
-        stockBatchDao.updateBatch(nearestBatch);
-
-      } else {
-        throw new IllegalArgumentException("Insufficient stock in nearest batch for item: " + itemCode);
+      if (totalAvailableQuantity < maxRestockQuantity) {
+        throw new InsufficientStockException("Insufficient stock across all batches for item: " + itemCode);
       }
+
+      adjustBatchStock(batches, maxRestockQuantity);
+      adjustShelfStock(item, shelfType, maxRestockQuantity);
+
+      // Save the updated inventory
+      inventoryDao.updateInventory(item);
     } else {
       throw new IllegalArgumentException("Item not found: " + itemCode);
+    }
+  }
+
+  // Adjusts batch stock quantities based on the required amount
+  private void adjustBatchStock(List<StockBatch> batches, int requiredQuantity) {
+    int remainingQuantity = requiredQuantity;
+    for (StockBatch batch : batches) {
+      if (remainingQuantity == 0) break;
+
+      int batchQuantity = batch.getQuantity();
+      if (batchQuantity >= remainingQuantity) {
+        batch.setQuantity(batchQuantity - remainingQuantity);
+        remainingQuantity = 0;
+      } else {
+        batch.setQuantity(0);
+        remainingQuantity -= batchQuantity;
+      }
+      stockBatchDao.updateBatch(batch); // Update the batch after adjusting
+    }
+  }
+
+  // Adjusts the store or online stock based on shelf type
+  private void adjustShelfStock(Inventory item, String shelfType, int quantity) {
+    if ("store".equalsIgnoreCase(shelfType)) {
+      int currentStoreStock = item.getStoreStock();
+      int maxStoreRestock = item.getShelfCapacity() - currentStoreStock;
+
+      // Ensure restock quantity does not exceed shelf capacity
+      if (quantity > maxStoreRestock) {
+        quantity = maxStoreRestock;
+      }
+
+      item.setStoreStock(currentStoreStock + quantity);
+    } else if ("online".equalsIgnoreCase(shelfType)) {
+      int currentOnlineStock = item.getOnlineStock();
+      int maxOnlineRestock = item.getShelfCapacity() - currentOnlineStock;
+
+      // Ensure restock quantity does not exceed shelf capacity
+      if (quantity > maxOnlineRestock) {
+        quantity = maxOnlineRestock;
+      }
+
+      item.setOnlineStock(currentOnlineStock + quantity);
+    } else {
+      throw new IllegalArgumentException("Invalid shelf type: " + shelfType);
+    }
+  }
+
+  // Determines the maximum restock quantity based on shelf capacity
+  private int getMaxRestockQuantity(Inventory item, String shelfType) {
+    if ("store".equalsIgnoreCase(shelfType)) {
+      return item.getShelfCapacity() - item.getStoreStock();
+    } else if ("online".equalsIgnoreCase(shelfType)) {
+      return item.getShelfCapacity() - item.getOnlineStock();
+    } else {
+      throw new IllegalArgumentException("Invalid shelf type: " + shelfType);
     }
   }
 }

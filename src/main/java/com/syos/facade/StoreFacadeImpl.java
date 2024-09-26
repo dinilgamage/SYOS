@@ -1,6 +1,8 @@
 package com.syos.facade;
 
+import com.syos.command.Command;
 import com.syos.command.GenerateBillCommand;
+import com.syos.command.RestockCommand;
 import com.syos.dao.InventoryDao;
 import com.syos.enums.ReportType;
 import com.syos.enums.TransactionType;
@@ -64,8 +66,15 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public void restockItem(String itemCode, int quantity, String shelfType) {
-    inventoryService.restockItem(itemCode, quantity, shelfType);
+  public void restockItem(String itemCode, String shelfType) {
+    // Create a RestockCommand and execute it
+    Command restockCommand = new RestockCommand(inventoryService, itemCode, shelfType);
+    restockCommand.execute();
+  }
+
+  @Override
+  public int calculateTotalStockFromBatches (int itemId) {
+    return inventoryService.calculateTotalStockFromBatches(itemId);
   }
 
   @Override

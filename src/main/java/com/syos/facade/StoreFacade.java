@@ -13,10 +13,11 @@ public interface StoreFacade {
 
   Inventory getItemByCode(String itemCode);
   boolean checkAvailableStock(Inventory inventoryItem, int quantity, String transactionType);
+  int calculateTotalStockFromBatches (int itemId);
   void generateBill(List<BillItem> billItems, String transactionType, BigDecimal cashTendered, Integer userId);
   BigDecimal applyDiscount(Inventory inventory, BillItem billItem);
 
-  void restockItem(String itemCode, int quantity, String shelfType);
+  void restockItem(String itemCode, String shelfType);
 
   void updateInventoryStock(String itemCode, int quantity, String shelfType);
 

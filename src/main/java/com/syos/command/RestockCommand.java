@@ -1,5 +1,6 @@
 package com.syos.command;
 
+import com.syos.exception.InsufficientStockException;
 import com.syos.service.InventoryService;
 
 /**
@@ -9,20 +10,22 @@ public class RestockCommand implements Command {
 
   private InventoryService inventoryService;
   private String itemCode;
-  private int quantity;
   private String shelfType;  // 'store' or 'online'
 
   // Constructor
-  public RestockCommand(InventoryService inventoryService, String itemCode, int quantity, String shelfType) {
+  public RestockCommand(InventoryService inventoryService, String itemCode, String shelfType) {
     this.inventoryService = inventoryService;
     this.itemCode = itemCode;
-    this.quantity = quantity;
     this.shelfType = shelfType;
   }
 
   @Override
   public void execute() {
-    // Delegate restocking to the InventoryService
-    inventoryService.restockItem(itemCode, quantity, shelfType);
+    try {
+      // Delegate restocking to the InventoryService
+      inventoryService.restockItem(itemCode, shelfType);
+    } catch (InsufficientStockException e) {
+      System.out.println("Error during restocking: " + e.getMessage());
+    }
   }
 }
