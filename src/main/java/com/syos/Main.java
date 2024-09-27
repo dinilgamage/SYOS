@@ -8,12 +8,15 @@ import com.syos.dao.impl.BillItemDaoImpl;
 import com.syos.dao.impl.InventoryDaoImpl;
 import com.syos.dao.impl.StockBatchDaoImpl;
 import com.syos.dao.impl.TransactionDaoImpl;
+import com.syos.dao.impl.UserDaoImpl;
 import com.syos.facade.StoreFacadeImpl;
+import com.syos.processor.BillingProcessor;
 import com.syos.service.BillService;
 import com.syos.service.DiscountService;
 import com.syos.service.InventoryService;
 import com.syos.service.ReportService;
 import com.syos.service.TransactionService;
+import com.syos.service.UserService;
 
 public class Main {
 
@@ -26,9 +29,10 @@ public class Main {
   // Extract the initialization logic for the MainMenu
   private static MainMenu initializeMainMenu() {
     StoreFacadeImpl storeFacade = initializeStoreFacade();
+    BillingProcessor billingProcessor = new BillingProcessor(storeFacade);
 
     // Initialize the menus
-    OnlineMenu onlineMenu = new OnlineMenu(storeFacade);
+    OnlineMenu onlineMenu = new OnlineMenu(storeFacade,billingProcessor);
     StoreMenu storeMenu = new StoreMenu(storeFacade);
 
     // Return the MainMenu object
@@ -45,6 +49,7 @@ public class Main {
     DiscountService discountService = new DiscountService();
 
     // Return the initialized StoreFacadeImpl
-    return new StoreFacadeImpl(inventoryService, billService, reportService, new InventoryDaoImpl(), discountService);
+    return new StoreFacadeImpl(inventoryService, billService, reportService, new InventoryDaoImpl(), discountService,
+      new UserService(new UserDaoImpl()));
   }
 }

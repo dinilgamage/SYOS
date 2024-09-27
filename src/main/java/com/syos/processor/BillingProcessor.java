@@ -18,19 +18,18 @@ public class BillingProcessor {
     this.storeFacade = storeFacade;
   }
 
-  // Add transactionType as a parameter to handle both in-store and online transactions
-  public void processBilling(Scanner scanner, String transactionType) {
+  /**
+   * Process billing for both online and in-store transactions.
+   *
+   * @param scanner        Input scanner for user input.
+   * @param transactionType Type of transaction (e.g., "online" or "over-the-counter").
+   * @param userId         ID of the user (online customers or in-store as 1 for SYOS Store).
+   */
+  public void processBilling(Scanner scanner, String transactionType, Integer userId) {
     List<BillItem> billItems = new ArrayList<>();
     System.out.println("=== " + (transactionType.equals("online") ? "Online Billing" : "In-Store Billing") + " ===");
     BigDecimal totalAmount = BigDecimal.ZERO;
     boolean billingFailed = false;
-
-    // For online billing, get customer ID or additional info
-    Integer userId = null;
-    if (transactionType.equals("online")) {
-      System.out.print("Enter Customer ID: ");
-      userId = scanner.nextInt();  // Assuming customer ID is an integer, adjust accordingly
-    }
 
     String continueBilling;
     do {
@@ -84,7 +83,15 @@ public class BillingProcessor {
     return billItem;
   }
 
-  // Modify processPayment to handle both online and in-store transactions
+  /**
+   * Handles the payment process for both online and in-store transactions.
+   *
+   * @param scanner         Input scanner for user input.
+   * @param billItems       List of items in the bill.
+   * @param totalAmount     Total amount to be paid after discounts.
+   * @param transactionType Type of transaction (e.g., "online" or "over-the-counter").
+   * @param userId          ID of the user (online customers or in-store as 1 for SYOS Store).
+   */
   private void processPayment(Scanner scanner, List<BillItem> billItems, BigDecimal totalAmount, String transactionType, Integer userId) {
     System.out.println("Total amount to be paid (including discounts): " + totalAmount);
 

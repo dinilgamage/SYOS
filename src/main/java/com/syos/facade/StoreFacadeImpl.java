@@ -9,10 +9,12 @@ import com.syos.enums.TransactionType;
 import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
+import com.syos.model.User;
 import com.syos.service.DiscountService;
 import com.syos.service.ReportService;
 import com.syos.service.BillService;
 import com.syos.service.InventoryService;
+import com.syos.service.UserService;
 import com.syos.strategy.DiscountStrategy;
 
 import java.math.BigDecimal;
@@ -26,15 +28,48 @@ public class StoreFacadeImpl implements StoreFacade {
   private final ReportService reportService;
   private final InventoryDao inventoryDao;
   private final DiscountService discountService;
+  private final UserService userService;
 
 
   public StoreFacadeImpl(InventoryService inventoryService, BillService billService, ReportService reportService,
-    InventoryDao inventoryDao, DiscountService discountService) {
+    InventoryDao inventoryDao, DiscountService discountService, UserService userService) {
     this.inventoryService = inventoryService;
     this.billService = billService;
     this.reportService = reportService;
     this.inventoryDao = inventoryDao;
     this.discountService = discountService;
+    this.userService = userService;
+  }
+
+  @Override
+  public void registerUser(String name, String email, String password) {
+    // Create a new User object
+    User user = new User(name, email, password);  // Password should ideally be hashed here
+
+    // Delegate the registration logic to the UserService
+    boolean isRegistered = userService.registerUser(user);
+
+    if (!isRegistered) {
+      throw new IllegalArgumentException("Email already registered.");
+    }
+  }
+
+  @Override
+  public boolean loginUser(String email, String password) {
+    // Delegate login logic to the UserService
+    return userService.loginUser(email, password);
+  }
+
+  @Override
+  public Integer getUserId(String email) {
+    // You can add this to retrieve the user ID for other purposes (like billing)
+    User user = userService.getUserByEmail(email); // Assume this method is available in UserService
+    return user != null ? user.getUserId() : null;
+  }
+
+  @Override
+  public List<Inventory> getAllItems() {
+    return inventoryService.getAllItems();  // Call to the InventoryService
   }
 
   @Override
@@ -45,11 +80,6 @@ public class StoreFacadeImpl implements StoreFacade {
   @Override
   public boolean checkAvailableStock(Inventory inventoryItem, int quantity, String transactionType) {
     return inventoryService.checkAvailableStock(inventoryItem, quantity, transactionType);
-  }
-
-  @Override
-  public BigDecimal applyDiscount(Inventory inventoryItem, BillItem billItem) {
-    return discountService.applyDiscount(inventoryItem, billItem);
   }
 
   @Override
@@ -97,6 +127,11 @@ public class StoreFacadeImpl implements StoreFacade {
   @Override
   public void generateReport(ReportType reportType, TransactionType transactionType) {
     reportService.generateReport(reportType, transactionType);
+  }
+
+  @Override
+  public BigDecimal applyDiscount(Inventory inventoryItem, BillItem billItem) {
+    return discountService.applyDiscount(inventoryItem, billItem);
   }
 
   @Override

@@ -40,5 +40,16 @@ public class UserService {
     // Verify user credentials via the UserDao
     return userDao.verifyUserCredentials(email, password);
   }
+
+  /**
+   * Retrieves a user by email.
+   *
+   * @param email - The email address of the user.
+   * @return - Returns the User object if found, otherwise null.
+   */
+  public User getUserByEmail(String email) {
+    // Call the DAO method to fetch the user
+    return userDao.getUserByEmail(email);
+  }
 }
 

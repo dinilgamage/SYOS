@@ -44,6 +44,16 @@ public class InventoryService implements StockSubject {
   }
 
   /**
+   * Retrieves all items from the inventory.
+   *
+   * @return List of all inventory items.
+   */
+  public List<Inventory> getAllItems() {
+    // Fetch all inventory items from the DAO and return
+    return inventoryDao.getAllItems();
+  }
+
+  /**
    * Calculates the total stock for a given item across all stock batches.
    *
    * @param itemId - The ID of the inventory item.
