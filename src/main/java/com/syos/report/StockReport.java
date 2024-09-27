@@ -36,7 +36,7 @@ public class StockReport extends Report {
   }
 
   @Override
-  protected void displayReport() {
+  protected void displayReport(TransactionType transactionType) {
     for (StockBatch batch : stockBatches) {
       System.out.println("Item ID: " + batch.getItemId() +
         ", Batch ID: " + batch.getBatchId() +

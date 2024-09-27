@@ -42,7 +42,7 @@ public class BillReport extends Report {
   }
 
   @Override
-  protected void displayReport() {
+  protected void displayReport(TransactionType transactionType) {
     System.out.println("Displaying all transactions:");
     for (Transaction transaction : transactions) {
       System.out.println("Transaction ID: " + transaction.getTransactionId() +

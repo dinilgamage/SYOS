@@ -49,7 +49,7 @@ public class TotalSalesReport extends Report {
   }
 
   @Override
-  protected void displayReport() {
+  protected void displayReport(TransactionType transactionType) {
     System.out.println("Total Sales: " + totalSales);
     System.out.println("Number of transactions: " + transactions.size());
     transactions.forEach(transaction -> {

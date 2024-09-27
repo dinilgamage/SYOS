@@ -24,7 +24,7 @@ public class ReportFactory {
       case RESHELVE:
         return new ReshelveReport(inventoryDao);
       case REORDER:
-        return new ReorderReport(inventoryDao);
+        return new ReorderReport(inventoryDao, stockBatchDao);
       case BILL:
         return new BillReport(transactionDao);
       case STOCK:

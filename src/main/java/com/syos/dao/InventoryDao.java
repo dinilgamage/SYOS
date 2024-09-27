@@ -6,6 +6,7 @@ import java.util.List;
 public interface InventoryDao {
   Inventory getItemByCode(String itemCode); // Retrieves an inventory item by its unique item code
   Inventory getItemById(int itemId); // Retrieves an inventory item by its unique item id
+  List<Inventory> getAllItems(); // Retrieve all inventory items
   void updateInventory(Inventory inventory); // Updates the stock levels for an inventory item
   List<Inventory> getLowStockItems(); // Retrieves all items below the specified stock threshold
   List<Inventory> getItemsToReshelveForInStore(); // A list of Inventory objects for in-store items to be reshelved

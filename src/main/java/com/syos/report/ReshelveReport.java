@@ -42,21 +42,41 @@ public class ReshelveReport extends Report {
   }
 
   @Override
-  protected void displayReport() {
+  protected void displayReport(TransactionType transactionType) {
     System.out.println("Items that need to be reshelved:");
+
     for (Inventory item : itemsToReshelve) {
-      if (item.getStoreStock() < item.getShelfCapacity()) {
-        System.out.println("Item Code: " + item.getItemCode() +
-          ", Name: " + item.getName() +
-          ", Current Store Stock: " + item.getStoreStock() +
-          ", Shelf Capacity: " + item.getShelfCapacity());
-      }
-      if (item.getOnlineStock() < item.getShelfCapacity()) {
-        System.out.println("Item Code: " + item.getItemCode() +
-          ", Name: " + item.getName() +
-          ", Current Online Stock: " + item.getOnlineStock() +
-          ", Shelf Capacity: " + item.getShelfCapacity());
+      // Display only the relevant stock information based on the transaction type
+      if (transactionType == TransactionType.STORE) {
+        if (item.getStoreStock() < item.getShelfCapacity()) {
+          System.out.println("Item Code: " + item.getItemCode() +
+            ", Name: " + item.getName() +
+            ", Current Store Stock: " + item.getStoreStock() +
+            ", Shelf Capacity: " + item.getShelfCapacity());
+        }
+      } else if (transactionType == TransactionType.ONLINE) {
+        if (item.getOnlineStock() < item.getShelfCapacity()) {
+          System.out.println("Item Code: " + item.getItemCode() +
+            ", Name: " + item.getName() +
+            ", Current Online Stock: " + item.getOnlineStock() +
+            ", Shelf Capacity: " + item.getShelfCapacity());
+        }
+      } else if (transactionType == TransactionType.BOTH) {
+        // Display both store and online stock if BOTH is selected
+        if (item.getStoreStock() < item.getShelfCapacity()) {
+          System.out.println("Item Code: " + item.getItemCode() +
+            ", Name: " + item.getName() +
+            ", Current Store Stock: " + item.getStoreStock() +
+            ", Shelf Capacity: " + item.getShelfCapacity());
+        }
+        if (item.getOnlineStock() < item.getShelfCapacity()) {
+          System.out.println("Item Code: " + item.getItemCode() +
+            ", Name: " + item.getName() +
+            ", Current Online Stock: " + item.getOnlineStock() +
+            ", Shelf Capacity: " + item.getShelfCapacity());
+        }
       }
     }
   }
+
 }

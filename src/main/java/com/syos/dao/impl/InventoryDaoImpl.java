@@ -18,6 +18,7 @@ public class InventoryDaoImpl implements InventoryDao {
   private static final String SELECT_ITEMS_TO_RESHELVE_FOR_ONLINE = "SELECT * FROM Inventory WHERE online_stock < shelf_capacity";
   private static final String SELECT_ITEMS_TO_RESHELVE_FOR_BOTH = "SELECT * FROM Inventory WHERE store_stock < shelf_capacity OR online_stock < shelf_capacity";
   private static final String SELECT_ITEMS_BELOW_REORDER_LEVEL = "SELECT * FROM Inventory WHERE (store_stock + online_stock) < ?";
+  private static final String SELECT_ALL_ITEMS = "SELECT * FROM Inventory";
 
   @Override
   public Inventory getItemByCode(String itemCode) {
@@ -54,6 +55,27 @@ public class InventoryDaoImpl implements InventoryDao {
     }
     return inventory;
   }
+
+  // Method to get all inventory items
+  @Override
+  public List<Inventory> getAllItems() {
+    List<Inventory> items = new ArrayList<>();
+
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_ITEMS);
+         ResultSet rs = preparedStatement.executeQuery()) {
+
+      while (rs.next()) {
+        Inventory inventory = mapRowToInventory(rs);
+        items.add(inventory);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      // Error handling can be done here
+    }
+    return items;
+  }
+
 
   @Override
   public void updateInventory(Inventory inventory) {

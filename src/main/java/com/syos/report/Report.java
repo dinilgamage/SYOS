@@ -11,12 +11,12 @@ public abstract class Report {
     prepareHeader();
     collectData(date, type); // Use the transaction type for data collection
     formatReport();
-    displayReport();
+    displayReport(type);
   }
 
   // Steps that subclasses will need to implement
   protected abstract void prepareHeader();
   protected abstract void collectData(LocalDate date, TransactionType type); // Pass type to filter data
   protected abstract void formatReport();
-  protected abstract void displayReport();
+  protected abstract void displayReport(TransactionType transactionType);
 }
