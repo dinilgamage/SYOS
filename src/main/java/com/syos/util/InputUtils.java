@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InputUtils {
 
@@ -173,5 +175,58 @@ public class InputUtils {
     }
 
     return date;
+  }
+  // Method to validate email format
+  public static String getValidatedEmail(Scanner scanner, String promptMessage) {
+    String email = "";
+    boolean validInput = false;
+
+    while (!validInput) {
+      System.out.print(promptMessage);
+      email = scanner.next();
+
+      if (isValidEmail(email)) {
+        validInput = true;
+      } else {
+        System.out.println("Invalid email format. Please enter a valid email.");
+      }
+    }
+
+    return email;
+  }
+
+  // Helper method to check if the email is valid
+  private static boolean isValidEmail(String email) {
+    String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    Pattern pattern = Pattern.compile(emailRegex);
+    Matcher matcher = pattern.matcher(email);
+    return matcher.matches();
+  }
+
+  // Method to validate password strength (min 8 chars, at least one number and special character)
+  public static String getValidatedPassword(Scanner scanner, String promptMessage) {
+    String password = "";
+    boolean validInput = false;
+
+    while (!validInput) {
+      System.out.print(promptMessage);
+      password = scanner.next();
+
+      if (isValidPassword(password)) {
+        validInput = true;
+      } else {
+        System.out.println("Password must be at least 8 characters long and include at least one number and one special character.");
+      }
+    }
+
+    return password;
+  }
+
+  // Helper method to check if the password meets the required criteria
+  private static boolean isValidPassword(String password) {
+    String passwordRegex = "^(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$";
+    Pattern pattern = Pattern.compile(passwordRegex);
+    Matcher matcher = pattern.matcher(password);
+    return matcher.matches();
   }
 }

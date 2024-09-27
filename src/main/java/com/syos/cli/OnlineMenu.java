@@ -1,10 +1,12 @@
 package com.syos.cli;
 
+import com.syos.exception.UserAlreadyExistsException;
 import com.syos.facade.StoreFacade;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
 import com.syos.model.User;
 import com.syos.processor.BillingProcessor;
+import com.syos.util.InputUtils;
 
 import java.util.List;
 import java.util.Scanner;
@@ -49,21 +51,27 @@ public class OnlineMenu {
 
   private void registerUser(Scanner scanner) {
     System.out.println("=== Register ===");
+
+    // Validate name (similar to other validated inputs)
     System.out.print("Enter Name: ");
     String name = scanner.next();
-    System.out.print("Enter Email: ");
-    String email = scanner.next();
-    System.out.print("Enter Password: ");
-    String password = scanner.next();
+
+    // Validate email using InputUtils
+    String email = InputUtils.getValidatedEmail(scanner, "Enter Email: ");
+
+    // Validate password using InputUtils
+    String password = InputUtils.getValidatedPassword(scanner, "Enter Password: ");
 
     // Call StoreFacade to register user
     try {
       storeFacade.registerUser(name, email, password);
       System.out.println("Registration Successful!");
-    } catch (IllegalArgumentException e) {
+    } catch (UserAlreadyExistsException e) {
+      // Handle the custom exception and provide meaningful feedback
       System.out.println("Registration failed: " + e.getMessage());
     }
   }
+
 
   private void loginUser(Scanner scanner) {
     System.out.println("=== Login ===");
@@ -111,7 +119,7 @@ public class OnlineMenu {
 
     // Display items with their online stock
     for (Inventory item : items) {
-      System.out.println("Item Code: " + item.getItemCode() + ", Name: " + item.getName() + ", Online Stock: " + item.getOnlineStock());
+      System.out.println("Item Code: " + item.getItemCode() + ", Name: " + item.getName() + ", Stock: " + item.getOnlineStock());
     }
   }
 

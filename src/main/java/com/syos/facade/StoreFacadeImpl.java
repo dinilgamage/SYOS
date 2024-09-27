@@ -6,6 +6,7 @@ import com.syos.command.RestockCommand;
 import com.syos.dao.InventoryDao;
 import com.syos.enums.ReportType;
 import com.syos.enums.TransactionType;
+import com.syos.exception.UserAlreadyExistsException;
 import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
@@ -47,10 +48,10 @@ public class StoreFacadeImpl implements StoreFacade {
     User user = new User(name, email, password);  // Password should ideally be hashed here
 
     // Delegate the registration logic to the UserService
-    boolean isRegistered = userService.registerUser(user);
-
-    if (!isRegistered) {
-      throw new IllegalArgumentException("Email already registered.");
+    try {
+      userService.registerUser(user);
+    } catch (UserAlreadyExistsException e) {
+      throw e;
     }
   }
 
