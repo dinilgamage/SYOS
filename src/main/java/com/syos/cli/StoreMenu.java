@@ -39,7 +39,8 @@ public class StoreMenu {
 
       switch (choice) {
         case 1:
-          billProcessor.processBilling(scanner, "over-the-counter", 1);  // Delegating to BillProcessor
+          // Over the counter bills do not have a user so user id is set to null
+          billProcessor.processBilling(scanner, "over-the-counter", null);  // Delegating to BillProcessor,
           break;
         case 2:
           restockProcessor.restockShelf(scanner);  // Delegating to RestockProcessor
