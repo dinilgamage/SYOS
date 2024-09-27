@@ -11,6 +11,9 @@ import com.syos.dao.impl.TransactionDaoImpl;
 import com.syos.dao.impl.UserDaoImpl;
 import com.syos.facade.StoreFacadeImpl;
 import com.syos.processor.BillingProcessor;
+import com.syos.processor.DiscountProcessor;
+import com.syos.processor.ReportProcessor;
+import com.syos.processor.ShelfRestockProcessor;
 import com.syos.service.BillService;
 import com.syos.service.DiscountService;
 import com.syos.service.InventoryService;
@@ -30,10 +33,13 @@ public class Main {
   private static MainMenu initializeMainMenu() {
     StoreFacadeImpl storeFacade = initializeStoreFacade();
     BillingProcessor billingProcessor = new BillingProcessor(storeFacade);
+    DiscountProcessor discountProcessor = new DiscountProcessor(storeFacade);
+    ReportProcessor reportProcessor = new ReportProcessor(storeFacade);
+    ShelfRestockProcessor shelfRestockProcessor = new ShelfRestockProcessor(storeFacade);
 
     // Initialize the menus
     OnlineMenu onlineMenu = new OnlineMenu(storeFacade,billingProcessor);
-    StoreMenu storeMenu = new StoreMenu(storeFacade);
+    StoreMenu storeMenu = new StoreMenu(billingProcessor, shelfRestockProcessor, reportProcessor, discountProcessor);
 
     // Return the MainMenu object
     return new MainMenu(onlineMenu, storeMenu);
