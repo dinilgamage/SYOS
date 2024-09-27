@@ -4,6 +4,8 @@ import com.syos.facade.StoreFacade;
 import com.syos.model.Inventory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -151,5 +153,25 @@ public class InputUtils {
     }
 
     return input;
+  }
+
+  // Method to validate and get a LocalDate from the user
+  public static LocalDate getValidatedDate(Scanner scanner, String promptMessage) {
+    LocalDate date = null;
+    boolean validInput = false;
+
+    while (!validInput) {
+      try {
+        System.out.print(promptMessage);
+        String dateInput = scanner.next();
+        // Try to parse the date
+        date = LocalDate.parse(dateInput);
+        validInput = true; // If parsing is successful, exit the loop
+      } catch (DateTimeParseException e) {
+        System.out.println("Invalid date format. Please enter the date in the format yyyy-mm-dd.");
+      }
+    }
+
+    return date;
   }
 }

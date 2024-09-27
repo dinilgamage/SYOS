@@ -24,7 +24,7 @@ public class ReshelveReport extends Report {
 
   @Override
   protected void collectData(LocalDate date, TransactionType type) {
-    System.out.println("Collecting reshelve data for " + type + " on " + date);
+    System.out.println("Collecting reshelve data for " + type);
 
     // Fetch reshelve data based on the type (online, in-store, or both)
     if (type == TransactionType.BOTH) {

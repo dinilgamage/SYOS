@@ -29,11 +29,22 @@ public class ReportService {
    * @param date - Optional: The date for the report (used for date-sensitive reports like TotalSales).
    * @param transactionType - Optional: The type of transaction (used for reports filtered by transaction type).
    */
+// Existing method (date and transactionType both required)
   public void generateReport(ReportType reportType, LocalDate date, TransactionType transactionType) {
-    // Create the appropriate report using the factory
     Report report = ReportFactory.createReport(reportType, inventoryDao, transactionDao, stockBatchDao);
-
-    // Generate the report with optional date and transactionType if applicable
     report.generate(date, transactionType);
   }
+
+  // Overloaded method for reports that don't need date or transactionType
+  public void generateReport(ReportType reportType) {
+    Report report = ReportFactory.createReport(reportType, inventoryDao, transactionDao, stockBatchDao);
+    report.generate(null, null);  // No date and transactionType, so passing null is acceptable
+  }
+
+  // Overloaded method for reports that only need transactionType
+  public void generateReport(ReportType reportType, TransactionType transactionType) {
+    Report report = ReportFactory.createReport(reportType, inventoryDao, transactionDao, stockBatchDao);
+    report.generate(null, transactionType);  // No date, only transactionType, so passing null is acceptable
+  }
+
 }

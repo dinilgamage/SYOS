@@ -33,7 +33,7 @@ public class StoreMenu {
       System.out.println("[4] Add Discounts");
       System.out.println("[5] Exit");
 
-      choice = scanner.nextInt();
+      choice = InputUtils.getValidatedPositiveInt(scanner, "Choose an option: ");
 
       switch (choice) {
         case 1:
@@ -142,38 +142,63 @@ public class StoreMenu {
 
     int reportChoice = scanner.nextInt();
     ReportType reportType;
+    LocalDate date = null;
+    TransactionType transactionType = null;
+    String transactionMode = null;
 
+    // Select report type based on user input
     switch (reportChoice) {
       case 1:
         reportType = ReportType.TOTAL_SALES;
+
+        // Use the new utility method to get a validated date
+        date = InputUtils.getValidatedDate(scanner, "Enter Date (yyyy-mm-dd): ");
+
+        // Use the utility method to validate and get the transaction mode (store/online/both)
+        transactionMode = InputUtils.getValidatedStringOption(scanner,
+          "Enter Transaction Mode (online/store/both): ",
+          "online", "store", "both");
+        transactionType = TransactionType.valueOf(transactionMode.toUpperCase());
+
+        // Call the overloaded method with both date and transaction type
+        storeFacade.generateReport(reportType, date, transactionType);
         break;
       case 2:
         reportType = ReportType.RESHELVE;
+
+        // Use the utility method to validate and get the transaction mode (store/online/both)
+        transactionMode = InputUtils.getValidatedStringOption(scanner,
+          "Enter Transaction Mode (online/store/both): ",
+          "online", "store", "both");
+        transactionType = TransactionType.valueOf(transactionMode.toUpperCase());
+
+        // Call the overloaded method with only transaction type
+        storeFacade.generateReport(reportType, transactionType);
         break;
       case 3:
-        reportType = ReportType.REORDER;
-        break;
       case 4:
-        reportType = ReportType.STOCK;
+        reportType = (reportChoice == 3) ? ReportType.REORDER : ReportType.STOCK;
+
+        // Call the overloaded method with no date or transaction type
+        storeFacade.generateReport(reportType);
         break;
       case 5:
         reportType = ReportType.BILL;
+
+        // Use the utility method to validate and get the transaction mode (store/online/both)
+        transactionMode = InputUtils.getValidatedStringOption(scanner,
+          "Enter Transaction Mode (online/store/both): ",
+          "online", "store", "both");
+        transactionType = TransactionType.valueOf(transactionMode.toUpperCase());
+
+        // Call the overloaded method with only transaction type
+        storeFacade.generateReport(reportType, transactionType);
         break;
       default:
         System.out.println("Invalid report choice.");
-        return;
     }
-
-    System.out.print("Enter Date (yyyy-mm-dd): ");
-    String dateInput = scanner.next();
-    LocalDate date = LocalDate.parse(dateInput);
-
-    System.out.print("Transaction Mode (online/store/both): ");
-    String transactionMode = scanner.next();
-
-    // Process report via StoreFacade
-    storeFacade.generateReport(reportType, date, TransactionType.valueOf(transactionMode.toUpperCase()));
   }
+
 
   private void addDiscounts(Scanner scanner) {
     System.out.println("=== Add Discounts ===");

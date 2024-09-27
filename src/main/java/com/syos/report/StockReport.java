@@ -1,6 +1,7 @@
 package com.syos.report;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,16 +53,18 @@ public class StockReport extends Report {
 
   @Override
   protected void displayReport(TransactionType transactionType) {
-    // Display report using the data collected in collectData
-    for (Map.Entry<StockBatch, String> entry : stockBatchWithItemCodes.entrySet()) {
-      StockBatch batch = entry.getKey();
-      String itemCode = entry.getValue();
+    // Convert the map entries to a stream and sort them by the item code (or any other field)
+    stockBatchWithItemCodes.entrySet().stream()
+      .sorted(Comparator.comparing(entry -> entry.getKey().getBatchId()))
+      .forEach(entry -> {
+        StockBatch batch = entry.getKey();
+        String itemCode = entry.getValue();
 
-      System.out.println("Item Code: " + itemCode +
-        ", Batch ID: " + batch.getBatchId() +
-        ", Quantity: " + batch.getQuantity() +
-        ", Date Received: " + batch.getDateReceived() +
-        ", Expiry Date: " + batch.getExpiryDate());
-    }
+        System.out.println("Batch ID: " + batch.getBatchId() +
+          ", Item Code: " + itemCode +
+          ", Quantity: " + batch.getQuantity() +
+          ", Date Received: " + batch.getDateReceived() +
+          ", Expiry Date: " + batch.getExpiryDate());
+      });
   }
 }

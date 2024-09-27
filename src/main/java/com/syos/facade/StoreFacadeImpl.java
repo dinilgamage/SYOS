@@ -83,8 +83,20 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-    public void generateReport(ReportType reportType, LocalDate date, TransactionType transactionType) {
+  public void generateReport(ReportType reportType, LocalDate date, TransactionType transactionType) {
     reportService.generateReport(reportType, date, transactionType);
+  }
+
+  // Overloaded method for reports that don't need date and transactionType
+  @Override
+  public void generateReport(ReportType reportType) {
+    reportService.generateReport(reportType);
+  }
+
+  // Overloaded method for reports that only need transactionType
+  @Override
+  public void generateReport(ReportType reportType, TransactionType transactionType) {
+    reportService.generateReport(reportType, transactionType);
   }
 
   @Override
