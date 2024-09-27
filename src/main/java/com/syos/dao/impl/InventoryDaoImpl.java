@@ -12,6 +12,7 @@ import java.util.List;
 public class InventoryDaoImpl implements InventoryDao {
 
   private static final String SELECT_ITEM_BY_CODE = "SELECT * FROM Inventory WHERE item_code = ?";
+  private static final String SELECT_ITEM_BY_ID = "SELECT * FROM Inventory WHERE item_id = ?";
   private static final String UPDATE_INVENTORY_SQL = "UPDATE Inventory SET store_stock = ?, online_stock = ?, discount_strategy = ?, discount_value = ? WHERE item_code = ?";
   private static final String SELECT_LOW_STOCK_ITEMS = "SELECT * FROM Inventory WHERE store_stock < ? OR online_stock < ?";
   private static final String SELECT_ITEMS_TO_RESHELVE_FOR_IN_STORE = "SELECT * FROM Inventory WHERE store_stock < shelf_capacity";
@@ -42,7 +43,7 @@ public class InventoryDaoImpl implements InventoryDao {
   public Inventory getItemById(int itemId) {
     Inventory inventory = null;
     try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ITEM_BY_CODE)) {
+         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ITEM_BY_ID)) {
       preparedStatement.setInt(1, itemId);
       ResultSet rs = preparedStatement.executeQuery();
 

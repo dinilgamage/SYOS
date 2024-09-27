@@ -28,7 +28,7 @@ public class ReportFactory {
       case BILL:
         return new BillReport(transactionDao);
       case STOCK:
-        return new StockReport(stockBatchDao);
+        return new StockReport(stockBatchDao, inventoryDao);
       default:
         throw new IllegalArgumentException("Invalid report type: " + reportType);
     }
