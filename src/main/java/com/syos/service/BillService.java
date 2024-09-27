@@ -101,13 +101,13 @@ public class BillService {
   }
 
   // Helper method to calculate total bill amount
-  private BigDecimal calculateTotal(List<BillItem> items) {
+  public BigDecimal calculateTotal(List<BillItem> items) {
     return items.stream()
       .map(BillItem::getItemPrice)
       .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
   // Helper method to calculate total transaction amount, including quantity
-  private BigDecimal calculateTransactionTotal(List<BillItem> items) {
+  public BigDecimal calculateTransactionTotal(List<BillItem> items) {
     return items.stream()
       .map(item -> item.getItemPrice().multiply(BigDecimal.valueOf(item.getQuantity()))) // Price * Quantity
       .reduce(BigDecimal.ZERO, BigDecimal::add);
