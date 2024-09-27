@@ -1,26 +1,29 @@
 package com.syos.cli;
 
-import com.syos.exception.UserAlreadyExistsException;
-import com.syos.facade.StoreFacade;
-import com.syos.model.BillItem;
-import com.syos.model.Inventory;
-import com.syos.model.User;
+import com.syos.processor.UserRegistrationProcessor;
+import com.syos.processor.UserLoginProcessor;
+import com.syos.processor.UserMenuProcessor;
 import com.syos.processor.BillingProcessor;
 import com.syos.util.InputUtils;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class OnlineMenu {
 
-  private final StoreFacade storeFacade;
-  private final BillingProcessor billingProcessor;  // Reusing BillingProcessor
+  private final UserRegistrationProcessor userRegistrationProcessor;
+  private final UserLoginProcessor userLoginProcessor;
+  private final UserMenuProcessor userMenuProcessor;
 
-  public OnlineMenu(StoreFacade storeFacade, BillingProcessor billingProcessor) {
-    this.storeFacade = storeFacade;
-    this.billingProcessor = billingProcessor; // Initialize BillingProcessor
+  // Constructor that accepts the processors as dependencies
+  public OnlineMenu(UserRegistrationProcessor userRegistrationProcessor,
+                    UserLoginProcessor userLoginProcessor,
+                    UserMenuProcessor userMenuProcessor) {
+    this.userRegistrationProcessor = userRegistrationProcessor;
+    this.userLoginProcessor = userLoginProcessor;
+    this.userMenuProcessor = userMenuProcessor;
   }
 
+  // Orchestrating user interactions
   public void displayOnlineMenu() {
     Scanner scanner = new Scanner(System.in);
     int choice;
@@ -31,14 +34,20 @@ public class OnlineMenu {
       System.out.println("[2] Login");
       System.out.println("[3] Exit");
 
-      choice = scanner.nextInt();
+      choice = InputUtils.getValidatedPositiveInt(scanner, "Please choose an option: ");
 
       switch (choice) {
         case 1:
-          registerUser(scanner);
+          userRegistrationProcessor.registerUser(scanner); // Delegate to UserRegistrationProcessor
           break;
         case 2:
-          loginUser(scanner);
+          String email = userLoginProcessor.loginUser(scanner);  // Capture email from login
+          if (email != null) {  // If login is successful
+            System.out.println("Login Successful!");
+            userMenuProcessor.displayUserMenu(scanner, email); // Pass the captured email to UserMenuProcessor
+          } else {
+            System.out.println("Invalid credentials. Try again.");
+          }
           break;
         case 3:
           System.out.println("Returning to Main Menu...");
@@ -47,85 +56,5 @@ public class OnlineMenu {
           System.out.println("Invalid option. Please try again.");
       }
     } while (choice != 3);
-  }
-
-  private void registerUser(Scanner scanner) {
-    System.out.println("=== Register ===");
-
-    // Validate name (similar to other validated inputs)
-    System.out.print("Enter Name: ");
-    String name = scanner.next();
-
-    // Validate email using InputUtils
-    String email = InputUtils.getValidatedEmail(scanner, "Enter Email: ");
-
-    // Validate password using InputUtils
-    String password = InputUtils.getValidatedPassword(scanner, "Enter Password: ");
-
-    // Call StoreFacade to register user
-    try {
-      storeFacade.registerUser(name, email, password);
-      System.out.println("Registration Successful!");
-    } catch (UserAlreadyExistsException e) {
-      // Handle the custom exception and provide meaningful feedback
-      System.out.println("Registration failed: " + e.getMessage());
-    }
-  }
-
-
-  private void loginUser(Scanner scanner) {
-    System.out.println("=== Login ===");
-    System.out.print("Enter Email: ");
-    String email = scanner.next();
-    System.out.print("Enter Password: ");
-    String password = scanner.next();
-
-    // Validate login through facade
-    boolean isAuthenticated = storeFacade.loginUser(email, password);
-    if (isAuthenticated) {
-      System.out.println("Login Successful!");
-      userMenu(scanner, email);  // Pass user email for purchase
-    } else {
-      System.out.println("Invalid credentials. Try again.");
-    }
-  }
-
-  private void userMenu(Scanner scanner, String email) {
-    int choice;
-    do {
-      System.out.println("=== User Menu ===");
-      System.out.println("[1] Make Purchase");
-      System.out.println("[2] Logout");
-
-      choice = scanner.nextInt();
-
-      switch (choice) {
-        case 1:
-          displayInventoryWithOnlineStock();  // Display inventory before making a purchase
-          makePurchase(scanner, email);
-          break;
-        case 2:
-          System.out.println("Logging out...");
-          break;
-        default:
-          System.out.println("Invalid option. Please try again.");
-      }
-    } while (choice != 2);
-  }
-
-  private void displayInventoryWithOnlineStock() {
-    System.out.println("=== Available Items (Online Stock) ===");
-    List<Inventory> items = storeFacade.getAllItems(); // Retrieve all inventory items
-
-    // Display items with their online stock
-    for (Inventory item : items) {
-      System.out.println("Item Code: " + item.getItemCode() + ", Name: " + item.getName() + ", Stock: " + item.getOnlineStock());
-    }
-  }
-
-  private void makePurchase(Scanner scanner, String email) {
-    // Reusing the existing billingProcessor for online purchases
-    Integer userId = storeFacade.getUserId(email);
-    billingProcessor.processBilling(scanner, "online", userId);  // Pass 'online' as the transaction type
   }
 }

@@ -78,7 +78,7 @@ public class BillingProcessor {
 
     System.out.println("Added BillItem: Code = " + billItem.getItemCode() +
       ", Quantity = " + billItem.getQuantity() +
-      ", Discounted Price = " + discountedPrice);
+      ", Price = " + discountedPrice);
 
     return billItem;
   }
