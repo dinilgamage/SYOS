@@ -2,6 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.BillItemDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.exception.DaoException;
 import com.syos.model.BillItem;
 
 import java.math.BigDecimal;
@@ -26,9 +27,9 @@ public class BillItemDaoImpl implements BillItemDao {
       preparedStatement.setBigDecimal(5, billItem.getTotalPrice());
 
       preparedStatement.executeUpdate();
+
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Proper error handling can be implemented here
+      throw new DaoException("Error saving BillItem: " + billItem, e);  // Throw custom exception with details
     }
   }
 
@@ -47,8 +48,7 @@ public class BillItemDaoImpl implements BillItemDao {
         billItems.add(billItem);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Proper error handling can be implemented here
+      throw new DaoException("Error retrieving BillItems for Bill ID: " + billId, e);  // Throw custom exception with details
     }
     return billItems;
   }
@@ -70,4 +70,3 @@ public class BillItemDaoImpl implements BillItemDao {
     return billItem;
   }
 }
-

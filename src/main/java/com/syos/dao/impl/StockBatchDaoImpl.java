@@ -2,6 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.StockBatchDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.exception.DaoException;  // Import the custom exception
 import com.syos.model.StockBatch;
 
 import java.sql.*;
@@ -30,8 +31,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
         batches.add(batch);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions appropriately (logging or rethrowing)
+      throw new DaoException("Error retrieving batches for item ID: " + itemId, e);  // Pass the cause
     }
     return batches;
   }
@@ -45,10 +45,12 @@ public class StockBatchDaoImpl implements StockBatchDao {
       preparedStatement.setDate(2, Date.valueOf(batch.getExpiryDate()));
       preparedStatement.setInt(3, batch.getBatchId());
 
-      preparedStatement.executeUpdate();
+      int rowsUpdated = preparedStatement.executeUpdate();
+      if (rowsUpdated == 0) {
+        throw new DaoException("Update failed, no rows affected for batch ID: " + batch.getBatchId());
+      }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions appropriatel y (logging or rethrowing)
+      throw new DaoException("Error updating batch ID: " + batch.getBatchId(), e);  // Pass the cause
     }
   }
 
@@ -65,8 +67,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
         batch = mapRowToStockBatch(rs);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions appropriately (logging or rethrowing)
+      throw new DaoException("Error retrieving nearest expiry batch for item ID: " + itemId, e);  // Pass the cause
     }
     return batch;
   }
@@ -91,7 +92,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
         stockBatches.add(stockBatch);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new DaoException("Error retrieving all stock batches", e);  // Pass the cause
     }
     return stockBatches;
   }
@@ -107,4 +108,3 @@ public class StockBatchDaoImpl implements StockBatchDao {
     return new StockBatch(batchId, itemId, quantity, dateReceived, expiryDate);
   }
 }
-

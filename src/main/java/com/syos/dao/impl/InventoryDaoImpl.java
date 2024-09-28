@@ -2,6 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.InventoryDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.exception.DaoException;
 import com.syos.model.Inventory;
 
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ public class InventoryDaoImpl implements InventoryDao {
     Inventory inventory = null;
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ITEM_BY_CODE)) {
+
       preparedStatement.setString(1, itemCode);
       ResultSet rs = preparedStatement.executeQuery();
 
@@ -33,8 +35,7 @@ public class InventoryDaoImpl implements InventoryDao {
         inventory = mapRowToInventory(rs);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Error handling can be done here
+      throw new DaoException("Error retrieving item by code: " + itemCode, e);
     }
     return inventory;
   }
@@ -44,6 +45,7 @@ public class InventoryDaoImpl implements InventoryDao {
     Inventory inventory = null;
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ITEM_BY_ID)) {
+
       preparedStatement.setInt(1, itemId);
       ResultSet rs = preparedStatement.executeQuery();
 
@@ -51,13 +53,11 @@ public class InventoryDaoImpl implements InventoryDao {
         inventory = mapRowToInventory(rs);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Error handling can be done here
+      throw new DaoException("Error retrieving item by ID: " + itemId, e);
     }
     return inventory;
   }
 
-  // Method to get all inventory items
   @Override
   public List<Inventory> getAllItems() {
     List<Inventory> items = new ArrayList<>();
@@ -71,12 +71,10 @@ public class InventoryDaoImpl implements InventoryDao {
         items.add(inventory);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Error handling can be done here
+      throw new DaoException("Error retrieving all items", e);
     }
     return items;
   }
-
 
   @Override
   public void updateInventory(Inventory inventory) {
@@ -91,13 +89,11 @@ public class InventoryDaoImpl implements InventoryDao {
 
       int rowsUpdated = preparedStatement.executeUpdate();
       if (rowsUpdated == 0) {
-        throw new SQLException("Update failed, no rows affected for item code: " + inventory.getItemCode());
+        throw new DaoException("Update failed, no rows affected for item code: " + inventory.getItemCode());
       }
 
     } catch (SQLException e) {
-      // Log and rethrow or handle the exception as per your application's requirements
-      System.err.println("Error updating inventory: " + e.getMessage());
-      throw new RuntimeException(e);  // Optionally rethrow a custom exception or handle it differently
+      throw new DaoException("Error updating inventory for item code: " + inventory.getItemCode(), e);
     }
   }
 
@@ -108,6 +104,7 @@ public class InventoryDaoImpl implements InventoryDao {
 
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_LOW_STOCK_ITEMS)) {
+
       preparedStatement.setInt(1, LOW_STOCK_THRESHOLD);
       preparedStatement.setInt(2, LOW_STOCK_THRESHOLD);
 
@@ -117,8 +114,7 @@ public class InventoryDaoImpl implements InventoryDao {
         lowStockItems.add(inventory);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Error handling can be done here
+      throw new DaoException("Error retrieving low stock items", e);
     }
     return lowStockItems;
   }
@@ -131,14 +127,14 @@ public class InventoryDaoImpl implements InventoryDao {
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ITEMS_BELOW_REORDER_LEVEL)) {
 
       preparedStatement.setInt(1, threshold);
-
       ResultSet rs = preparedStatement.executeQuery();
+
       while (rs.next()) {
         Inventory item = mapRowToInventory(rs);
         items.add(item);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new DaoException("Error retrieving items below reorder level", e);
     }
     return items;
   }
@@ -171,7 +167,7 @@ public class InventoryDaoImpl implements InventoryDao {
         items.add(item);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new DaoException("Error retrieving items to reshelve", e);
     }
     return items;
   }

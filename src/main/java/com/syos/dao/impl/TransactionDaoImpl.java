@@ -2,6 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.TransactionDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.exception.DaoException;  // Import the custom exception
 import com.syos.model.OnlineTransaction;
 import com.syos.model.OverTheCounterTransaction;
 import com.syos.model.Transaction;
@@ -44,8 +45,7 @@ public class TransactionDaoImpl implements TransactionDao {
         }
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error saving transaction for type: " + transaction.getTransactionType(), e);
     }
   }
 
@@ -64,8 +64,7 @@ public class TransactionDaoImpl implements TransactionDao {
         transactions.add(transaction);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error retrieving transactions for date: " + date, e);
     }
     return transactions;
   }
@@ -86,12 +85,10 @@ public class TransactionDaoImpl implements TransactionDao {
         transactions.add(transaction);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error retrieving transactions for date: " + date + " and type: " + type, e);
     }
     return transactions;
   }
-
 
   @Override
   public List<Transaction> getAllTransactions() {
@@ -120,7 +117,7 @@ public class TransactionDaoImpl implements TransactionDao {
         transactions.add(transaction);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new DaoException("Error retrieving transactions", e);
     }
     return transactions;
   }
@@ -147,5 +144,4 @@ public class TransactionDaoImpl implements TransactionDao {
 
     return transaction;
   }
-
 }

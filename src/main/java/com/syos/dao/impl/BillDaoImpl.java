@@ -2,6 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.BillDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.exception.DaoException;
 import com.syos.model.Bill;
 
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ public class BillDaoImpl implements BillDao {
     Bill bill = null;
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BILL_BY_ID)) {
+
       preparedStatement.setInt(1, billId);
       ResultSet rs = preparedStatement.executeQuery();
 
@@ -28,8 +30,7 @@ public class BillDaoImpl implements BillDao {
         bill = mapRowToBill(rs);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Proper error handling can be done here
+      throw new DaoException("Error retrieving bill with ID: " + billId, e);
     }
     return bill;
   }
@@ -54,10 +55,12 @@ public class BillDaoImpl implements BillDao {
             bill.setBillId(generatedKeys.getInt(1));
           }
         }
+      } else {
+        throw new DaoException("Inserting the bill failed, no rows affected.");
       }
+
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Proper error handling can be done here
+      throw new DaoException("Error saving bill", e);
     }
   }
 
@@ -66,6 +69,7 @@ public class BillDaoImpl implements BillDao {
     List<Bill> bills = new ArrayList<>();
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BILLS_BY_DATE)) {
+
       preparedStatement.setDate(1, Date.valueOf(date));
       ResultSet rs = preparedStatement.executeQuery();
 
@@ -73,8 +77,7 @@ public class BillDaoImpl implements BillDao {
         bills.add(mapRowToBill(rs));
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Proper error handling can be done here
+      throw new DaoException("Error retrieving bills for date: " + date, e);
     }
     return bills;
   }

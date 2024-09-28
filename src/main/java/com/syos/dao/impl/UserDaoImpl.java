@@ -2,6 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.UserDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.exception.DaoException;  // Import the custom exception
 import com.syos.model.User;
 
 import java.sql.*;
@@ -21,10 +22,13 @@ public class UserDaoImpl implements UserDao {
       preparedStatement.setString(2, user.getEmail());
       preparedStatement.setString(3, user.getPassword()); // Assuming password is hashed before saving
 
-      preparedStatement.executeUpdate();
+      int rowsAffected = preparedStatement.executeUpdate();
+      if (rowsAffected == 0) {
+        throw new DaoException("User save failed, no rows affected for email: " + user.getEmail());
+      }
+
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error saving user with email: " + user.getEmail(), e);
     }
   }
 
@@ -40,10 +44,12 @@ public class UserDaoImpl implements UserDao {
 
       if (rs.next()) {
         user = mapRowToUser(rs);
+      } else {
+        throw new DaoException("User with email: " + email + " not found.");
       }
+
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error retrieving user with email: " + email, e);
     }
     return user;
   }
@@ -62,9 +68,9 @@ public class UserDaoImpl implements UserDao {
       if (rs.next()) {
         isValid = true; // Credentials match
       }
+
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error verifying user credentials for email: " + email, e);
     }
     return isValid;
   }
@@ -81,4 +87,3 @@ public class UserDaoImpl implements UserDao {
     return user;
   }
 }
-
