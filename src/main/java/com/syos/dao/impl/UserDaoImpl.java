@@ -44,8 +44,6 @@ public class UserDaoImpl implements UserDao {
 
       if (rs.next()) {
         user = mapRowToUser(rs);
-      } else {
-        throw new DaoException("User with email: " + email + " not found.");
       }
 
     } catch (SQLException e) {
