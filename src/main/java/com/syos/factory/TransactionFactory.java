@@ -1,5 +1,6 @@
 package com.syos.factory;
 
+import com.syos.enums.TransactionType;
 import com.syos.model.OnlineTransaction;
 import com.syos.model.OverTheCounterTransaction;
 import com.syos.model.Transaction;
@@ -16,14 +17,14 @@ public class TransactionFactory {
    * @param userId - The ID of the user (only for online transactions, null for over-the-counter).
    * @return - A new Transaction object.
    */
-  public static Transaction createTransaction(String type, BigDecimal totalAmount, Integer userId) {
-    switch (type.toLowerCase()) {
-      case "online":
+  public static Transaction createTransaction(TransactionType type, BigDecimal totalAmount, Integer userId) {
+    switch (type) {
+      case ONLINE:
         if (userId == null) {
           throw new IllegalArgumentException("User ID is required for online transactions");
         }
         return new OnlineTransaction(totalAmount, userId);
-      case "over-the-counter":
+      case STORE:
         return new OverTheCounterTransaction(totalAmount);
       default:
         throw new IllegalArgumentException("Invalid transaction type: " + type);

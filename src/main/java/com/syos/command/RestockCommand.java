@@ -1,5 +1,6 @@
 package com.syos.command;
 
+import com.syos.enums.ShelfType;
 import com.syos.exception.InsufficientStockException;
 import com.syos.service.InventoryService;
 
@@ -10,10 +11,10 @@ public class RestockCommand implements Command {
 
   private InventoryService inventoryService;
   private String itemCode;
-  private String shelfType;  // 'store' or 'online'
+  private ShelfType shelfType;  // 'store' or 'online'
 
   // Constructor
-  public RestockCommand(InventoryService inventoryService, String itemCode, String shelfType) {
+  public RestockCommand(InventoryService inventoryService, String itemCode, ShelfType shelfType) {
     this.inventoryService = inventoryService;
     this.itemCode = itemCode;
     this.shelfType = shelfType;

@@ -1,4 +1,6 @@
 package com.syos.enums;
 
-public class ShelfType {
+public enum ShelfType {
+  ONLINE_SHELF,
+  STORE_SHELF
 }

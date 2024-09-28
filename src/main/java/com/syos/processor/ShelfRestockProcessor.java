@@ -1,5 +1,6 @@
 package com.syos.processor;
 
+import com.syos.enums.ShelfType;
 import com.syos.facade.StoreFacade;
 import com.syos.model.Inventory;
 import com.syos.util.InputUtils;
@@ -21,9 +22,25 @@ public class ShelfRestockProcessor {
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
     // Use the utility method to validate shelf type (store or online)
-    String shelfType = InputUtils.getValidatedStringOption(scanner, "Enter Shelf Type (store/online): ", "store", "online");
+    String shelfTypeString = InputUtils.getValidatedStringOption(scanner, "Enter Shelf Type (store/online): ", "store",
+      "online");
+
+    // Convert the string shelfType to the ShelfType enum
+    ShelfType shelfType = convertToShelfType(shelfTypeString);
 
     // Restock the item using StoreFacade
     storeFacade.restockItem(inventoryItem.getItemCode(), shelfType);
+  }
+
+  // Helper method to convert string to enum
+  private ShelfType convertToShelfType(String shelfTypeString) {
+    switch (shelfTypeString.toLowerCase()) {
+      case "store":
+        return ShelfType.STORE_SHELF;
+      case "online":
+        return ShelfType.ONLINE_SHELF;
+      default:
+        throw new IllegalArgumentException("Invalid shelf type: " + shelfTypeString);
+    }
   }
 }

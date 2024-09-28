@@ -6,6 +6,8 @@ import com.syos.command.RestockCommand;
 import com.syos.dao.InventoryDao;
 import com.syos.enums.ReportType;
 import com.syos.enums.ReportFilterType;
+import com.syos.enums.ShelfType;
+import com.syos.enums.TransactionType;
 import com.syos.exception.UserAlreadyExistsException;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
@@ -77,14 +79,14 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public boolean checkAvailableStock(Inventory inventoryItem, int quantity, String transactionType) {
+  public boolean checkAvailableStock(Inventory inventoryItem, int quantity, TransactionType transactionType) {
     return inventoryService.checkAvailableStock(inventoryItem, quantity, transactionType);
   }
 
   @Override
-  public void generateBill(List<BillItem> billItems, String transactionType, BigDecimal cashTendered, Integer userId) {
+  public void generateBill(List<BillItem> billItems, TransactionType transactionType, BigDecimal cashTendered, Integer userId) {
     GenerateBillCommand generateBillCommand;
-    if ("over-the-counter".equals(transactionType)) {
+    if (TransactionType.STORE.equals(transactionType)) {
       // In-store transaction
       generateBillCommand = new GenerateBillCommand(billService, billItems, transactionType, cashTendered);
     } else {
@@ -95,7 +97,7 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public void restockItem(String itemCode, String shelfType) {
+  public void restockItem(String itemCode, ShelfType shelfType) {
     // Create a RestockCommand and execute it
     Command restockCommand = new RestockCommand(inventoryService, itemCode, shelfType);
     restockCommand.execute();
@@ -107,7 +109,7 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public void updateInventoryStock(String itemCode, int quantity, String shelfType) {
+  public void updateInventoryStock(String itemCode, int quantity, TransactionType shelfType) {
     inventoryService.updateInventoryStock(itemCode, quantity, shelfType);
   }
 

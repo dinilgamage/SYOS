@@ -1,5 +1,6 @@
 package com.syos.processor;
 
+import com.syos.enums.TransactionType;
 import com.syos.facade.StoreFacade;
 import com.syos.model.Inventory;
 import com.syos.util.InputUtils;
@@ -54,6 +55,6 @@ public class UserMenuProcessor {
   private void makePurchase(Scanner scanner, String email) {
     // Reuse the existing billingProcessor for online purchases
     Integer userId = storeFacade.getUserId(email);
-    billingProcessor.processBilling(scanner, "online", userId);  // Pass 'online' as the transaction type
+    billingProcessor.processBilling(scanner, TransactionType.ONLINE, userId);  // Pass 'online' as the transaction type
   }
 }

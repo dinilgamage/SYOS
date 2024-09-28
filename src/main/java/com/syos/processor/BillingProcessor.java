@@ -1,5 +1,6 @@
 package com.syos.processor;
 
+import com.syos.enums.TransactionType;
 import com.syos.facade.StoreFacade;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
@@ -25,9 +26,10 @@ public class BillingProcessor {
    * @param transactionType Type of transaction (e.g., "online" or "over-the-counter").
    * @param userId         ID of the user (online customers or in-store as 1 for SYOS Store).
    */
-  public void processBilling(Scanner scanner, String transactionType, Integer userId) {
+  public void processBilling(Scanner scanner, TransactionType transactionType, Integer userId) {
     List<BillItem> billItems = new ArrayList<>();
-    System.out.println("=== " + (transactionType.equals("online") ? "Online Billing" : "In-Store Billing") + " ===");
+    System.out.println("=== " + (transactionType.equals(TransactionType.ONLINE) ? "Online Billing" : "In-Store Billing") +
+      " ===");
     BigDecimal totalAmount = BigDecimal.ZERO;
     boolean billingFailed = false;
 
@@ -55,7 +57,7 @@ public class BillingProcessor {
   }
 
   // Adjust this method to check stock based on transaction type (store/online)
-  private BillItem getValidatedBillItem(Scanner scanner, String transactionType) {
+  private BillItem getValidatedBillItem(Scanner scanner, TransactionType transactionType) {
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
     int quantity = InputUtils.getValidatedPositiveInt(scanner, "Enter Quantity: ");
 
@@ -92,11 +94,12 @@ public class BillingProcessor {
    * @param transactionType Type of transaction (e.g., "online" or "over-the-counter").
    * @param userId          ID of the user (online customers or in-store as 1 for SYOS Store).
    */
-  private void processPayment(Scanner scanner, List<BillItem> billItems, BigDecimal totalAmount, String transactionType, Integer userId) {
+  private void processPayment(Scanner scanner, List<BillItem> billItems, BigDecimal totalAmount, TransactionType transactionType,
+    Integer userId) {
     System.out.println("Total amount to be paid (including discounts): " + totalAmount);
 
     BigDecimal cashTendered;
-    if (transactionType.equals("online")) {
+    if (transactionType.equals(TransactionType.ONLINE)) {
       // For online transactions, there may not be immediate cash handling
       System.out.println("This is an online order. Processing payment...");
       cashTendered = totalAmount;  // Assume full amount for now

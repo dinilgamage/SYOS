@@ -2,7 +2,9 @@ package com.syos.service;
 
 import com.syos.dao.InventoryDao;
 import com.syos.dao.StockBatchDao;
+import com.syos.enums.ShelfType;
 import com.syos.enums.StockThreshold;
+import com.syos.enums.TransactionType;
 import com.syos.exception.InsufficientStockException;
 import com.syos.model.Inventory;
 import com.syos.model.StockBatch;
@@ -96,11 +98,11 @@ public class InventoryService implements StockSubject {
    * @param transactionType The type of transaction (store or online).
    * @return true if sufficient stock is available, false otherwise.
    */
-  public boolean checkAvailableStock(Inventory inventoryItem, int quantity, String transactionType) {
-    if ("over-the-counter".equals(transactionType)) {
+  public boolean checkAvailableStock(Inventory inventoryItem, int quantity, TransactionType transactionType) {
+    if (TransactionType.STORE.equals(transactionType)) {
       // Check if store stock is available
       return inventoryItem.getStoreStock() >= quantity;
-    } else if ("online".equals(transactionType)) {
+    } else if (TransactionType.ONLINE.equals(transactionType)) {
       // Check if online stock is available
       return inventoryItem.getOnlineStock() >= quantity;
     } else {
@@ -115,15 +117,15 @@ public class InventoryService implements StockSubject {
    * @param itemCode - The unique code for the inventory item.
    * @param quantity - The quantity to deduct from the stock.
    */
-  public void updateInventoryStock(String itemCode, int quantity, String shelfType) {
+  public void updateInventoryStock(String itemCode, int quantity, TransactionType shelfType) {
     Inventory item = inventoryDao.getItemByCode(itemCode);
 
     if (item != null) {
       // Update stock based on shelf type
-      if ("over-the-counter".equalsIgnoreCase(shelfType)) {
+      if (TransactionType.STORE.equals(shelfType)) {
         int updatedStoreStock = item.getStoreStock() - quantity;
         item.setStoreStock(updatedStoreStock);
-      } else if ("online".equalsIgnoreCase(shelfType)) {
+      } else if (TransactionType.ONLINE.equals(shelfType)) {
         int updatedOnlineStock = item.getOnlineStock() - quantity;
         item.setOnlineStock(updatedOnlineStock);
       } else {
@@ -139,7 +141,7 @@ public class InventoryService implements StockSubject {
   }
 
   // Restock an item based on the shelf type (store or online), replenishing until shelf capacity is reached
-  public void restockItem(String itemCode, String shelfType) {
+  public void restockItem(String itemCode, ShelfType shelfType) {
     Inventory item = inventoryDao.getItemByCode(itemCode);
 
     if (item != null) {
@@ -191,8 +193,8 @@ public class InventoryService implements StockSubject {
   }
 
   // Adjusts the store or online stock based on shelf type
-  private void adjustShelfStock(Inventory item, String shelfType, int quantity) {
-    if ("store".equalsIgnoreCase(shelfType)) {
+  private void adjustShelfStock(Inventory item, ShelfType shelfType, int quantity) {
+    if (ShelfType.STORE_SHELF.equals(shelfType)) {
       int currentStoreStock = item.getStoreStock();
       int maxStoreRestock = item.getShelfCapacity() - currentStoreStock;
 
@@ -202,7 +204,7 @@ public class InventoryService implements StockSubject {
       }
 
       item.setStoreStock(currentStoreStock + quantity);
-    } else if ("online".equalsIgnoreCase(shelfType)) {
+    } else if (ShelfType.ONLINE_SHELF.equals(shelfType)) {
       int currentOnlineStock = item.getOnlineStock();
       int maxOnlineRestock = item.getShelfCapacity() - currentOnlineStock;
 
@@ -218,10 +220,10 @@ public class InventoryService implements StockSubject {
   }
 
   // Determines the maximum restock quantity based on shelf capacity
-  private int getMaxRestockQuantity(Inventory item, String shelfType) {
-    if ("store".equalsIgnoreCase(shelfType)) {
+  private int getMaxRestockQuantity(Inventory item, ShelfType shelfType) {
+    if (ShelfType.STORE_SHELF.equals(shelfType)) {
       return item.getShelfCapacity() - item.getStoreStock();
-    } else if ("online".equalsIgnoreCase(shelfType)) {
+    } else if (ShelfType.ONLINE_SHELF.equals(shelfType)) {
       return item.getShelfCapacity() - item.getOnlineStock();
     } else {
       throw new IllegalArgumentException("Invalid shelf type: " + shelfType);

@@ -4,6 +4,7 @@ import com.syos.builder.BillBuilder;
 import com.syos.dao.BillDao;
 import com.syos.dao.BillItemDao;
 import com.syos.dao.InventoryDao;
+import com.syos.enums.TransactionType;
 import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
@@ -35,17 +36,17 @@ public class BillService {
   }
 
   // For online transactions (with userId), without cashTendered or changeAmount
-  public Bill buildBill(List<BillItem> items, String transactionType, Integer userId) {
+  public Bill buildBill(List<BillItem> items, TransactionType transactionType, Integer userId) {
     return buildBill(items, transactionType, null, userId);
   }
 
   // Overloaded method to handle in-store transactions
-  public Bill buildBill(List<BillItem> items, String transactionType, BigDecimal cashTendered) {
+  public Bill buildBill(List<BillItem> items, TransactionType transactionType, BigDecimal cashTendered) {
     return buildBill(items, transactionType, cashTendered, null);  // No userId for in-store transactions
   }
 
   // Core method that handles both online and in-store transactions
-  public Bill buildBill(List<BillItem> items, String transactionType, BigDecimal cashTendered, Integer userId) {
+  public Bill buildBill(List<BillItem> items, TransactionType transactionType, BigDecimal cashTendered, Integer userId) {
     BillBuilder billBuilder = new BillBuilder();
 
     // Create a new transaction (pass userId for online, null for in-store)
@@ -70,7 +71,7 @@ public class BillService {
     }
 
     // Handle cash tendered and change for in-store transactions
-    if ("over-the-counter".equals(transactionType) && cashTendered != null) {
+    if (TransactionType.STORE.equals(transactionType) && cashTendered != null) {
       BigDecimal totalAmount = calculateTransactionTotal(items); // Ensure total includes discounted prices
       BigDecimal changeAmount = cashTendered.subtract(totalAmount);
 

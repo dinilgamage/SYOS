@@ -1,5 +1,6 @@
 package com.syos.cli;
 
+import com.syos.enums.TransactionType;
 import com.syos.processor.BillingProcessor;
 import com.syos.processor.ReportProcessor;
 import com.syos.processor.DiscountProcessor;
@@ -40,7 +41,9 @@ public class StoreMenu {
       switch (choice) {
         case 1:
           // Over the counter bills do not have a user so user id is set to null
-          billProcessor.processBilling(scanner, "over-the-counter", null);  // Delegating to BillProcessor,
+          // TODO: define an enum for over-the-counter and online
+          billProcessor.processBilling(scanner,
+            TransactionType.STORE, null);  // Delegating to BillProcessor,
           break;
         case 2:
           restockProcessor.restockShelf(scanner);  // Delegating to RestockProcessor
