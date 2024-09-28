@@ -1,9 +1,8 @@
 package com.syos.processor;
 
 import com.syos.enums.ReportType;
-import com.syos.enums.TransactionType;
+import com.syos.enums.ReportFilterType;
 import com.syos.facade.StoreFacade;
-import com.syos.service.ReportService;
 import com.syos.util.InputUtils;
 
 import java.time.LocalDate;
@@ -28,19 +27,19 @@ public class ReportProcessor {
     int reportChoice = InputUtils.getValidatedPositiveInt(scanner, "Please enter a valid report option: ");
     ReportType reportType = null;
     LocalDate date = null;
-    TransactionType transactionType = null;
+    ReportFilterType reportFilterType = null;
 
     switch (reportChoice) {
       case 1:
         reportType = ReportType.TOTAL_SALES;
         date = InputUtils.getValidatedDate(scanner, "Enter Date (yyyy-mm-dd): ");
         String transactionMode = InputUtils.getValidatedStringOption(scanner, "Transaction Mode (online/store/both): ", "online", "store", "both");
-        transactionType = TransactionType.valueOf(transactionMode.toUpperCase());
+        reportFilterType = ReportFilterType.valueOf(transactionMode.toUpperCase());
         break;
       case 2:
         reportType = ReportType.RESHELVE;
         transactionMode = InputUtils.getValidatedStringOption(scanner, "Transaction Mode (online/store/both): ", "online", "store", "both");
-        transactionType = TransactionType.valueOf(transactionMode.toUpperCase());
+        reportFilterType = ReportFilterType.valueOf(transactionMode.toUpperCase());
         break;
       case 3:
         reportType = ReportType.REORDER;
@@ -51,7 +50,7 @@ public class ReportProcessor {
       case 5:
         reportType = ReportType.BILL;
         transactionMode = InputUtils.getValidatedStringOption(scanner, "Transaction Mode (online/store/both): ", "online", "store", "both");
-        transactionType = TransactionType.valueOf(transactionMode.toUpperCase());
+        reportFilterType = ReportFilterType.valueOf(transactionMode.toUpperCase());
         break;
       default:
         System.out.println("Invalid report choice.");
@@ -59,6 +58,7 @@ public class ReportProcessor {
     }
 
     // Delegate report generation through the StoreFacade
-    storeFacade.generateReport(reportType, date, transactionType);
+    storeFacade.generateReport(reportType, date,
+      reportFilterType);
   }
 }

@@ -1,7 +1,7 @@
 package com.syos.facade;
 
 import com.syos.enums.ReportType;
-import com.syos.enums.TransactionType;
+import com.syos.enums.ReportFilterType;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
 
@@ -26,8 +26,8 @@ public interface StoreFacade {
   void updateInventoryStock(String itemCode, int quantity, String shelfType);
 
   void generateReport(ReportType reportType);
-  void generateReport(ReportType reportType,TransactionType transactionType);
-  void generateReport(ReportType reportType, LocalDate date, TransactionType transactionType);
+  void generateReport(ReportType reportType, ReportFilterType reportFilterType);
+  void generateReport(ReportType reportType, LocalDate date, ReportFilterType reportFilterType);
 
   void addDiscount(String itemCode, BigDecimal discountValue, String strategyType);
   BigDecimal applyDiscount(Inventory inventory, BillItem billItem);

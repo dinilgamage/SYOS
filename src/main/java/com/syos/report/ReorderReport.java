@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.syos.dao.InventoryDao;
 import com.syos.dao.StockBatchDao;
-import com.syos.enums.TransactionType;
+import com.syos.enums.ReportFilterType;
 import com.syos.model.Inventory;
 import com.syos.model.StockBatch;
 
@@ -32,7 +32,7 @@ public class ReorderReport extends Report {
   }
 
   @Override
-  protected void collectData(LocalDate date, TransactionType type) {
+  protected void collectData(LocalDate date, ReportFilterType type) {
     System.out.println("Collecting inventory data for reorder report...");
 
     // Fetch all inventory items, regardless of their stock level
@@ -60,7 +60,7 @@ public class ReorderReport extends Report {
   }
 
   @Override
-  protected void displayReport(TransactionType transactionType) {
+  protected void displayReport(ReportFilterType reportFilterType) {
     System.out.println("Items that need to be reordered (total stock across batches below " + REORDER_THRESHOLD + "):");
     for (Map.Entry<Inventory, Integer> entry : itemsToReorder.entrySet()) {
       Inventory item = entry.getKey();

@@ -1,7 +1,7 @@
 package com.syos.service;
 
 import com.syos.enums.ReportType;
-import com.syos.enums.TransactionType;
+import com.syos.enums.ReportFilterType;
 import com.syos.report.Report;
 import com.syos.factory.ReportFactory;
 import com.syos.dao.InventoryDao;
@@ -27,12 +27,13 @@ public class ReportService {
    * Generates a report based on the report type.
    * @param reportType - The type of report to generate.
    * @param date - Optional: The date for the report (used for date-sensitive reports like TotalSales).
-   * @param transactionType - Optional: The type of transaction (used for reports filtered by transaction type).
+   * @param reportFilterType - Optional: The type of transaction (used for reports filtered by transaction type).
    */
 // Existing method (date and transactionType both required)
-  public void generateReport(ReportType reportType, LocalDate date, TransactionType transactionType) {
+  public void generateReport(ReportType reportType, LocalDate date, ReportFilterType reportFilterType) {
     Report report = ReportFactory.createReport(reportType, inventoryDao, transactionDao, stockBatchDao);
-    report.generate(date, transactionType);
+    report.generate(date,
+      reportFilterType);
   }
 
   // Overloaded method for reports that don't need date or transactionType
@@ -42,9 +43,10 @@ public class ReportService {
   }
 
   // Overloaded method for reports that only need transactionType
-  public void generateReport(ReportType reportType, TransactionType transactionType) {
+  public void generateReport(ReportType reportType, ReportFilterType reportFilterType) {
     Report report = ReportFactory.createReport(reportType, inventoryDao, transactionDao, stockBatchDao);
-    report.generate(null, transactionType);  // No date, only transactionType, so passing null is acceptable
+    report.generate(null,
+      reportFilterType);  // No date, only transactionType, so passing null is acceptable
   }
 
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.syos.dao.StockBatchDao;
 import com.syos.dao.InventoryDao;
-import com.syos.enums.TransactionType;
+import com.syos.enums.ReportFilterType;
 import com.syos.model.StockBatch;
 import com.syos.model.Inventory;
 
@@ -32,7 +32,7 @@ public class StockReport extends Report {
   }
 
   @Override
-  protected void collectData(LocalDate date, TransactionType type) {
+  protected void collectData(LocalDate date, ReportFilterType type) {
     System.out.println("Collecting stock data batch-wise...");
 
     // Fetch all stock batches from the StockBatchDao
@@ -52,7 +52,7 @@ public class StockReport extends Report {
   }
 
   @Override
-  protected void displayReport(TransactionType transactionType) {
+  protected void displayReport(ReportFilterType reportFilterType) {
     // Convert the map entries to a stream and sort them by the item code (or any other field)
     stockBatchWithItemCodes.entrySet().stream()
       .sorted(Comparator.comparing(entry -> entry.getKey().getBatchId()))

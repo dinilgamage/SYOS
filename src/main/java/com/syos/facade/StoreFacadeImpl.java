@@ -5,9 +5,8 @@ import com.syos.command.GenerateBillCommand;
 import com.syos.command.RestockCommand;
 import com.syos.dao.InventoryDao;
 import com.syos.enums.ReportType;
-import com.syos.enums.TransactionType;
+import com.syos.enums.ReportFilterType;
 import com.syos.exception.UserAlreadyExistsException;
-import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
 import com.syos.model.User;
@@ -16,7 +15,6 @@ import com.syos.service.ReportService;
 import com.syos.service.BillService;
 import com.syos.service.InventoryService;
 import com.syos.service.UserService;
-import com.syos.strategy.DiscountStrategy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -114,8 +112,9 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public void generateReport(ReportType reportType, LocalDate date, TransactionType transactionType) {
-    reportService.generateReport(reportType, date, transactionType);
+  public void generateReport(ReportType reportType, LocalDate date, ReportFilterType reportFilterType) {
+    reportService.generateReport(reportType, date,
+      reportFilterType);
   }
 
   // Overloaded method for reports that don't need date and transactionType
@@ -126,8 +125,9 @@ public class StoreFacadeImpl implements StoreFacade {
 
   // Overloaded method for reports that only need transactionType
   @Override
-  public void generateReport(ReportType reportType, TransactionType transactionType) {
-    reportService.generateReport(reportType, transactionType);
+  public void generateReport(ReportType reportType, ReportFilterType reportFilterType) {
+    reportService.generateReport(reportType,
+      reportFilterType);
   }
 
   @Override

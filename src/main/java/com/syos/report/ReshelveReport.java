@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.syos.dao.InventoryDao;
-import com.syos.enums.TransactionType;
+import com.syos.enums.ReportFilterType;
 import com.syos.model.Inventory;
 
 public class ReshelveReport extends Report {
@@ -23,13 +23,13 @@ public class ReshelveReport extends Report {
   }
 
   @Override
-  protected void collectData(LocalDate date, TransactionType type) {
+  protected void collectData(LocalDate date, ReportFilterType type) {
     System.out.println("Collecting reshelve data for " + type);
 
     // Fetch reshelve data based on the type (online, in-store, or both)
-    if (type == TransactionType.BOTH) {
+    if (type == ReportFilterType.BOTH) {
       itemsToReshelve = inventoryDao.getItemsToReshelveForBoth();
-    } else if (type == TransactionType.ONLINE) {
+    } else if (type == ReportFilterType.ONLINE) {
       itemsToReshelve = inventoryDao.getItemsToReshelveForOnline();
     } else {
       itemsToReshelve = inventoryDao.getItemsToReshelveForInStore();
@@ -42,26 +42,26 @@ public class ReshelveReport extends Report {
   }
 
   @Override
-  protected void displayReport(TransactionType transactionType) {
+  protected void displayReport(ReportFilterType reportFilterType) {
     System.out.println("Items that need to be reshelved:");
 
     for (Inventory item : itemsToReshelve) {
       // Display only the relevant stock information based on the transaction type
-      if (transactionType == TransactionType.STORE) {
+      if (reportFilterType == ReportFilterType.STORE) {
         if (item.getStoreStock() < item.getShelfCapacity()) {
           System.out.println("Item Code: " + item.getItemCode() +
             ", Name: " + item.getName() +
             ", Current Store Stock: " + item.getStoreStock() +
             ", Shelf Capacity: " + item.getShelfCapacity());
         }
-      } else if (transactionType == TransactionType.ONLINE) {
+      } else if (reportFilterType == ReportFilterType.ONLINE) {
         if (item.getOnlineStock() < item.getShelfCapacity()) {
           System.out.println("Item Code: " + item.getItemCode() +
             ", Name: " + item.getName() +
             ", Current Online Stock: " + item.getOnlineStock() +
             ", Shelf Capacity: " + item.getShelfCapacity());
         }
-      } else if (transactionType == TransactionType.BOTH) {
+      } else if (reportFilterType == ReportFilterType.BOTH) {
         // Display both store and online stock if BOTH is selected
         if (item.getStoreStock() < item.getShelfCapacity()) {
           System.out.println("Item Code: " + item.getItemCode() +
