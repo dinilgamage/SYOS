@@ -43,6 +43,8 @@ public class TransactionDaoImpl implements TransactionDao {
             transaction.setTransactionId(generatedKeys.getInt(1));
           }
         }
+      } else {
+        throw new DaoException("Error saving transaction for type: " + transaction.getTransactionType());
       }
     } catch (SQLException e) {
       throw new DaoException("Error saving transaction for type: " + transaction.getTransactionType(), e);
