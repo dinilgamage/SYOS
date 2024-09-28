@@ -2,6 +2,7 @@ package com.syos.service;
 
 import com.syos.dao.InventoryDao;
 import com.syos.dao.StockBatchDao;
+import com.syos.enums.StockThreshold;
 import com.syos.exception.InsufficientStockException;
 import com.syos.model.Inventory;
 import com.syos.model.StockBatch;
@@ -132,14 +133,6 @@ public class InventoryService implements StockSubject {
       // Update the inventory in the database
       inventoryDao.updateInventory(item);
 
-      // Calculate the total stock across all batches for the item
-      int totalStockAcrossBatches = calculateTotalStockFromBatches(item.getItemId());
-
-      // If the total stock falls below a certain threshold, notify observers
-      if (totalStockAcrossBatches < 50) {  // 50 is an example threshold
-        notifyObservers(item);
-      }
-
     } else {
       throw new IllegalArgumentException("Item not found: " + itemCode);
     }
@@ -165,6 +158,15 @@ public class InventoryService implements StockSubject {
 
       // Save the updated inventory
       inventoryDao.updateInventory(item);
+
+      // Calculate the total stock across all batches for the item
+      int totalStockAcrossBatches = calculateTotalStockFromBatches(item.getItemId());
+
+      // If the total stock falls below a certain threshold, notify observers
+      if (totalStockAcrossBatches < StockThreshold.REORDER_LEVEL.getValue()) {
+        notifyObservers(item);
+      }
+
     } else {
       throw new IllegalArgumentException("Item not found: " + itemCode);
     }

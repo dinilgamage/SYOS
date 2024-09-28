@@ -25,6 +25,5 @@ public class ShelfRestockProcessor {
 
     // Restock the item using StoreFacade
     storeFacade.restockItem(inventoryItem.getItemCode(), shelfType);
-    System.out.println("Item " + inventoryItem.getItemCode() + " restocked to " + shelfType + ".");
   }
 }
