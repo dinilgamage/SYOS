@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.syos.dao.TransactionDao;
 import com.syos.enums.ReportFilterType;
+import com.syos.enums.TransactionType;
 import com.syos.model.Transaction;
 
 public class BillReport extends Report {
@@ -30,9 +31,9 @@ public class BillReport extends Report {
     if (type == ReportFilterType.BOTH) {
       transactions = transactionDao.getAllTransactions();
     } else if (type == ReportFilterType.ONLINE) {
-      transactions = transactionDao.getAllTransactionsByType("online");
+      transactions = transactionDao.getAllTransactionsByType(TransactionType.ONLINE);
     } else {
-      transactions = transactionDao.getAllTransactionsByType("over-the-counter");
+      transactions = transactionDao.getAllTransactionsByType(TransactionType.STORE);
     }
   }
 

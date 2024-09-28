@@ -1,12 +1,14 @@
 package com.syos.model;
 
+import com.syos.enums.TransactionType;
+
 import java.math.BigDecimal;
 
 public class OnlineTransaction extends Transaction {
   private int userId;
 
   public OnlineTransaction(BigDecimal totalAmount, int userId) {
-    super("online", totalAmount);
+    super(TransactionType.ONLINE, totalAmount);
     this.userId = userId;
   }
 

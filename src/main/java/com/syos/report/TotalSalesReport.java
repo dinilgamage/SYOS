@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.syos.dao.TransactionDao;
 import com.syos.enums.ReportFilterType;
+import com.syos.enums.TransactionType;
 import com.syos.model.Transaction;
 
 public class TotalSalesReport extends Report {
@@ -32,9 +33,10 @@ public class TotalSalesReport extends Report {
     if (type == ReportFilterType.BOTH) {
       transactions = transactionDao.getTransactionsByDate(date); // Combined data for both online and in-store
     } else if (type == ReportFilterType.ONLINE) {
-      transactions = transactionDao.getTransactionsByDateAndType(date, "online"); // Only online transactions
+      transactions = transactionDao.getTransactionsByDateAndType(date,
+        TransactionType.ONLINE); // Only online transactions
     } else {
-      transactions = transactionDao.getTransactionsByDateAndType(date, "over-the-counter"); // Only in-store transactions
+      transactions = transactionDao.getTransactionsByDateAndType(date, TransactionType.STORE); // Only in-store transactions
     }
 
     // Calculate the total sales amount

@@ -1,16 +1,18 @@
 package com.syos.model;
 
+import com.syos.enums.TransactionType;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public abstract class Transaction {
   private int transactionId;
-  private String transactionType;
+  private TransactionType transactionType;
   private BigDecimal totalAmount;
   private LocalDateTime createdAt;
 
   // Constructor for all types of transactions
-  public Transaction(String transactionType, BigDecimal totalAmount) {
+  public Transaction(TransactionType transactionType, BigDecimal totalAmount) {
     this.transactionType = transactionType;
     this.totalAmount = totalAmount;
     this.createdAt = LocalDateTime.now();
@@ -29,11 +31,11 @@ public abstract class Transaction {
     this.transactionId = transactionId;
   }
 
-  public String getTransactionType() {
+  public TransactionType getTransactionType() {
     return transactionType;
   }
 
-  public void setTransactionType(String transactionType) {
+  public void setTransactionType(TransactionType transactionType) {
     this.transactionType = transactionType;
   }
 

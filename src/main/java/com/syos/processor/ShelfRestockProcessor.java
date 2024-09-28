@@ -26,21 +26,10 @@ public class ShelfRestockProcessor {
       "online");
 
     // Convert the string shelfType to the ShelfType enum
-    ShelfType shelfType = convertToShelfType(shelfTypeString);
+    ShelfType shelfType = ShelfType.fromString(shelfTypeString);
 
     // Restock the item using StoreFacade
     storeFacade.restockItem(inventoryItem.getItemCode(), shelfType);
   }
 
-  // Helper method to convert string to enum
-  private ShelfType convertToShelfType(String shelfTypeString) {
-    switch (shelfTypeString.toLowerCase()) {
-      case "store":
-        return ShelfType.STORE_SHELF;
-      case "online":
-        return ShelfType.ONLINE_SHELF;
-      default:
-        throw new IllegalArgumentException("Invalid shelf type: " + shelfTypeString);
-    }
-  }
 }
