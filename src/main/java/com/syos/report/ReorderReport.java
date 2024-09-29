@@ -70,4 +70,9 @@ public class ReorderReport extends Report {
         ", Total Stock across batches: " + totalStock);
     }
   }
+
+  // Getter for itemsToReorder for testing purposes
+  public Map<Inventory, Integer> getItemsToReorder() {
+    return itemsToReorder;
+  }
 }
