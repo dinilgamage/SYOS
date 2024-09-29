@@ -47,6 +47,14 @@ public class BillService {
 
   // Core method that handles both online and in-store transactions
   public Bill buildBill(List<BillItem> items, TransactionType transactionType, BigDecimal cashTendered, Integer userId) {
+    if (transactionType == null) {
+      throw new NullPointerException("TransactionType cannot be null");
+    }
+
+    if (items == null || items.isEmpty()) {
+      throw new IllegalArgumentException("Bill must contain at least one item");
+    }
+
     BillBuilder billBuilder = new BillBuilder();
 
     // Create a new transaction (pass userId for online, null for in-store)

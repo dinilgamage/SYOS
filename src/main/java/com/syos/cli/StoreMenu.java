@@ -41,7 +41,6 @@ public class StoreMenu {
       switch (choice) {
         case 1:
           // Over the counter bills do not have a user so user id is set to null
-          // TODO: define an enum for over-the-counter and online
           billProcessor.processBilling(scanner,
             TransactionType.STORE, null);  // Delegating to BillProcessor,
           break;
