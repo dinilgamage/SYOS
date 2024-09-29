@@ -67,4 +67,9 @@ public class StockReport extends Report {
           ", Expiry Date: " + batch.getExpiryDate());
       });
   }
+
+  // Getter for itemsToReorder for testing purposes
+  public Map<StockBatch, String> getStockBatchWithItemCodes() {
+    return stockBatchWithItemCodes;
+  }
 }
