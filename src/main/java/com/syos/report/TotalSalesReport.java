@@ -61,5 +61,14 @@ public class TotalSalesReport extends Report {
         ", Date: " + transaction.getCreatedAt());
     });
   }
+
+  // Add getter methods for testing
+  public BigDecimal getTotalSales() {
+    return totalSales;
+  }
+
+  public List<Transaction> getTransactions() {
+    return transactions;
+  }
 }
 

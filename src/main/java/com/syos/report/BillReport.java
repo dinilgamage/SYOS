@@ -6,6 +6,7 @@ import java.util.List;
 import com.syos.dao.TransactionDao;
 import com.syos.enums.ReportFilterType;
 import com.syos.enums.TransactionType;
+import com.syos.model.Inventory;
 import com.syos.model.Transaction;
 
 public class BillReport extends Report {
@@ -51,5 +52,10 @@ public class BillReport extends Report {
         ", Total Amount: " + transaction.getTotalAmount() +
         ", Date: " + transaction.getCreatedAt());
     }
+  }
+
+  // Getter method for getTransactions for testing purposes
+  public List<Transaction> getTransactions() {
+    return transactions;
   }
 }

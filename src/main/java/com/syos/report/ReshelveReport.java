@@ -78,5 +78,8 @@ public class ReshelveReport extends Report {
       }
     }
   }
-
+  // Getter method for itemsToReshelve for testing purposes
+  public List<Inventory> getItemsToReshelve() {
+    return itemsToReshelve;
+  }
 }
