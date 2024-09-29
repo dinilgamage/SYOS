@@ -163,6 +163,21 @@ public class InventoryServiceTest {
   }
 
   /**
+   * Test checking available stock for store transactions (Edge Case: Insufficient stock).
+   */
+  @Test
+  public void testCheckAvailableStock_StoreFailure() {
+    // Arrange
+    Inventory inventory = createInventory(1, "ITEM001", "Item One", new BigDecimal("100.00"), 10, 50, 100);
+
+    // Act
+    boolean result = inventoryService.checkAvailableStock(inventory, 20, TransactionType.STORE);
+
+    // Assert
+    assertFalse(result);
+  }
+
+  /**
    * Test updating inventory stock after purchase (Store, Happy Path).
    */
   @Test
