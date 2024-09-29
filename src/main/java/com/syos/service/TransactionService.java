@@ -2,6 +2,8 @@ package com.syos.service;
 
 import com.syos.dao.TransactionDao;
 import com.syos.enums.TransactionType;
+import com.syos.exception.InvalidReportTypeException;
+import com.syos.exception.InvalidTransactionTypeException;
 import com.syos.factory.TransactionFactory;
 import com.syos.model.Transaction;
 
@@ -26,6 +28,10 @@ public class TransactionService {
    * @return - The created Transaction object.
    */
   public Transaction createTransaction(TransactionType transactionType, BigDecimal totalAmount, Integer userId) {
+    if (transactionType == null) {
+      throw new InvalidTransactionTypeException("Transaction type cannot be null");
+    }
+
     // Use the factory to create the appropriate type of transaction
     Transaction transaction = TransactionFactory.createTransaction(transactionType, totalAmount, userId);
 
