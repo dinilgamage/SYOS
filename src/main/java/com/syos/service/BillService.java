@@ -5,6 +5,7 @@ import com.syos.dao.BillDao;
 import com.syos.dao.BillItemDao;
 import com.syos.dao.InventoryDao;
 import com.syos.enums.TransactionType;
+import com.syos.exception.InvalidTransactionTypeException;
 import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
@@ -48,7 +49,7 @@ public class BillService {
   // Core method that handles both online and in-store transactions
   public Bill buildBill(List<BillItem> items, TransactionType transactionType, BigDecimal cashTendered, Integer userId) {
     if (transactionType == null) {
-      throw new NullPointerException("TransactionType cannot be null");
+      throw new InvalidTransactionTypeException("Transaction type cannot be null.");
     }
 
     if (items == null || items.isEmpty()) {
