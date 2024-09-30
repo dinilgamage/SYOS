@@ -22,7 +22,6 @@ public abstract class Transaction {
   public abstract Integer getUserId();
 
   // Getters and Setters
-
   public int getTransactionId() {
     return transactionId;
   }

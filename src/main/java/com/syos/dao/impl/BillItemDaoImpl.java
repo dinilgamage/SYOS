@@ -29,7 +29,7 @@ public class BillItemDaoImpl implements BillItemDao {
       preparedStatement.executeUpdate();
 
     } catch (SQLException e) {
-      throw new DaoException("Error saving BillItem: " + billItem, e);  // Throw custom exception with details
+      throw new DaoException("Error saving BillItem: " + billItem, e);
     }
   }
 
@@ -48,7 +48,7 @@ public class BillItemDaoImpl implements BillItemDao {
         billItems.add(billItem);
       }
     } catch (SQLException e) {
-      throw new DaoException("Error retrieving BillItems for Bill ID: " + billId, e);  // Throw custom exception with details
+      throw new DaoException("Error retrieving BillItems for Bill ID: " + billId, e);
     }
     return billItems;
   }

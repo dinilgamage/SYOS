@@ -7,16 +7,14 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
   // JDBC connection credentials
-  private static final String URL = "jdbc:mysql://localhost:3306/syos_db"; // Change as per your database
-  private static final String USERNAME = "root"; // Your database username
-  private static final String PASSWORD = "mysql123"; // Your database password
+  private static final String URL = "jdbc:mysql://localhost:3306/syos_db";
+  private static final String USERNAME = "root";
+  private static final String PASSWORD = "mysql123";
 
-  // Private constructor to prevent instantiation
   private DatabaseConnection() {
     // Private constructor to prevent instantiation
   }
 
-  // Public method to get a new database connection
   public static Connection getConnection() {
     try {
       return DriverManager.getConnection(URL, USERNAME, PASSWORD);

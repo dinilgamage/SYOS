@@ -2,7 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.StockBatchDao;
 import com.syos.database.DatabaseConnection;
-import com.syos.exception.DaoException;  // Import the custom exception
+import com.syos.exception.DaoException;
 import com.syos.model.StockBatch;
 
 import java.sql.*;
@@ -31,7 +31,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
         batches.add(batch);
       }
     } catch (SQLException e) {
-      throw new DaoException("Error retrieving batches for item ID: " + itemId, e);  // Pass the cause
+      throw new DaoException("Error retrieving batches for item ID: " + itemId, e);
     }
     return batches;
   }
@@ -50,7 +50,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
         throw new DaoException("Update failed, no rows affected for batch ID: " + batch.getBatchId());
       }
     } catch (SQLException e) {
-      throw new DaoException("Error updating batch ID: " + batch.getBatchId(), e);  // Pass the cause
+      throw new DaoException("Error updating batch ID: " + batch.getBatchId(), e);
     }
   }
 
@@ -67,7 +67,7 @@ public class StockBatchDaoImpl implements StockBatchDao {
         batch = mapRowToStockBatch(rs);
       }
     } catch (SQLException e) {
-      throw new DaoException("Error retrieving nearest expiry batch for item ID: " + itemId, e);  // Pass the cause
+      throw new DaoException("Error retrieving nearest expiry batch for item ID: " + itemId, e);
     }
     return batch;
   }
@@ -83,16 +83,16 @@ public class StockBatchDaoImpl implements StockBatchDao {
       while (rs.next()) {
         StockBatch stockBatch = new StockBatch(
           rs.getInt("batch_id"),
-          rs.getInt("item_id"),               // itemId
-          rs.getInt("quantity"),              // quantity
-          rs.getDate("date_received").toLocalDate(), // dateReceived
-          rs.getDate("expiry_date").toLocalDate()    // expiryDate
+          rs.getInt("item_id"),
+          rs.getInt("quantity"),
+          rs.getDate("date_received").toLocalDate(),
+          rs.getDate("expiry_date").toLocalDate()
         );
-        stockBatch.setBatchId(rs.getInt("batch_id")); // Set batchId
+        stockBatch.setBatchId(rs.getInt("batch_id"));
         stockBatches.add(stockBatch);
       }
     } catch (SQLException e) {
-      throw new DaoException("Error retrieving all stock batches", e);  // Pass the cause
+      throw new DaoException("Error retrieving all stock batches", e);
     }
     return stockBatches;
   }

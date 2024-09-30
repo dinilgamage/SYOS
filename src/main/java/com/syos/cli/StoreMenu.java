@@ -42,16 +42,16 @@ public class StoreMenu {
         case 1:
           // Over the counter bills do not have a user so user id is set to null
           billProcessor.processBilling(scanner,
-            TransactionType.STORE, null);  // Delegating to BillProcessor,
+            TransactionType.STORE, null);
           break;
         case 2:
-          restockProcessor.restockShelf(scanner);  // Delegating to RestockProcessor
+          restockProcessor.restockShelf(scanner);
           break;
         case 3:
-          reportProcessor.generateReports(scanner);  // Delegating to ReportProcessor
+          reportProcessor.generateReports(scanner);
           break;
         case 4:
-          discountProcessor.addDiscounts(scanner);  // Delegating to DiscountProcessor
+          discountProcessor.addDiscounts(scanner);
           break;
         case 5:
           System.out.println("Exiting store menu...");

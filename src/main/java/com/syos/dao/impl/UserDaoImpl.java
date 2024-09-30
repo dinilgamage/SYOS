@@ -2,7 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.UserDao;
 import com.syos.database.DatabaseConnection;
-import com.syos.exception.DaoException;  // Import the custom exception
+import com.syos.exception.DaoException;
 import com.syos.model.User;
 
 import java.sql.*;
@@ -20,7 +20,7 @@ public class UserDaoImpl implements UserDao {
 
       preparedStatement.setString(1, user.getName());
       preparedStatement.setString(2, user.getEmail());
-      preparedStatement.setString(3, user.getPassword()); // Assuming password is hashed before saving
+      preparedStatement.setString(3, user.getPassword());
 
       int rowsAffected = preparedStatement.executeUpdate();
       if (rowsAffected == 0) {
@@ -60,11 +60,11 @@ public class UserDaoImpl implements UserDao {
          PreparedStatement preparedStatement = connection.prepareStatement(VERIFY_USER_CREDENTIALS_SQL)) {
 
       preparedStatement.setString(1, email);
-      preparedStatement.setString(2, password); // Assuming password is already hashed before passing to this method
+      preparedStatement.setString(2, password);
       ResultSet rs = preparedStatement.executeQuery();
 
       if (rs.next()) {
-        isValid = true; // Credentials match
+        isValid = true;
       }
 
     } catch (SQLException e) {
@@ -78,7 +78,7 @@ public class UserDaoImpl implements UserDao {
     int userId = rs.getInt("user_id");
     String name = rs.getString("name");
     String email = rs.getString("email");
-    String password = rs.getString("password"); // Password should be hashed
+    String password = rs.getString("password");
 
     User user = new User(name, email, password);
     user.setUserId(userId);

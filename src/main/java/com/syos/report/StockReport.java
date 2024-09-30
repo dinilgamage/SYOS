@@ -16,9 +16,8 @@ public class StockReport extends Report {
 
   private StockBatchDao stockBatchDao;
   private InventoryDao inventoryDao;
-  private Map<StockBatch, String> stockBatchWithItemCodes; // Map to store StockBatch with corresponding Item Code
+  private Map<StockBatch, String> stockBatchWithItemCodes;
 
-  // Constructor to inject both StockBatchDao and InventoryDao
   public StockReport(StockBatchDao stockBatchDao, InventoryDao inventoryDao) {
     this.stockBatchDao = stockBatchDao;
     this.inventoryDao = inventoryDao;
@@ -42,7 +41,7 @@ public class StockReport extends Report {
     for (StockBatch batch : stockBatches) {
       Inventory inventoryItem = inventoryDao.getItemById(batch.getItemId());
       String itemCode = (inventoryItem != null) ? inventoryItem.getItemCode() : "Unknown Code";
-      stockBatchWithItemCodes.put(batch, itemCode); // Store the StockBatch with its Item Code
+      stockBatchWithItemCodes.put(batch, itemCode);
     }
   }
 

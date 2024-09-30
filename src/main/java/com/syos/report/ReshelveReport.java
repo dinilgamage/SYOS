@@ -12,7 +12,6 @@ public class ReshelveReport extends Report {
   private InventoryDao inventoryDao;
   private List<Inventory> itemsToReshelve;
 
-  // Constructor to inject dependencies (InventoryDao)
   public ReshelveReport(InventoryDao inventoryDao) {
     this.inventoryDao = inventoryDao;
   }

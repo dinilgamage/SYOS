@@ -3,7 +3,7 @@ package com.syos.dao.impl;
 import com.syos.dao.TransactionDao;
 import com.syos.database.DatabaseConnection;
 import com.syos.enums.TransactionType;
-import com.syos.exception.DaoException;  // Import the custom exception
+import com.syos.exception.DaoException;
 import com.syos.model.OnlineTransaction;
 import com.syos.model.OverTheCounterTransaction;
 import com.syos.model.Transaction;

@@ -9,14 +9,14 @@ public class BillItem {
   private String itemCode;
   private int quantity;
   private BigDecimal itemPrice;
-  private BigDecimal totalPrice;  // Final price after applying discount externally
+  private BigDecimal totalPrice;
 
   // Constructors
   public BillItem(String itemCode, int quantity, BigDecimal itemPrice) {
     this.itemCode = itemCode;
     this.quantity = quantity;
     this.itemPrice = itemPrice;
-    this.totalPrice = calculateTotalPrice();  // Now it only calculates based on itemPrice and quantity
+    this.totalPrice = calculateTotalPrice();
   }
 
   public BillItem(int itemId, int quantity, BigDecimal itemPrice) {

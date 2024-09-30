@@ -44,10 +44,9 @@ public class StoreFacadeImpl implements StoreFacade {
 
   @Override
   public void registerUser(String name, String email, String password) {
-    // Create a new User object
-    User user = new User(name, email, password);  // Password should ideally be hashed here
 
-    // Delegate the registration logic to the UserService
+    User user = new User(name, email, password);
+
     try {
       userService.registerUser(user);
     } catch (UserAlreadyExistsException e) {
@@ -57,20 +56,20 @@ public class StoreFacadeImpl implements StoreFacade {
 
   @Override
   public boolean loginUser(String email, String password) {
-    // Delegate login logic to the UserService
+
     return userService.loginUser(email, password);
   }
 
   @Override
   public Integer getUserId(String email) {
-    // You can add this to retrieve the user ID for other purposes (like billing)
-    User user = userService.getUserByEmail(email); // Assume this method is available in UserService
+
+    User user = userService.getUserByEmail(email);
     return user != null ? user.getUserId() : null;
   }
 
   @Override
   public List<Inventory> getAllItems() {
-    return inventoryService.getAllItems();  // Call to the InventoryService
+    return inventoryService.getAllItems();
   }
 
   @Override

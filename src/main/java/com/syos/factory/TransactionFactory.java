@@ -9,14 +9,6 @@ import java.math.BigDecimal;
 
 public class TransactionFactory {
 
-  /**
-   * Factory method to create a Transaction based on the type.
-   *
-   * @param type - The type of transaction (e.g., 'online', 'over-the-counter').
-   * @param totalAmount - The total amount for the transaction.
-   * @param userId - The ID of the user (only for online transactions, null for over-the-counter).
-   * @return - A new Transaction object.
-   */
   public static Transaction createTransaction(TransactionType type, BigDecimal totalAmount, Integer userId) {
     switch (type) {
       case ONLINE:

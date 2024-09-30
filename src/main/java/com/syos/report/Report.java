@@ -16,7 +16,6 @@ public abstract class Report {
     displayReport(type);
   }
 
-  // Steps that subclasses will need to implement
   protected abstract void prepareHeader();
   protected abstract void collectData(LocalDate date, ReportFilterType type);
   protected abstract void formatReport();

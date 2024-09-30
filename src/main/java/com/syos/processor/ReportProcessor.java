@@ -57,7 +57,6 @@ public class ReportProcessor {
         return;
     }
 
-    // Delegate report generation through the StoreFacade
     storeFacade.generateReport(reportType, date,
       reportFilterType);
   }

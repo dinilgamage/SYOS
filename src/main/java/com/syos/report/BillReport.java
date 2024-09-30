@@ -6,7 +6,6 @@ import java.util.List;
 import com.syos.dao.TransactionDao;
 import com.syos.enums.ReportFilterType;
 import com.syos.enums.TransactionType;
-import com.syos.model.Inventory;
 import com.syos.model.Transaction;
 
 public class BillReport extends Report {
@@ -14,7 +13,6 @@ public class BillReport extends Report {
   private TransactionDao transactionDao;
   private List<Transaction> transactions;
 
-  // Constructor to inject dependencies (TransactionDao)
   public BillReport(TransactionDao transactionDao) {
     this.transactionDao = transactionDao;
   }

@@ -4,9 +4,6 @@ import com.syos.enums.ShelfType;
 import com.syos.exception.InsufficientStockException;
 import com.syos.service.InventoryService;
 
-/**
- * Command to restock an item in the store or online.
- */
 public class RestockCommand implements Command {
 
   private InventoryService inventoryService;

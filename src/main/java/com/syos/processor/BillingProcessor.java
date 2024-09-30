@@ -19,13 +19,6 @@ public class BillingProcessor {
     this.storeFacade = storeFacade;
   }
 
-  /**
-   * Process billing for both online and in-store transactions.
-   *
-   * @param scanner        Input scanner for user input.
-   * @param transactionType Type of transaction (e.g., "online" or "over-the-counter").
-   * @param userId         ID of the user (online customers or in-store as 1 for SYOS Store).
-   */
   public void processBilling(Scanner scanner, TransactionType transactionType, Integer userId) {
     List<BillItem> billItems = new ArrayList<>();
     System.out.println("=== " + (transactionType.equals(TransactionType.ONLINE) ? "Online Billing" : "In-Store Billing") +
@@ -35,7 +28,7 @@ public class BillingProcessor {
 
     String continueBilling;
     do {
-      BillItem billItem = getValidatedBillItem(scanner, transactionType);  // Step 1: Get item and quantity
+      BillItem billItem = getValidatedBillItem(scanner, transactionType);
 
       if (billItem != null) {
         billItems.add(billItem);
@@ -50,13 +43,12 @@ public class BillingProcessor {
     } while ("yes".equalsIgnoreCase(continueBilling));
 
     if (!billingFailed) {
-      processPayment(scanner, billItems, totalAmount, transactionType, userId);  // Step 4: Handle payment and complete billing
+      processPayment(scanner, billItems, totalAmount, transactionType, userId);
     } else {
       System.out.println("Billing process stopped due to issues with item availability or stock.");
     }
   }
 
-  // Adjust this method to check stock based on transaction type (store/online)
   private BillItem getValidatedBillItem(Scanner scanner, TransactionType transactionType) {
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
     int quantity = InputUtils.getValidatedPositiveInt(scanner, "Enter Quantity: ");
@@ -67,7 +59,7 @@ public class BillingProcessor {
       return null;
     }
 
-    return processItemForBilling(inventoryItem, quantity);  // Step 2: Process item (apply discounts)
+    return processItemForBilling(inventoryItem, quantity);
   }
 
   private BillItem processItemForBilling(Inventory inventoryItem, int quantity) {
@@ -76,7 +68,7 @@ public class BillingProcessor {
 
     // Apply discount strategy and set the discounted price
     BigDecimal discountedPrice = storeFacade.applyDiscount(inventoryItem, billItem);
-    billItem.setItemPrice(discountedPrice);  // Set the discounted price for the item
+    billItem.setItemPrice(discountedPrice);
 
     System.out.println("Added BillItem: Code = " + billItem.getItemCode() +
       ", Quantity = " + billItem.getQuantity() +
@@ -85,15 +77,6 @@ public class BillingProcessor {
     return billItem;
   }
 
-  /**
-   * Handles the payment process for both online and in-store transactions.
-   *
-   * @param scanner         Input scanner for user input.
-   * @param billItems       List of items in the bill.
-   * @param totalAmount     Total amount to be paid after discounts.
-   * @param transactionType Type of transaction (e.g., "online" or "over-the-counter").
-   * @param userId          ID of the user (online customers or in-store as 1 for SYOS Store).
-   */
   private void processPayment(Scanner scanner, List<BillItem> billItems, BigDecimal totalAmount, TransactionType transactionType,
     Integer userId) {
     System.out.println("Total amount to be paid (including discounts): " + totalAmount);
@@ -102,7 +85,7 @@ public class BillingProcessor {
     if (transactionType.equals(TransactionType.ONLINE)) {
       // For online transactions, there may not be immediate cash handling
       System.out.println("This is an online order. Processing payment...");
-      cashTendered = totalAmount;  // Assume full amount for now
+      cashTendered = totalAmount;
     } else {
       // For in-store, prompt for cash tendered
       cashTendered = InputUtils.getValidatedCashTendered(scanner, "Enter Cash Tendered: ", totalAmount);

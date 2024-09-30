@@ -9,7 +9,6 @@ public class User {
   private String password; // Should be hashed for security
   private LocalDateTime createdAt;
 
-  // Constructors
   public User(String name, String email, String password) {
     this.name = name;
     this.email = email;

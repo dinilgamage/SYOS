@@ -9,7 +9,6 @@ import com.syos.strategy.PercentageDiscountStrategy;
 
 public class DiscountStrategyFactory {
 
-  // Factory method to create the appropriate DiscountStrategy
   public static DiscountStrategy getDiscountStrategy(Inventory inventory) {
     String discountType = inventory.getDiscountType();
     BigDecimal discountValue = inventory.getDiscountValue();

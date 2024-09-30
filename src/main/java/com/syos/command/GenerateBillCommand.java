@@ -37,10 +37,8 @@ public class GenerateBillCommand implements Command {
   @Override
   public void execute() {
     if (TransactionType.STORE.equals(transactionType)) {
-      // Handle in-store (over-the-counter) transactions
       billService.buildBill(billItems, transactionType, cashTendered);
     } else if (TransactionType.ONLINE.equals(transactionType)) {
-      // Handle online transactions with userId
       if (userId == null) {
         throw new IllegalArgumentException("User ID is required for online transactions.");
       }

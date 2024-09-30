@@ -3,7 +3,6 @@ package com.syos.cli;
 import com.syos.processor.UserRegistrationProcessor;
 import com.syos.processor.UserLoginProcessor;
 import com.syos.processor.UserMenuProcessor;
-import com.syos.processor.BillingProcessor;
 import com.syos.util.InputUtils;
 
 import java.util.Scanner;
@@ -38,13 +37,13 @@ public class OnlineMenu {
 
       switch (choice) {
         case 1:
-          userRegistrationProcessor.registerUser(scanner); // Delegate to UserRegistrationProcessor
+          userRegistrationProcessor.registerUser(scanner);
           break;
         case 2:
-          String email = userLoginProcessor.loginUser(scanner);  // Capture email from login
-          if (email != null) {  // If login is successful
+          String email = userLoginProcessor.loginUser(scanner);
+          if (email != null) {
             System.out.println("Login Successful!");
-            userMenuProcessor.displayUserMenu(scanner, email); // Pass the captured email to UserMenuProcessor
+            userMenuProcessor.displayUserMenu(scanner, email);
           } else {
             System.out.println("Invalid credentials. Try again.");
           }
