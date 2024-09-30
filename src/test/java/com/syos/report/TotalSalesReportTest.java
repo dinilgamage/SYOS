@@ -6,13 +6,11 @@ import com.syos.enums.TransactionType;
 import com.syos.model.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -53,8 +51,7 @@ public class TotalSalesReportTest {
     when(mockTransactionDao.getTransactionsByDate(date)).thenReturn(Arrays.asList(transaction1, transaction2));
 
     // Act
-    totalSalesReport.collectData(date, ReportFilterType.BOTH);
-    totalSalesReport.displayReport(ReportFilterType.BOTH);
+    totalSalesReport.generate(date, ReportFilterType.BOTH);
 
     // Assert
     assertEquals(new BigDecimal("250.00"), totalSalesReport.getTotalSales());
@@ -74,8 +71,7 @@ public class TotalSalesReportTest {
     when(mockTransactionDao.getTransactionsByDateAndType(date, TransactionType.ONLINE)).thenReturn(Collections.singletonList(transaction1));
 
     // Act
-    totalSalesReport.collectData(date, ReportFilterType.ONLINE);
-    totalSalesReport.displayReport(ReportFilterType.ONLINE);
+    totalSalesReport.generate(date, ReportFilterType.ONLINE);
 
     // Assert
     assertEquals(new BigDecimal("100.00"), totalSalesReport.getTotalSales());
@@ -95,8 +91,7 @@ public class TotalSalesReportTest {
     when(mockTransactionDao.getTransactionsByDateAndType(date, TransactionType.STORE)).thenReturn(Collections.singletonList(transaction1));
 
     // Act
-    totalSalesReport.collectData(date, ReportFilterType.STORE);
-    totalSalesReport.displayReport(ReportFilterType.STORE);
+    totalSalesReport.generate(date, ReportFilterType.STORE);
 
     // Assert
     assertEquals(new BigDecimal("150.00"), totalSalesReport.getTotalSales());
@@ -114,13 +109,11 @@ public class TotalSalesReportTest {
     when(mockTransactionDao.getTransactionsByDate(date)).thenReturn(Collections.emptyList());
 
     // Act
-    totalSalesReport.collectData(date, ReportFilterType.BOTH);
-    totalSalesReport.displayReport(ReportFilterType.BOTH);
+    totalSalesReport.generate(date, ReportFilterType.BOTH);
 
     // Assert
     assertEquals(BigDecimal.ZERO, totalSalesReport.getTotalSales());
     assertEquals(0, totalSalesReport.getTransactions().size());
     verify(mockTransactionDao, times(1)).getTransactionsByDate(date);
   }
-
 }

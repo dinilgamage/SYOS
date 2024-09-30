@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -64,8 +63,7 @@ public class ReorderReportTest {
     when(mockStockBatchDao.getBatchesForItem(item2.getItemId())).thenReturn(Collections.singletonList(batch2));
 
     // Act
-    reorderReport.collectData(null, ReportFilterType.BOTH);
-    reorderReport.displayReport(ReportFilterType.BOTH);
+    reorderReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     assertFalse(reorderReport.getItemsToReorder().isEmpty()); // Items should need reordering
@@ -87,8 +85,7 @@ public class ReorderReportTest {
     when(mockStockBatchDao.getBatchesForItem(item1.getItemId())).thenReturn(Collections.singletonList(batch1));
 
     // Act
-    reorderReport.collectData(null, ReportFilterType.BOTH);
-    reorderReport.displayReport(ReportFilterType.BOTH);
+    reorderReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     assertTrue(reorderReport.getItemsToReorder().isEmpty()); // No items should need reordering
@@ -108,8 +105,7 @@ public class ReorderReportTest {
     when(mockStockBatchDao.getBatchesForItem(item1.getItemId())).thenReturn(Collections.emptyList()); // No stock batches
 
     // Act
-    reorderReport.collectData(null, ReportFilterType.BOTH);
-    reorderReport.displayReport(ReportFilterType.BOTH);
+    reorderReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     assertFalse(reorderReport.getItemsToReorder().isEmpty()); // Item should need reordering because it has no stock
@@ -138,8 +134,7 @@ public class ReorderReportTest {
     when(mockStockBatchDao.getBatchesForItem(item2.getItemId())).thenReturn(Collections.singletonList(batch2));
 
     // Act
-    reorderReport.collectData(null, ReportFilterType.BOTH);
-    reorderReport.displayReport(ReportFilterType.BOTH);
+    reorderReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     assertEquals(1, reorderReport.getItemsToReorder().size()); // Only item1 should need reordering
@@ -157,8 +152,7 @@ public class ReorderReportTest {
     when(mockInventoryDao.getAllItems()).thenReturn(Collections.emptyList());
 
     // Act
-    reorderReport.collectData(null, ReportFilterType.BOTH);
-    reorderReport.displayReport(ReportFilterType.BOTH);
+    reorderReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     assertTrue(reorderReport.getItemsToReorder().isEmpty()); // No items should be in the report

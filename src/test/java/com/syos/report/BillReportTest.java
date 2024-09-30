@@ -51,8 +51,7 @@ public class BillReportTest {
     when(mockTransactionDao.getAllTransactions()).thenReturn(Arrays.asList(onlineTransaction, storeTransaction));
 
     // Act
-    billReport.collectData(null, ReportFilterType.BOTH);
-    billReport.displayReport(ReportFilterType.BOTH);
+    billReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     List<Transaction> transactions = billReport.getTransactions();
@@ -70,8 +69,7 @@ public class BillReportTest {
     when(mockTransactionDao.getAllTransactionsByType(TransactionType.ONLINE)).thenReturn(Collections.singletonList(onlineTransaction));
 
     // Act
-    billReport.collectData(null, ReportFilterType.ONLINE);
-    billReport.displayReport(ReportFilterType.ONLINE);
+    billReport.generate(null, ReportFilterType.ONLINE);
 
     // Assert
     List<Transaction> transactions = billReport.getTransactions();
@@ -90,8 +88,7 @@ public class BillReportTest {
     when(mockTransactionDao.getAllTransactionsByType(TransactionType.STORE)).thenReturn(Collections.singletonList(storeTransaction));
 
     // Act
-    billReport.collectData(null, ReportFilterType.STORE);
-    billReport.displayReport(ReportFilterType.STORE);
+    billReport.generate(null, ReportFilterType.STORE);
 
     // Assert
     List<Transaction> transactions = billReport.getTransactions();
@@ -109,8 +106,7 @@ public class BillReportTest {
     when(mockTransactionDao.getAllTransactions()).thenReturn(Collections.emptyList());
 
     // Act
-    billReport.collectData(null, ReportFilterType.BOTH);
-    billReport.displayReport(ReportFilterType.BOTH);
+    billReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     List<Transaction> transactions = billReport.getTransactions();
@@ -127,8 +123,7 @@ public class BillReportTest {
     when(mockTransactionDao.getAllTransactionsByType(TransactionType.ONLINE)).thenReturn(Collections.emptyList());
 
     // Act
-    billReport.collectData(null, ReportFilterType.ONLINE);
-    billReport.displayReport(ReportFilterType.ONLINE);
+    billReport.generate(null, ReportFilterType.ONLINE);
 
     // Assert
     List<Transaction> transactions = billReport.getTransactions();
@@ -145,8 +140,7 @@ public class BillReportTest {
     when(mockTransactionDao.getAllTransactionsByType(TransactionType.STORE)).thenReturn(Collections.emptyList());
 
     // Act
-    billReport.collectData(null, ReportFilterType.STORE);
-    billReport.displayReport(ReportFilterType.STORE);
+    billReport.generate(null, ReportFilterType.STORE);
 
     // Assert
     List<Transaction> transactions = billReport.getTransactions();

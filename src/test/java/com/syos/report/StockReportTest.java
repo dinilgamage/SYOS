@@ -59,8 +59,7 @@ public class StockReportTest {
     when(mockInventoryDao.getItemById(102)).thenReturn(item2);
 
     // Act
-    stockReport.collectData(null, ReportFilterType.BOTH);
-    stockReport.displayReport(ReportFilterType.BOTH);
+    stockReport.generate(null, ReportFilterType.BOTH);  // Use generate()
 
     // Assert
     verify(mockStockBatchDao, times(1)).getAllStockBatches();
@@ -78,8 +77,7 @@ public class StockReportTest {
     when(mockStockBatchDao.getAllStockBatches()).thenReturn(Collections.emptyList());
 
     // Act
-    stockReport.collectData(null, ReportFilterType.BOTH);
-    stockReport.displayReport(ReportFilterType.BOTH);
+    stockReport.generate(null, ReportFilterType.BOTH);  // Use generate()
 
     // Assert
     verify(mockStockBatchDao, times(1)).getAllStockBatches();
@@ -99,8 +97,7 @@ public class StockReportTest {
     when(mockInventoryDao.getItemById(101)).thenReturn(null);  // No corresponding inventory item
 
     // Act
-    stockReport.collectData(null, ReportFilterType.BOTH);
-    stockReport.displayReport(ReportFilterType.BOTH);
+    stockReport.generate(null, ReportFilterType.BOTH);  // Use generate()
 
     // Assert
     verify(mockStockBatchDao, times(1)).getAllStockBatches();
@@ -123,8 +120,7 @@ public class StockReportTest {
     when(mockInventoryDao.getItemById(101)).thenReturn(item1);
 
     // Act
-    stockReport.collectData(null, ReportFilterType.BOTH);
-    stockReport.displayReport(ReportFilterType.BOTH);
+    stockReport.generate(null, ReportFilterType.BOTH);  // Use generate()
 
     // Assert
     verify(mockStockBatchDao, times(1)).getAllStockBatches();
@@ -149,8 +145,7 @@ public class StockReportTest {
     when(mockInventoryDao.getItemById(102)).thenReturn(item2);
 
     // Act
-    stockReport.collectData(null, ReportFilterType.BOTH);
-    stockReport.displayReport(ReportFilterType.BOTH);
+    stockReport.generate(null, ReportFilterType.BOTH);  // Use generate()
 
     // Assert
     verify(mockStockBatchDao, times(1)).getAllStockBatches();

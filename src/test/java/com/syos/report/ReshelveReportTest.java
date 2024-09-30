@@ -43,8 +43,7 @@ public class ReshelveReportTest {
     when(mockInventoryDao.getItemsToReshelveForBoth()).thenReturn(Arrays.asList(item1, item2));
 
     // Act
-    reshelveReport.collectData(null, ReportFilterType.BOTH);
-    reshelveReport.displayReport(ReportFilterType.BOTH);
+    reshelveReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     verify(mockInventoryDao, times(1)).getItemsToReshelveForBoth();
@@ -60,8 +59,7 @@ public class ReshelveReportTest {
     when(mockInventoryDao.getItemsToReshelveForInStore()).thenReturn(Collections.singletonList(item1));
 
     // Act
-    reshelveReport.collectData(null, ReportFilterType.STORE);
-    reshelveReport.displayReport(ReportFilterType.STORE);
+    reshelveReport.generate(null, ReportFilterType.STORE);
 
     // Assert
     verify(mockInventoryDao, times(1)).getItemsToReshelveForInStore();
@@ -77,8 +75,7 @@ public class ReshelveReportTest {
     when(mockInventoryDao.getItemsToReshelveForOnline()).thenReturn(Collections.singletonList(item1));
 
     // Act
-    reshelveReport.collectData(null, ReportFilterType.ONLINE);
-    reshelveReport.displayReport(ReportFilterType.ONLINE);
+    reshelveReport.generate(null, ReportFilterType.ONLINE);
 
     // Assert
     verify(mockInventoryDao, times(1)).getItemsToReshelveForOnline();
@@ -93,8 +90,7 @@ public class ReshelveReportTest {
     when(mockInventoryDao.getItemsToReshelveForBoth()).thenReturn(Collections.emptyList());
 
     // Act
-    reshelveReport.collectData(null, ReportFilterType.BOTH);
-    reshelveReport.displayReport(ReportFilterType.BOTH);
+    reshelveReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     assertTrue(reshelveReport.getItemsToReshelve().isEmpty());
@@ -111,8 +107,7 @@ public class ReshelveReportTest {
     when(mockInventoryDao.getItemsToReshelveForBoth()).thenReturn(Collections.emptyList());
 
     // Act
-    reshelveReport.collectData(null, ReportFilterType.BOTH);
-    reshelveReport.displayReport(ReportFilterType.BOTH);
+    reshelveReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     assertTrue(reshelveReport.getItemsToReshelve().isEmpty());  // No items should need reshelving
@@ -130,8 +125,7 @@ public class ReshelveReportTest {
     when(mockInventoryDao.getItemsToReshelveForBoth()).thenReturn(Arrays.asList(item1, item2));
 
     // Act
-    reshelveReport.collectData(null, ReportFilterType.BOTH);
-    reshelveReport.displayReport(ReportFilterType.BOTH);
+    reshelveReport.generate(null, ReportFilterType.BOTH);
 
     // Assert
     assertEquals(2, reshelveReport.getItemsToReshelve().size());
