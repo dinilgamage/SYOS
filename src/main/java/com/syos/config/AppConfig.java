@@ -44,6 +44,6 @@ public class AppConfig {
     OnlineMenu onlineMenu = new OnlineMenu(userRegistrationProcessor, userLoginProcessor, userMenuProcessor);
     StoreMenu storeMenu = new StoreMenu(billingProcessor, shelfRestockProcessor, reportProcessor, discountProcessor);
 
-    return new MainMenu(onlineMenu, storeMenu);
+    return new MainMenu(storeMenu);
   }
 }

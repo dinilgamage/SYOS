@@ -6,11 +6,9 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-  private final OnlineMenu onlineMenu;
   private final StoreMenu storeMenu;
 
-  public MainMenu(OnlineMenu onlineMenu, StoreMenu storeMenu) {
-    this.onlineMenu = onlineMenu;
+  public MainMenu(StoreMenu storeMenu) {
     this.storeMenu = storeMenu;
   }
 
@@ -20,7 +18,7 @@ public class MainMenu {
 
     do {
       System.out.println("=== SYOS Main Menu ===");
-      System.out.println("[1] Online Store");
+      System.out.println("[1] Online Store (Access via API: http://localhost:8080)");
       System.out.println("[2] In-Store Operations");
       System.out.println("[3] Exit");
 
@@ -28,7 +26,7 @@ public class MainMenu {
 
       switch (choice) {
         case 1:
-          onlineMenu.displayOnlineMenu();
+          System.out.println("Online store can be accessed via API endpoints.");
           break;
         case 2:
           storeMenu.displayStoreMenu();
