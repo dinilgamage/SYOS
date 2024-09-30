@@ -1,5 +1,6 @@
 package com.syos.util;
 
+import com.syos.enums.DiscountType;
 import com.syos.facade.StoreFacade;
 import com.syos.model.Inventory;
 
@@ -104,8 +105,7 @@ public class InputUtils {
   }
 
   // New method to validate discount based on the discount type (percentage/fixed)
-  public static boolean validateDiscount(String strategyType, BigDecimal discountValue, Inventory inventoryItem) {
-    strategyType = strategyType.toLowerCase(); // Normalize strategy type
+  public static boolean validateDiscount(DiscountType discountType, BigDecimal discountValue, Inventory inventoryItem) {
 
     // Ensure discount value is positive
     if (discountValue.compareTo(BigDecimal.ZERO) <= 0) {
@@ -113,13 +113,13 @@ public class InputUtils {
       return false;
     }
 
-    if ("fixed".equals(strategyType)) {
+    if (DiscountType.FIXED.equals(discountType)) {
       // For fixed, the discount cannot exceed the item price
       if (discountValue.compareTo(inventoryItem.getPrice()) > 0) {
         System.out.println("Discount cannot exceed the item's price for a fixed discount.");
         return false;
       }
-    } else if ("percentage".equals(strategyType)) {
+    } else if (DiscountType.PERCENTAGE.equals(discountType)) {
       // For percentage, the discount must not exceed 100
       if (discountValue.compareTo(BigDecimal.valueOf(100)) > 0) {
         System.out.println("Percentage discount cannot exceed 100%.");

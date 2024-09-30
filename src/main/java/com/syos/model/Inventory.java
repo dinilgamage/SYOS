@@ -1,5 +1,7 @@
 package com.syos.model;
 
+import com.syos.enums.DiscountType;
+
 import java.math.BigDecimal;
 
 public class Inventory {
@@ -8,7 +10,7 @@ public class Inventory {
   private String name;
   private BigDecimal price;
   private BigDecimal discountValue;
-  private String discountType; // "fixed" or "percentage"
+  private DiscountType discountType; // "fixed" or "percentage"
   private Integer storeStock;
   private Integer onlineStock;
   private int shelfCapacity;
@@ -22,7 +24,7 @@ public class Inventory {
     this.onlineStock = onlineStock;
     this.shelfCapacity = shelfCapacity;
     this.discountValue = BigDecimal.ZERO;
-    this.discountType = "";
+    this.discountType = DiscountType.NONE;
   }
 
   // Getters and Setters
@@ -66,11 +68,11 @@ public class Inventory {
     this.discountValue = discountValue;
   }
 
-  public String getDiscountType() {
+  public DiscountType getDiscountType() {
     return discountType;
   }
 
-  public void setDiscountType(String discountType) {
+  public void setDiscountType(DiscountType discountType) {
     this.discountType = discountType;
   }
 

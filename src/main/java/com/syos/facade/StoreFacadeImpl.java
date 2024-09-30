@@ -4,6 +4,7 @@ import com.syos.command.Command;
 import com.syos.command.GenerateBillCommand;
 import com.syos.command.RestockCommand;
 import com.syos.dao.InventoryDao;
+import com.syos.enums.DiscountType;
 import com.syos.enums.ReportType;
 import com.syos.enums.ReportFilterType;
 import com.syos.enums.ShelfType;
@@ -137,7 +138,7 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public void addDiscount(String itemCode, BigDecimal discountValue, String discountType) {
+  public void addDiscount(String itemCode, BigDecimal discountValue, DiscountType discountType) {
     // Retrieve the item from the inventory
     Inventory inventory = inventoryDao.getItemByCode(itemCode);
 

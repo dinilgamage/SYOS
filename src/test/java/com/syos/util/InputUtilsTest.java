@@ -1,5 +1,6 @@
 package com.syos.util;
 
+import com.syos.enums.DiscountType;
 import com.syos.facade.StoreFacade;
 import com.syos.model.Inventory;
 import org.junit.jupiter.api.AfterEach;
@@ -180,7 +181,7 @@ public class InputUtilsTest {
     BigDecimal discountValue = new BigDecimal("10.00");
 
     // Act
-    boolean result = InputUtils.validateDiscount("fixed", discountValue, inventoryItem);
+    boolean result = InputUtils.validateDiscount(DiscountType.FIXED, discountValue, inventoryItem);
 
     // Assert
     assertTrue(result);
@@ -196,7 +197,7 @@ public class InputUtilsTest {
     BigDecimal discountValue = new BigDecimal("150.00");
 
     // Act
-    boolean result = InputUtils.validateDiscount("fixed", discountValue, inventoryItem);
+    boolean result = InputUtils.validateDiscount(DiscountType.FIXED, discountValue, inventoryItem);
 
     // Assert
     assertFalse(result);
@@ -212,7 +213,7 @@ public class InputUtilsTest {
     BigDecimal discountValue = new BigDecimal("10.00");
 
     // Act
-    boolean result = InputUtils.validateDiscount("percentage", discountValue, inventoryItem);
+    boolean result = InputUtils.validateDiscount(DiscountType.PERCENTAGE, discountValue, inventoryItem);
 
     // Assert
     assertTrue(result);
@@ -228,7 +229,7 @@ public class InputUtilsTest {
     BigDecimal discountValue = new BigDecimal("120.00");
 
     // Act
-    boolean result = InputUtils.validateDiscount("percentage", discountValue, inventoryItem);
+    boolean result = InputUtils.validateDiscount(DiscountType.PERCENTAGE, discountValue, inventoryItem);
 
     // Assert
     assertFalse(result);

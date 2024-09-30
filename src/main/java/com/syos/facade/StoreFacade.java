@@ -1,5 +1,6 @@
 package com.syos.facade;
 
+import com.syos.enums.DiscountType;
 import com.syos.enums.ReportType;
 import com.syos.enums.ReportFilterType;
 import com.syos.enums.ShelfType;
@@ -31,6 +32,6 @@ public interface StoreFacade {
   void generateReport(ReportType reportType, ReportFilterType reportFilterType);
   void generateReport(ReportType reportType, LocalDate date, ReportFilterType reportFilterType);
 
-  void addDiscount(String itemCode, BigDecimal discountValue, String strategyType);
+  void addDiscount(String itemCode, BigDecimal discountValue, DiscountType discountType);
   BigDecimal applyDiscount(Inventory inventory, BillItem billItem);
 }

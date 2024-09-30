@@ -1,5 +1,6 @@
 package com.syos.service;
 
+import com.syos.enums.DiscountType;
 import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
@@ -43,7 +44,7 @@ public class DiscountServiceTest {
   /**
    * Helper method to create a sample Inventory with a discount type.
    */
-  private Inventory createInventory(String discountType, BigDecimal discountValue) {
+  private Inventory createInventory(DiscountType discountType, BigDecimal discountValue) {
     Inventory inventory = new Inventory("ITEM001", "Item One", new BigDecimal("100.00"), 50, 30, 100);
     inventory.setDiscountType(discountType);
     inventory.setDiscountValue(discountValue);
@@ -56,7 +57,7 @@ public class DiscountServiceTest {
   @Test
   public void testApplyFixedDiscount_Success() {
     // Arrange
-    Inventory inventory = createInventory("fixed", new BigDecimal("10.00"));
+    Inventory inventory = createInventory(DiscountType.FIXED, new BigDecimal("10.00"));
     BillItem billItem = createBillItem("ITEM001", 1, new BigDecimal("100.00"));
 
     // Mock the DiscountStrategyFactory to return a FixedDiscountStrategy
@@ -77,7 +78,7 @@ public class DiscountServiceTest {
   @Test
   public void testApplyPercentageDiscount_Success() {
     // Arrange
-    Inventory inventory = createInventory("percentage", new BigDecimal("10.00"));  // 10% discount
+    Inventory inventory = createInventory(DiscountType.PERCENTAGE, new BigDecimal("10.00"));  // 10% discount
     BillItem billItem = createBillItem("ITEM001", 1, new BigDecimal("100.00"));
 
     // Mock the DiscountStrategyFactory to return a PercentageDiscountStrategy
@@ -98,7 +99,7 @@ public class DiscountServiceTest {
   @Test
   public void testApplyNoDiscount() {
     // Arrange
-    Inventory inventory = createInventory("none", BigDecimal.ZERO);
+    Inventory inventory = createInventory(DiscountType.NONE, BigDecimal.ZERO);
     BillItem billItem = createBillItem("ITEM001", 1, new BigDecimal("100.00"));
 
     // Mock the DiscountStrategyFactory to return a NoDiscountStrategy
@@ -119,7 +120,7 @@ public class DiscountServiceTest {
   @Test
   public void testApplyFixedDiscount_ResultingInZero() {
     // Arrange
-    Inventory inventory = createInventory("fixed", new BigDecimal("200.00"));  // Discount exceeds item price
+    Inventory inventory = createInventory(DiscountType.FIXED, new BigDecimal("200.00"));  // Discount exceeds item price
     BillItem billItem = createBillItem("ITEM001", 1, new BigDecimal("100.00"));
 
     // Mock the DiscountStrategyFactory to return a FixedDiscountStrategy
@@ -140,7 +141,7 @@ public class DiscountServiceTest {
   @Test
   public void testApplyPercentageDiscount_ResultingInZero() {
     // Arrange
-    Inventory inventory = createInventory("percentage", new BigDecimal("100.00"));  // 100% discount
+    Inventory inventory = createInventory(DiscountType.PERCENTAGE, new BigDecimal("100.00"));  // 100% discount
     BillItem billItem = createBillItem("ITEM001", 1, new BigDecimal("100.00"));
 
     // Mock the DiscountStrategyFactory to return a PercentageDiscountStrategy
