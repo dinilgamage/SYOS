@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.syos.dao.TransactionDao;
+import com.syos.enums.ReportFilterType;
 import com.syos.enums.TransactionType;
 import com.syos.model.Transaction;
 
@@ -25,16 +26,17 @@ public class TotalSalesReport extends Report {
   }
 
   @Override
-  protected void collectData(LocalDate date, TransactionType type) {
+  protected void collectData(LocalDate date, ReportFilterType type) {
     System.out.println("Collecting total sales data for " + type + " on " + date);
 
     // Fetch transactions based on the type and date
-    if (type == TransactionType.BOTH) {
+    if (type == ReportFilterType.BOTH) {
       transactions = transactionDao.getTransactionsByDate(date); // Combined data for both online and in-store
-    } else if (type == TransactionType.ONLINE) {
-      transactions = transactionDao.getTransactionsByDateAndType(date, "online"); // Only online transactions
+    } else if (type == ReportFilterType.ONLINE) {
+      transactions = transactionDao.getTransactionsByDateAndType(date,
+        TransactionType.ONLINE); // Only online transactions
     } else {
-      transactions = transactionDao.getTransactionsByDateAndType(date, "over-the-counter"); // Only in-store transactions
+      transactions = transactionDao.getTransactionsByDateAndType(date, TransactionType.STORE); // Only in-store transactions
     }
 
     // Calculate the total sales amount
@@ -49,7 +51,7 @@ public class TotalSalesReport extends Report {
   }
 
   @Override
-  protected void displayReport() {
+  protected void displayReport(ReportFilterType reportFilterType) {
     System.out.println("Total Sales: " + totalSales);
     System.out.println("Number of transactions: " + transactions.size());
     transactions.forEach(transaction -> {
@@ -58,6 +60,15 @@ public class TotalSalesReport extends Report {
         ", Amount: " + transaction.getTotalAmount() +
         ", Date: " + transaction.getCreatedAt());
     });
+  }
+
+  // Add getter methods for testing
+  public BigDecimal getTotalSales() {
+    return totalSales;
+  }
+
+  public List<Transaction> getTransactions() {
+    return transactions;
   }
 }
 

@@ -4,6 +4,8 @@ import com.syos.builder.BillBuilder;
 import com.syos.dao.BillDao;
 import com.syos.dao.BillItemDao;
 import com.syos.dao.InventoryDao;
+import com.syos.enums.TransactionType;
+import com.syos.exception.InvalidTransactionTypeException;
 import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
@@ -12,6 +14,7 @@ import com.syos.model.Transaction;
 import com.syos.service.TransactionService;
 import com.syos.service.InventoryService;
 import com.syos.strategy.DiscountStrategy;
+import com.syos.strategy.NoDiscountStrategy;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,44 +37,51 @@ public class BillService {
   }
 
   // For online transactions (with userId), without cashTendered or changeAmount
-  public Bill buildBill(List<BillItem> items, String transactionType, Integer userId) {
+  public Bill buildBill(List<BillItem> items, TransactionType transactionType, Integer userId) {
     return buildBill(items, transactionType, null, userId);
   }
 
   // Overloaded method to handle in-store transactions
-  public Bill buildBill(List<BillItem> items, String transactionType, BigDecimal cashTendered) {
+  public Bill buildBill(List<BillItem> items, TransactionType transactionType, BigDecimal cashTendered) {
     return buildBill(items, transactionType, cashTendered, null);  // No userId for in-store transactions
   }
 
   // Core method that handles both online and in-store transactions
-  public Bill buildBill(List<BillItem> items, String transactionType, BigDecimal cashTendered, Integer userId) {
+  public Bill buildBill(List<BillItem> items, TransactionType transactionType, BigDecimal cashTendered, Integer userId) {
+    if (transactionType == null) {
+      throw new InvalidTransactionTypeException("Transaction type cannot be null.");
+    }
+
+    if (items == null || items.isEmpty()) {
+      throw new IllegalArgumentException("Bill must contain at least one item");
+    }
+
     BillBuilder billBuilder = new BillBuilder();
 
     // Create a new transaction (pass userId for online, null for in-store)
-    Transaction transaction = transactionService.createTransaction(transactionType, calculateTotal(items), userId);
+    Transaction transaction = transactionService.createTransaction(transactionType, calculateTransactionTotal(items), userId);
 
     // Initialize the BillBuilder
     billBuilder.setTransactionId(transaction.getTransactionId());
 
-    // Add items to the bill, and apply any discount strategy if it exists
+    // Add items to the bill (discounts have already been applied during processBilling in CLI)
     for (BillItem item : items) {
-      // Retrieve the inventory item to get discount details
-      Inventory inventory = inventoryDao.getItemById(item.getItemId());
+      // Retrieve the inventory item to get any additional details, if necessary
+      Inventory inventory = inventoryDao.getItemByCode(item.getItemCode());
 
-      // Use the factory to get the appropriate discount strategy
-      DiscountStrategy discountStrategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
+      // Set itemId in BillItem
+      item.setItemId(inventory.getItemId());
 
-      // Apply the discount to the total price of the item
-      BigDecimal discountedPrice = discountStrategy.applyDiscount(item.getTotalPrice());
-      item.setTotalPrice(discountedPrice);
-
-      // Add the item to the bill
+      // Add the item to the bill (discounted price already set during processBilling)
       billBuilder.addItem(item);
+
+      // Update the inventory stock after the purchase
+      inventoryService.updateInventoryStock(item.getItemCode(), item.getQuantity(), transactionType);
     }
 
-    // For in-store (over-the-counter) transactions, handle cash tendered and change amount
-    if ("over-the-counter".equals(transactionType) && cashTendered != null) {
-      BigDecimal totalAmount = calculateTotal(items);
+    // Handle cash tendered and change for in-store transactions
+    if (TransactionType.STORE.equals(transactionType) && cashTendered != null) {
+      BigDecimal totalAmount = calculateTransactionTotal(items); // Ensure total includes discounted prices
       BigDecimal changeAmount = cashTendered.subtract(totalAmount);
 
       // Set cashTendered and changeAmount for in-store transactions
@@ -87,6 +97,7 @@ public class BillService {
     return bill;
   }
 
+
   // Method to save the bill
   public void saveBill(Bill bill) {
     // Save the Bill
@@ -100,9 +111,16 @@ public class BillService {
   }
 
   // Helper method to calculate total bill amount
-  private BigDecimal calculateTotal(List<BillItem> items) {
+  public BigDecimal calculateTotal(List<BillItem> items) {
     return items.stream()
-      .map(BillItem::getTotalPrice)
+      .map(BillItem::getItemPrice)
       .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
+  // Helper method to calculate total transaction amount, including quantity
+  public BigDecimal calculateTransactionTotal(List<BillItem> items) {
+    return items.stream()
+      .map(item -> item.getItemPrice().multiply(BigDecimal.valueOf(item.getQuantity()))) // Price * Quantity
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
 }

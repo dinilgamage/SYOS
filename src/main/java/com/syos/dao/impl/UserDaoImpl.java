@@ -2,6 +2,7 @@ package com.syos.dao.impl;
 
 import com.syos.dao.UserDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.exception.DaoException;
 import com.syos.model.User;
 
 import java.sql.*;
@@ -14,17 +15,20 @@ public class UserDaoImpl implements UserDao {
 
   @Override
   public void saveUser(User user) {
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)) {
 
       preparedStatement.setString(1, user.getName());
       preparedStatement.setString(2, user.getEmail());
-      preparedStatement.setString(3, user.getPassword()); // Assuming password is hashed before saving
+      preparedStatement.setString(3, user.getPassword());
 
-      preparedStatement.executeUpdate();
+      int rowsAffected = preparedStatement.executeUpdate();
+      if (rowsAffected == 0) {
+        throw new DaoException("User save failed, no rows affected for email: " + user.getEmail());
+      }
+
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error saving user with email: " + user.getEmail(), e);
     }
   }
 
@@ -32,7 +36,7 @@ public class UserDaoImpl implements UserDao {
   public User getUserByEmail(String email) {
     User user = null;
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_EMAIL)) {
 
       preparedStatement.setString(1, email);
@@ -41,9 +45,9 @@ public class UserDaoImpl implements UserDao {
       if (rs.next()) {
         user = mapRowToUser(rs);
       }
+
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error retrieving user with email: " + email, e);
     }
     return user;
   }
@@ -52,19 +56,19 @@ public class UserDaoImpl implements UserDao {
   public boolean verifyUserCredentials(String email, String password) {
     boolean isValid = false;
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(VERIFY_USER_CREDENTIALS_SQL)) {
 
       preparedStatement.setString(1, email);
-      preparedStatement.setString(2, password); // Assuming password is already hashed before passing to this method
+      preparedStatement.setString(2, password);
       ResultSet rs = preparedStatement.executeQuery();
 
       if (rs.next()) {
-        isValid = true; // Credentials match
+        isValid = true;
       }
+
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error verifying user credentials for email: " + email, e);
     }
     return isValid;
   }
@@ -74,11 +78,10 @@ public class UserDaoImpl implements UserDao {
     int userId = rs.getInt("user_id");
     String name = rs.getString("name");
     String email = rs.getString("email");
-    String password = rs.getString("password"); // Password should be hashed
+    String password = rs.getString("password");
 
     User user = new User(name, email, password);
     user.setUserId(userId);
     return user;
   }
 }
-

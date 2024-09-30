@@ -1,5 +1,7 @@
 package com.syos.cli;
 
+import com.syos.util.InputUtils;
+
 import java.util.Scanner;
 
 public class MainMenu {
@@ -22,7 +24,7 @@ public class MainMenu {
       System.out.println("[2] In-Store Operations");
       System.out.println("[3] Exit");
 
-      choice = scanner.nextInt();
+      choice = InputUtils.getValidatedPositiveInt(scanner, "Choose an option: ");
 
       switch (choice) {
         case 1:

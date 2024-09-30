@@ -2,6 +2,8 @@ package com.syos.dao.impl;
 
 import com.syos.dao.TransactionDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.enums.TransactionType;
+import com.syos.exception.DaoException;
 import com.syos.model.OnlineTransaction;
 import com.syos.model.OverTheCounterTransaction;
 import com.syos.model.Transaction;
@@ -22,11 +24,11 @@ public class TransactionDaoImpl implements TransactionDao {
 
   @Override
   public void saveTransaction(Transaction transaction) {
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TRANSACTION_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
-      preparedStatement.setString(1, transaction.getTransactionType());
-      if (transaction.getUserId() == 0) {
+      preparedStatement.setString(1, transaction.getTransactionType().toString());
+      if (transaction.getUserId() == null || transaction.getUserId() == 0) {
         preparedStatement.setNull(2, Types.INTEGER); // Null if it's an over-the-counter transaction
       } else {
         preparedStatement.setInt(2, transaction.getUserId());
@@ -42,10 +44,11 @@ public class TransactionDaoImpl implements TransactionDao {
             transaction.setTransactionId(generatedKeys.getInt(1));
           }
         }
+      } else {
+        throw new DaoException("Error saving transaction for type: " + transaction.getTransactionType());
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error saving transaction for type: " + transaction.getTransactionType(), e);
     }
   }
 
@@ -53,7 +56,7 @@ public class TransactionDaoImpl implements TransactionDao {
   public List<Transaction> getTransactionsByDate(LocalDate date) {
     List<Transaction> transactions = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_TRANSACTIONS_BY_DATE)) {
 
       preparedStatement.setDate(1, Date.valueOf(date));
@@ -64,21 +67,20 @@ public class TransactionDaoImpl implements TransactionDao {
         transactions.add(transaction);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error retrieving transactions for date: " + date, e);
     }
     return transactions;
   }
 
   @Override
-  public List<Transaction> getTransactionsByDateAndType(LocalDate date, String type) {
+  public List<Transaction> getTransactionsByDateAndType(LocalDate date, TransactionType type) {
     List<Transaction> transactions = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_TRANSACTIONS_BY_DATE_AND_TYPE)) {
 
       preparedStatement.setDate(1, Date.valueOf(date));
-      preparedStatement.setString(2, type);
+      preparedStatement.setString(2, type.toString());
       ResultSet rs = preparedStatement.executeQuery();
 
       while (rs.next()) {
@@ -86,12 +88,10 @@ public class TransactionDaoImpl implements TransactionDao {
         transactions.add(transaction);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      // Handle exceptions properly (logging or rethrowing)
+      throw new DaoException("Error retrieving transactions for date: " + date + " and type: " + type, e);
     }
     return transactions;
   }
-
 
   @Override
   public List<Transaction> getAllTransactions() {
@@ -99,19 +99,19 @@ public class TransactionDaoImpl implements TransactionDao {
   }
 
   @Override
-  public List<Transaction> getAllTransactionsByType(String type) {
+  public List<Transaction> getAllTransactionsByType(TransactionType type) {
     return getTransactions(SELECT_TRANSACTIONS_BY_TYPE, type);
   }
 
   // Helper method to execute the query and map results to Transaction objects
-  private List<Transaction> getTransactions(String query, String type) {
+  private List<Transaction> getTransactions(String query, TransactionType type) {
     List<Transaction> transactions = new ArrayList<>();
 
-    try (Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
       if (type != null) {
-        preparedStatement.setString(1, type);
+        preparedStatement.setString(1, type.toString());
       }
 
       ResultSet rs = preparedStatement.executeQuery();
@@ -120,7 +120,7 @@ public class TransactionDaoImpl implements TransactionDao {
         transactions.add(transaction);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new DaoException("Error retrieving transactions", e);
     }
     return transactions;
   }
@@ -128,13 +128,15 @@ public class TransactionDaoImpl implements TransactionDao {
   // Helper method to map a ResultSet row to a Transaction object
   private Transaction mapRowToTransaction(ResultSet rs) throws SQLException {
     int transactionId = rs.getInt("transaction_id");
-    String transactionType = rs.getString("transaction_type");
+    String transactionTypeStr = rs.getString("transaction_type");
     int userId = rs.getInt("user_id");
     BigDecimal totalAmount = rs.getBigDecimal("total_amount");
     Timestamp createdAt = rs.getTimestamp("created_at");
 
+    TransactionType transactionType = TransactionType.fromString(transactionTypeStr);  // Convert String to Enum
+
     Transaction transaction;
-    if ("online".equals(transactionType)) {
+    if (TransactionType.ONLINE.equals(transactionType)) {
       // Create an OnlineTransaction
       transaction = new OnlineTransaction(totalAmount, userId);
     } else {
@@ -147,5 +149,4 @@ public class TransactionDaoImpl implements TransactionDao {
 
     return transaction;
   }
-
 }

@@ -1,7 +1,5 @@
 package com.syos.model;
 
-import com.syos.model.BillItem;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class Bill {
     this.totalAmount = totalAmount;
     this.cashTendered = cashTendered;
     this.changeAmount = changeAmount;
-    this.billItems = new ArrayList<>(); // Initialize the billItems list
+    this.billItems = new ArrayList<>();
   }
 
   public Bill(int transactionId, LocalDate billDate, BigDecimal totalAmount) {

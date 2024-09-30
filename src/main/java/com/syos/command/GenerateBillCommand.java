@@ -1,5 +1,6 @@
 package com.syos.command;
 
+import com.syos.enums.TransactionType;
 import com.syos.service.BillService;
 import com.syos.model.BillItem;
 
@@ -10,12 +11,12 @@ public class GenerateBillCommand implements Command {
 
   private BillService billService;
   private List<BillItem> billItems;
-  private String transactionType;
+  private TransactionType transactionType;
   private BigDecimal cashTendered;  // Optional for in-store transactions
   private Integer userId;           // Optional for online transactions
 
   // Constructor for online transactions (with userId)
-  public GenerateBillCommand(BillService billService, List<BillItem> billItems, String transactionType, Integer userId) {
+  public GenerateBillCommand(BillService billService, List<BillItem> billItems, TransactionType transactionType, Integer userId) {
     this.billService = billService;
     this.billItems = billItems;
     this.transactionType = transactionType;
@@ -24,7 +25,8 @@ public class GenerateBillCommand implements Command {
   }
 
   // Constructor for in-store transactions (with cashTendered)
-  public GenerateBillCommand(BillService billService, List<BillItem> billItems, String transactionType, BigDecimal cashTendered) {
+  public GenerateBillCommand(BillService billService, List<BillItem> billItems, TransactionType transactionType,
+    BigDecimal cashTendered) {
     this.billService = billService;
     this.billItems = billItems;
     this.transactionType = transactionType;
@@ -34,11 +36,9 @@ public class GenerateBillCommand implements Command {
 
   @Override
   public void execute() {
-    if ("over-the-counter".equals(transactionType)) {
-      // Handle in-store (over-the-counter) transactions
+    if (TransactionType.STORE.equals(transactionType)) {
       billService.buildBill(billItems, transactionType, cashTendered);
-    } else if ("online".equals(transactionType)) {
-      // Handle online transactions with userId
+    } else if (TransactionType.ONLINE.equals(transactionType)) {
       if (userId == null) {
         throw new IllegalArgumentException("User ID is required for online transactions.");
       }

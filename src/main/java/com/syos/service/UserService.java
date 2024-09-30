@@ -1,6 +1,7 @@
 package com.syos.service;
 
 import com.syos.dao.UserDao;
+import com.syos.exception.UserAlreadyExistsException;
 import com.syos.model.User;
 
 public class UserService {
@@ -18,15 +19,14 @@ public class UserService {
    * @param user - The User object containing the user's registration details.
    * @return - Returns true if the user was successfully registered, otherwise false.
    */
-  public boolean registerUser(User user) {
+  public void registerUser(User user) {
     // Check if the email is already registered
     if (userDao.getUserByEmail(user.getEmail()) != null) {
-      return false; // Email already exists
+      throw new UserAlreadyExistsException("Email '" + user.getEmail() + "' is already registered.");
     }
 
-    // Save the user and return success
+    // Save the user if no exception is thrown
     userDao.saveUser(user);
-    return true;
   }
 
   /**
@@ -39,6 +39,17 @@ public class UserService {
   public boolean loginUser(String email, String password) {
     // Verify user credentials via the UserDao
     return userDao.verifyUserCredentials(email, password);
+  }
+
+  /**
+   * Retrieves a user by email.
+   *
+   * @param email - The email address of the user.
+   * @return - Returns the User object if found, otherwise null.
+   */
+  public User getUserByEmail(String email) {
+    // Call the DAO method to fetch the user
+    return userDao.getUserByEmail(email);
   }
 }
 

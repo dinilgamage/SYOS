@@ -6,32 +6,29 @@ public class BillItem {
   private int billItemId;
   private int billId;
   private int itemId;
-  private String itemCode; // Updated from itemId
+  private String itemCode;
   private int quantity;
   private BigDecimal itemPrice;
   private BigDecimal totalPrice;
-  private BigDecimal discount;
 
   // Constructors
   public BillItem(String itemCode, int quantity, BigDecimal itemPrice) {
     this.itemCode = itemCode;
     this.quantity = quantity;
     this.itemPrice = itemPrice;
-  }
-
-  public BillItem(int billId, int itemId, int quantity, BigDecimal itemPrice, BigDecimal discount) {
-    this.billId = billId;
-    this.itemId = itemId;
-    this.quantity = quantity;
-    this.itemPrice = itemPrice;
-    this.discount = discount;
     this.totalPrice = calculateTotalPrice();
   }
 
-  // Method to calculate total price after discount
+  public BillItem(int itemId, int quantity, BigDecimal itemPrice) {
+    this.itemId = itemId;
+    this.quantity = quantity;
+    this.itemPrice = itemPrice;
+    this.totalPrice = calculateTotalPrice();
+  }
+
+  // Method to calculate total price without discount logic
   private BigDecimal calculateTotalPrice() {
-    BigDecimal priceWithoutDiscount = itemPrice.multiply(BigDecimal.valueOf(quantity));
-    return priceWithoutDiscount.subtract(priceWithoutDiscount.multiply(discount).divide(BigDecimal.valueOf(100)));
+    return itemPrice.multiply(BigDecimal.valueOf(quantity));
   }
 
   // Getters and Setters
@@ -55,6 +52,10 @@ public class BillItem {
     return itemId;
   }
 
+  public void setItemId(int itemId) {
+    this.itemId = itemId;
+  }
+
   public String getItemCode() {
     return itemCode;
   }
@@ -69,11 +70,16 @@ public class BillItem {
 
   public void setQuantity(int quantity) {
     this.quantity = quantity;
-    this.totalPrice = calculateTotalPrice(); // Recalculate total price
+    this.totalPrice = calculateTotalPrice(); // Recalculate total price based on quantity
   }
 
   public BigDecimal getItemPrice() {
     return itemPrice;
+  }
+
+  public void setItemPrice(BigDecimal itemPrice) {
+    this.itemPrice = itemPrice;
+    this.totalPrice = calculateTotalPrice(); // Recalculate total price based on price
   }
 
   public BigDecimal getTotalPrice() {
@@ -83,14 +89,4 @@ public class BillItem {
   public void setTotalPrice(BigDecimal totalPrice) {
     this.totalPrice = totalPrice;
   }
-
-  public BigDecimal getDiscount() {
-    return discount;
-  }
-
-  public void setDiscount(BigDecimal discount) {
-    this.discount = discount;
-    this.totalPrice = calculateTotalPrice(); // Recalculate total price
-  }
 }
-

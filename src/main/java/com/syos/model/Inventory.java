@@ -21,8 +21,8 @@ public class Inventory {
     this.storeStock = storeStock;
     this.onlineStock = onlineStock;
     this.shelfCapacity = shelfCapacity;
-    this.discountValue = BigDecimal.ZERO; // Default to no discount
-    this.discountType = ""; // Default to no discount type
+    this.discountValue = BigDecimal.ZERO;
+    this.discountType = "";
   }
 
   // Getters and Setters
