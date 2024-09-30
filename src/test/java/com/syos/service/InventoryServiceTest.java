@@ -290,4 +290,27 @@ public class InventoryServiceTest {
     // Assert
     verify(mockObserver, times(1)).update(inventory);
   }
+
+  /**
+   * Test restocking an item and ensuring observers are notified when stock falls below the reorder threshold.
+   */
+  @Test
+  public void testRestockItem_NotifyObserverOnReorderThreshold() {
+    // Arrange
+    Inventory inventory = createInventory(1, "ITEM001", "Item One", new BigDecimal("100.00"), 60, 30, 100); // Store
+    // stock is 40 (below threshold)
+
+    // Available stock in batches: 50 units. Restocking will leave total stock below the reorder threshold (50).
+    StockBatch batch1 = createStockBatch(1, 1, 50);  // Batch has 50 units initially
+
+    when(mockInventoryDao.getItemByCode("ITEM001")).thenReturn(inventory);
+    when(mockStockBatchDao.getBatchesForItem(1)).thenReturn(Collections.singletonList(batch1));
+
+    // Act
+    inventoryService.restockItem("ITEM001", ShelfType.STORE_SHELF); // This should restock and bring total stock to 90 (still below 100 threshold)
+
+    // Assert: Verify the observer is notified when total stock falls below the reorder threshold
+    verify(mockObserver, times(1)).update(inventory);
+  }
+
 }
