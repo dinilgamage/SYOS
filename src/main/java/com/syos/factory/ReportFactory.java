@@ -10,6 +10,9 @@ public class ReportFactory {
 
   public static Report createReport(ReportType reportType, InventoryDao inventoryDao, TransactionDao transactionDao,
     StockBatchDao stockBatchDao) {
+    if (reportType == null) {
+      throw new IllegalArgumentException("Report type cannot be null");
+    }
     switch (reportType) {
       case TOTAL_SALES:
         return new TotalSalesReport(transactionDao);
