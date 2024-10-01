@@ -285,43 +285,25 @@ public class BillServiceTest {
    * Edge Case: Cash tendered is less than the total amount in store transactions.
    */
   @Test
-  public void testBuildBill_Store_CashTenderedLessThanTotal() throws Exception {
+  public void testBuildBill_Store_CashTenderedLessThanTotal_ShouldThrowException() throws Exception {
     // Arrange
     BillItem item1 = createBillItem("ITEM007", 2, new BigDecimal("40.00"));
     List<BillItem> items = Arrays.asList(item1);
     TransactionType transactionType = TransactionType.STORE;
-    BigDecimal cashTendered = new BigDecimal("70.00"); // Total is 80.00
+    BigDecimal cashTendered = new BigDecimal("70.00"); // Less than the total of 80.00
+    BigDecimal transactionTotal = new BigDecimal("80.00");
 
-    BigDecimal transactionTotal = new BigDecimal("80.00"); // 2*40
-
-    Transaction transaction = createTransaction(5006, transactionType, transactionTotal, null);
-
-    when(mockTransactionService.createTransaction(transactionType, transactionTotal, null)).thenReturn(transaction);
-
-    Inventory inventory1 = createInventory(7, "ITEM007", "Item Seven", new BigDecimal("40.00"), 10, 5, 20);
-
-    when(mockInventoryDao.getItemByCode("ITEM007")).thenReturn(inventory1);
-
-    // Simulate updateInventoryStock working fine
+    when(mockTransactionService.createTransaction(transactionType, transactionTotal, null)).thenReturn(createTransaction(5006, transactionType, transactionTotal, null));
+    when(mockInventoryDao.getItemByCode("ITEM007")).thenReturn(createInventory(7, "ITEM007", "Item Seven", new BigDecimal("40.00"), 10, 5, 20));
     doNothing().when(mockInventoryService).updateInventoryStock("ITEM007", 2, transactionType);
 
-    // Act
-    Bill bill = billService.buildBill(items, transactionType, cashTendered);
+    // Act and Assert
+    assertThrows(IllegalArgumentException.class, () -> {
+      billService.buildBill(items, transactionType, cashTendered); // This should throw an exception
+    });
 
-    // Assert
-    assertNotNull(bill);
-    assertEquals(transaction.getTransactionId(), bill.getTransactionId());
-    assertEquals(new BigDecimal("80.00"), bill.getTotalAmount());
-    assertEquals(new BigDecimal("70.00"), bill.getCashTendered());
-    assertEquals(new BigDecimal("-10.00"), bill.getChangeAmount()); // Negative change indicates insufficient cash
-
-    assertEquals(1, bill.getBillItems().size());
-
-    // Verify interactions
-    verify(mockTransactionService, times(1)).createTransaction(transactionType, transactionTotal, null);
-    verify(mockInventoryDao, times(1)).getItemByCode("ITEM007");
-    verify(mockInventoryService, times(1)).updateInventoryStock("ITEM007", 2, transactionType);
-    verify(mockBillDao, times(1)).saveBill(bill);
-    verify(mockBillItemDao, times(1)).saveBillItem(any(BillItem.class));
+    // Verify that the transaction was not created
+    verify(mockTransactionService, never()).createTransaction(any(), any(), any());
   }
+
 }
