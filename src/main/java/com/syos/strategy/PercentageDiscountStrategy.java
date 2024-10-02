@@ -8,6 +8,9 @@ public class PercentageDiscountStrategy implements DiscountStrategy {
 
   // Constructor to set the discount percentage
   public PercentageDiscountStrategy(BigDecimal percentage) {
+    if (percentage.compareTo(BigDecimal.ZERO) < 0) {
+      throw new IllegalArgumentException("Discount percentage cannot be negative");
+    }
     this.percentage = percentage;
   }
 

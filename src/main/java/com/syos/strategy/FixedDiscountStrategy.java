@@ -8,6 +8,9 @@ public class FixedDiscountStrategy implements DiscountStrategy {
 
   // Constructor to set the fixed discount amount
   public FixedDiscountStrategy(BigDecimal discountAmount) {
+    if (discountAmount.compareTo(BigDecimal.ZERO) < 0) {
+      throw new IllegalArgumentException("Discount amount cannot be negative");
+    }
     this.discountAmount = discountAmount;
   }
 
