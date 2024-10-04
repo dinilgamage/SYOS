@@ -17,20 +17,13 @@ public class ReportService {
   private TransactionDao transactionDao;
   private StockBatchDao stockBatchDao;
 
-  // Constructor to inject dependencies
   public ReportService(InventoryDao inventoryDao, TransactionDao transactionDao, StockBatchDao stockBatchDao) {
     this.inventoryDao = inventoryDao;
     this.transactionDao = transactionDao;
     this.stockBatchDao = stockBatchDao;
   }
 
-  /**
-   * Generates a report based on the report type.
-   * @param reportType - The type of report to generate.
-   * @param date - Optional: The date for the report (used for date-sensitive reports like TotalSales).
-   * @param reportFilterType - Optional: The type of transaction (used for reports filtered by transaction type).
-   */
-// Existing method (date and transactionType both required)
+// method (date and transactionType both required)
   public void generateReport(ReportType reportType, LocalDate date, ReportFilterType reportFilterType) {
     validateReportType(reportType);
     Report report = ReportFactory.createReport(reportType, inventoryDao, transactionDao, stockBatchDao);

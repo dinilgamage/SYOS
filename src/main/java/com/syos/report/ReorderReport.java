@@ -18,7 +18,6 @@ public class ReorderReport extends Report {
   private StockBatchDao stockBatchDao;
   private Map<Inventory, Integer> itemsToReorder;
 
-  // Constructor to inject dependencies (InventoryDao and StockBatchDao)
   public ReorderReport(InventoryDao inventoryDao, StockBatchDao stockBatchDao) {
     this.inventoryDao = inventoryDao;
     this.stockBatchDao = stockBatchDao;

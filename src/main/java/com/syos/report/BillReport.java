@@ -26,7 +26,6 @@ public class BillReport extends Report {
   protected void collectData(LocalDate date, ReportFilterType type) {
     System.out.println("Collecting all transaction data for " + type);
 
-    // Fetch all transactions based on the type (online, in-store, or both)
     if (type == ReportFilterType.BOTH) {
       transactions = transactionDao.getAllTransactions();
     } else if (type == ReportFilterType.ONLINE) {

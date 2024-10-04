@@ -12,9 +12,8 @@ public class Bill {
   private BigDecimal totalAmount;
   private BigDecimal cashTendered;
   private BigDecimal changeAmount;
-  private List<BillItem> billItems; // Add a list to store BillItem objects
+  private List<BillItem> billItems;
 
-  // Constructors
   public Bill(int transactionId, LocalDate billDate, BigDecimal totalAmount, BigDecimal cashTendered, BigDecimal changeAmount) {
     this.transactionId = transactionId;
     this.billDate = billDate;

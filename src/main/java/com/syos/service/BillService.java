@@ -6,15 +6,10 @@ import com.syos.dao.BillItemDao;
 import com.syos.dao.InventoryDao;
 import com.syos.enums.TransactionType;
 import com.syos.exception.InvalidTransactionTypeException;
-import com.syos.factory.DiscountStrategyFactory;
 import com.syos.model.Bill;
 import com.syos.model.BillItem;
 import com.syos.model.Inventory;
 import com.syos.model.Transaction;
-import com.syos.service.TransactionService;
-import com.syos.service.InventoryService;
-import com.syos.strategy.DiscountStrategy;
-import com.syos.strategy.NoDiscountStrategy;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,7 +19,7 @@ public class BillService {
   private BillDao billDao;
   private BillItemDao billItemDao;
   private TransactionService transactionService;
-  private InventoryService inventoryService;  // To get item information including discounts
+  private InventoryService inventoryService;
   private final InventoryDao inventoryDao;
 
   public BillService(BillDao billDao, BillItemDao billItemDao, TransactionService transactionService,
@@ -32,7 +27,7 @@ public class BillService {
     this.billDao = billDao;
     this.billItemDao = billItemDao;
     this.transactionService = transactionService;
-    this.inventoryService = inventoryService;  // Inject InventoryService
+    this.inventoryService = inventoryService;
     this.inventoryDao = inventoryDao;
   }
 
@@ -56,7 +51,6 @@ public class BillService {
       throw new IllegalArgumentException("Bill must contain at least one item");
     }
 
-    // Calculate the total transaction amount
     BigDecimal totalAmount = calculateTransactionTotal(items);
 
     // For in-store transactions, check if cash tendered is less than the total
@@ -94,12 +88,9 @@ public class BillService {
   }
 
 
-  // Method to save the bill
   public void saveBill(Bill bill) {
-    // Save the Bill
     billDao.saveBill(bill);
 
-    // Save each BillItem associated with the bill
     for (BillItem item : bill.getBillItems()) {
       item.setBillId(bill.getBillId());
       billItemDao.saveBillItem(item);

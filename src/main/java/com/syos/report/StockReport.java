@@ -34,10 +34,8 @@ public class StockReport extends Report {
   protected void collectData(LocalDate date, ReportFilterType type) {
     System.out.println("Collecting stock data batch-wise...");
 
-    // Fetch all stock batches from the StockBatchDao
     List<StockBatch> stockBatches = stockBatchDao.getAllStockBatches();
 
-    // Collect corresponding item codes from InventoryDao
     for (StockBatch batch : stockBatches) {
       Inventory inventoryItem = inventoryDao.getItemById(batch.getItemId());
       String itemCode = (inventoryItem != null) ? inventoryItem.getItemCode() : "Unknown Code";

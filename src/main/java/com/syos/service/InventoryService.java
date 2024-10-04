@@ -10,7 +10,6 @@ import com.syos.model.Inventory;
 import com.syos.model.StockBatch;
 import com.syos.observer.StockObserver;
 import com.syos.observer.StockSubject;
-import com.syos.strategy.DiscountStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ public class InventoryService implements StockSubject {
   private StockBatchDao stockBatchDao;
   private List<StockObserver> observers;
 
-  // Constructor to inject dependencies
   public InventoryService(InventoryDao inventoryDao, StockBatchDao stockBatchDao) {
     this.inventoryDao = inventoryDao;
     this.stockBatchDao = stockBatchDao;
@@ -47,7 +45,6 @@ public class InventoryService implements StockSubject {
   }
 
   public List<Inventory> getAllItems() {
-    // Fetch all inventory items from the DAO and return
     return inventoryDao.getAllItems();
   }
 
@@ -68,10 +65,10 @@ public class InventoryService implements StockSubject {
 
   public boolean checkAvailableStock(Inventory inventoryItem, int quantity, TransactionType transactionType) {
     if (TransactionType.STORE.equals(transactionType)) {
-      // Check if store stock is available
+
       return inventoryItem.getStoreStock() >= quantity;
     } else if (TransactionType.ONLINE.equals(transactionType)) {
-      // Check if online stock is available
+
       return inventoryItem.getOnlineStock() >= quantity;
     } else {
       throw new IllegalArgumentException("Invalid transaction type: " + transactionType);
@@ -82,7 +79,7 @@ public class InventoryService implements StockSubject {
     Inventory item = inventoryDao.getItemByCode(itemCode);
 
     if (item != null) {
-      // Update stock based on shelf type
+
       if (TransactionType.STORE.equals(shelfType)) {
         int updatedStoreStock = item.getStoreStock() - quantity;
         item.setStoreStock(updatedStoreStock);
@@ -93,7 +90,7 @@ public class InventoryService implements StockSubject {
         throw new IllegalArgumentException("Invalid shelf type: " + shelfType);
       }
 
-      // Update the inventory in the database
+
       inventoryDao.updateInventory(item);
 
     } else {
@@ -119,10 +116,8 @@ public class InventoryService implements StockSubject {
       adjustBatchStock(batches, maxRestockQuantity);
       adjustShelfStock(item, shelfType, maxRestockQuantity);
 
-      // Save the updated inventory
       inventoryDao.updateInventory(item);
 
-      // Calculate the total stock across all batches for the item
       int totalStockAcrossBatches = calculateTotalStockFromBatches(item.getItemId());
 
       // If the total stock falls below a certain threshold, notify observers
@@ -149,7 +144,7 @@ public class InventoryService implements StockSubject {
         batch.setQuantity(0);
         remainingQuantity -= batchQuantity;
       }
-      stockBatchDao.updateBatch(batch); // Update the batch after adjusting
+      stockBatchDao.updateBatch(batch);
     }
   }
 

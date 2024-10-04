@@ -11,7 +11,6 @@ public class BillItem {
   private BigDecimal itemPrice;
   private BigDecimal totalPrice;
 
-  // Constructors
   public BillItem(String itemCode, int quantity, BigDecimal itemPrice) {
     this.itemCode = itemCode;
     this.quantity = quantity;
@@ -70,7 +69,7 @@ public class BillItem {
 
   public void setQuantity(int quantity) {
     this.quantity = quantity;
-    this.totalPrice = calculateTotalPrice(); // Recalculate total price based on quantity
+    this.totalPrice = calculateTotalPrice();
   }
 
   public BigDecimal getItemPrice() {
@@ -79,7 +78,7 @@ public class BillItem {
 
   public void setItemPrice(BigDecimal itemPrice) {
     this.itemPrice = itemPrice;
-    this.totalPrice = calculateTotalPrice(); // Recalculate total price based on price
+    this.totalPrice = calculateTotalPrice();
   }
 
   public BigDecimal getTotalPrice() {

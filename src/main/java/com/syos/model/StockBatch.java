@@ -9,7 +9,6 @@ public class StockBatch {
   private LocalDate dateReceived;
   private LocalDate expiryDate;
 
-  // Constructors
   public StockBatch(int batchId, int itemId, int quantity, LocalDate dateReceived, LocalDate expiryDate) {
     this.itemId = itemId;
     this.quantity = quantity;

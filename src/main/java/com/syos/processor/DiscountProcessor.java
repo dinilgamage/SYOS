@@ -19,14 +19,13 @@ public class DiscountProcessor {
   public void addDiscounts(Scanner scanner) {
     System.out.println("=== Add Discounts ===");
 
-    // Use the utility method to validate and get the item
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
     String discountTypeStr = InputUtils.getValidatedStringOption(scanner,
       "Enter Discount Strategy (percentage/fixed/none): ",
       "percentage", "fixed", "none");
 
-    DiscountType discountType = DiscountType.fromString(discountTypeStr);  // Convert String to Enum
+    DiscountType discountType = DiscountType.fromString(discountTypeStr);
 
     BigDecimal discountValue;
 
@@ -36,7 +35,7 @@ public class DiscountProcessor {
       discountValue = InputUtils.getValidatedPositiveBigDecimal(scanner, "Enter Discount Value: ");
 
       if (!InputUtils.validateDiscount(discountType, discountValue, inventoryItem)) {
-        return;  // Stop if validation fails
+        return;
       }
     }
 

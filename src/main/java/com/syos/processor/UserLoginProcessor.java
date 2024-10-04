@@ -12,7 +12,6 @@ public class UserLoginProcessor {
     this.storeFacade = storeFacade;
   }
 
-  // Modified to return the email if login is successful
   public String loginUser(Scanner scanner) {
     System.out.println("=== Login ===");
     System.out.print("Enter Email: ");
@@ -23,9 +22,9 @@ public class UserLoginProcessor {
     // Validate login through facade
     boolean isAuthenticated = storeFacade.loginUser(email, password);
     if (isAuthenticated) {
-      return email;  // Return the email if login is successful
+      return email;
     } else {
-      return null;  // Return null if login fails
+      return null;
     }
   }
 }

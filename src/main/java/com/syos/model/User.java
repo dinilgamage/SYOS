@@ -6,7 +6,7 @@ public class User {
   private int userId;
   private String name;
   private String email;
-  private String password; // Should be hashed for security
+  private String password;
   private LocalDateTime createdAt;
 
   public User(String name, String email, String password) {

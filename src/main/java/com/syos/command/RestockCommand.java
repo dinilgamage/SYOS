@@ -10,7 +10,6 @@ public class RestockCommand implements Command {
   private String itemCode;
   private ShelfType shelfType;  // 'store' or 'online'
 
-  // Constructor
   public RestockCommand(InventoryService inventoryService, String itemCode, ShelfType shelfType) {
     this.inventoryService = inventoryService;
     this.itemCode = itemCode;

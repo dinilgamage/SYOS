@@ -25,7 +25,6 @@ public class ReshelveReport extends Report {
   protected void collectData(LocalDate date, ReportFilterType type) {
     System.out.println("Collecting reshelve data for " + type);
 
-    // Fetch reshelve data based on the type (online, in-store, or both)
     if (type == ReportFilterType.BOTH) {
       itemsToReshelve = inventoryDao.getItemsToReshelveForBoth();
     } else if (type == ReportFilterType.ONLINE) {

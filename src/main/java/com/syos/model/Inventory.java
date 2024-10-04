@@ -15,7 +15,6 @@ public class Inventory {
   private Integer onlineStock;
   private int shelfCapacity;
 
-  // Constructors
   public Inventory(String itemCode, String name, BigDecimal price, Integer storeStock, Integer onlineStock, int shelfCapacity) {
     this.itemCode = itemCode;
     this.name = name;

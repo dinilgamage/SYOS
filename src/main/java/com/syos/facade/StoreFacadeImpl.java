@@ -139,7 +139,7 @@ public class StoreFacadeImpl implements StoreFacade {
 
   @Override
   public void addDiscount(String itemCode, BigDecimal discountValue, DiscountType discountType) {
-    // Retrieve the item from the inventory
+
     Inventory inventory = inventoryDao.getItemByCode(itemCode);
 
     if (inventory != null) {

@@ -4,7 +4,6 @@ import com.syos.dao.InventoryDao;
 import com.syos.database.DatabaseConnection;
 import com.syos.enums.DiscountType;
 import com.syos.enums.StockThreshold;
-import com.syos.enums.TransactionType;
 import com.syos.exception.DaoException;
 import com.syos.model.Inventory;
 

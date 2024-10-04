@@ -71,7 +71,6 @@ public class InputUtils {
       System.out.print(promptMessage);
       String itemCode = scanner.next();
 
-      // Check if the item exists in the inventory
       inventoryItem = storeFacade.getItemByCode(itemCode);
       if (inventoryItem == null) {
         System.out.println("Item not found: " + itemCode + ". Please try again.");
@@ -97,17 +96,16 @@ public class InputUtils {
         }
       } catch (InputMismatchException e) {
         System.out.println("Invalid input. Please enter a valid decimal amount.");
-        scanner.next(); // Clear the invalid input
+        scanner.next();
       }
     }
 
     return cashTendered;
   }
 
-  // New method to validate discount based on the discount type (percentage/fixed)
+  // Method to validate discount based on the discount type (percentage/fixed)
   public static boolean validateDiscount(DiscountType discountType, BigDecimal discountValue, Inventory inventoryItem) {
 
-    // Ensure discount value is positive
     if (discountValue.compareTo(BigDecimal.ZERO) <= 0) {
       System.out.println("Discount value must be greater than 0.");
       return false;
@@ -130,10 +128,10 @@ public class InputUtils {
       return false;
     }
 
-    return true; // Return true if all validations pass
+    return true;
   }
 
-  // New utility method to validate user input against multiple valid options
+  // Method to validate user input against multiple valid options
   public static String getValidatedStringOption(Scanner scanner, String promptMessage, String... validOptions) {
     Set<String> validOptionSet = new HashSet<>();
     for (String option : validOptions) {
@@ -145,10 +143,10 @@ public class InputUtils {
 
     while (!validInput) {
       System.out.print(promptMessage);
-      input = scanner.next().toLowerCase(); // Normalize input for case-insensitive comparison
+      input = scanner.next().toLowerCase();
 
       if (validOptionSet.contains(input)) {
-        validInput = true; // If input is valid, break the loop
+        validInput = true;
       } else {
         System.out.println("Invalid input. Please enter one of the following: " + String.join(", ", validOptions));
       }
@@ -168,7 +166,7 @@ public class InputUtils {
         String dateInput = scanner.next();
         // Try to parse the date
         date = LocalDate.parse(dateInput);
-        validInput = true; // If parsing is successful, exit the loop
+        validInput = true;
       } catch (DateTimeParseException e) {
         System.out.println("Invalid date format. Please enter the date in the format yyyy-mm-dd.");
       }
@@ -195,14 +193,6 @@ public class InputUtils {
     return email;
   }
 
-  // Helper method to check if the email is valid
-  private static boolean isValidEmail(String email) {
-    String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-    Pattern pattern = Pattern.compile(emailRegex);
-    Matcher matcher = pattern.matcher(email);
-    return matcher.matches();
-  }
-
   // Method to validate password strength (min 8 chars, at least one number and special character)
   public static String getValidatedPassword(Scanner scanner, String promptMessage) {
     String password = "";
@@ -220,6 +210,14 @@ public class InputUtils {
     }
 
     return password;
+  }
+
+  // Helper method to check if the email is valid
+  private static boolean isValidEmail(String email) {
+    String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    Pattern pattern = Pattern.compile(emailRegex);
+    Matcher matcher = pattern.matcher(email);
+    return matcher.matches();
   }
 
   // Helper method to check if the password meets the required criteria

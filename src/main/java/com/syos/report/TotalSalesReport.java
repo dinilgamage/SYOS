@@ -15,7 +15,6 @@ public class TotalSalesReport extends Report {
   private BigDecimal totalSales;
   private List<Transaction> transactions;
 
-  // Constructor to inject dependencies (TransactionDao)
   public TotalSalesReport(TransactionDao transactionDao) {
     this.transactionDao = transactionDao;
   }
@@ -29,14 +28,13 @@ public class TotalSalesReport extends Report {
   protected void collectData(LocalDate date, ReportFilterType type) {
     System.out.println("Collecting total sales data for " + type + " on " + date);
 
-    // Fetch transactions based on the type and date
     if (type == ReportFilterType.BOTH) {
-      transactions = transactionDao.getTransactionsByDate(date); // Combined data for both online and in-store
+      transactions = transactionDao.getTransactionsByDate(date);
     } else if (type == ReportFilterType.ONLINE) {
       transactions = transactionDao.getTransactionsByDateAndType(date,
-        TransactionType.ONLINE); // Only online transactions
+        TransactionType.ONLINE);
     } else {
-      transactions = transactionDao.getTransactionsByDateAndType(date, TransactionType.STORE); // Only in-store transactions
+      transactions = transactionDao.getTransactionsByDateAndType(date, TransactionType.STORE);
     }
 
     // Calculate the total sales amount

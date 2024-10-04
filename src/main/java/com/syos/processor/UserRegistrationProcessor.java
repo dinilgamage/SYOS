@@ -17,15 +17,12 @@ public class UserRegistrationProcessor {
   public void registerUser(Scanner scanner) {
     System.out.println("=== Register ===");
 
-    // Validate name
     System.out.print("Enter Name: ");
     String name = scanner.next();
 
-    // Validate email and password
     String email = InputUtils.getValidatedEmail(scanner, "Enter Email: ");
     String password = InputUtils.getValidatedPassword(scanner, "Enter Password: ");
 
-    // Call StoreFacade to register user
     try {
       storeFacade.registerUser(name, email, password);
       System.out.println("Registration Successful!");
