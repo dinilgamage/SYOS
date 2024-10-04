@@ -3,6 +3,7 @@ package com.syos.dao.impl;
 import com.syos.dao.InventoryDao;
 import com.syos.database.DatabaseConnection;
 import com.syos.enums.DiscountType;
+import com.syos.enums.StockThreshold;
 import com.syos.enums.TransactionType;
 import com.syos.exception.DaoException;
 import com.syos.model.Inventory;
@@ -102,13 +103,12 @@ public class InventoryDaoImpl implements InventoryDao {
   @Override
   public List<Inventory> getLowStockItems() {
     List<Inventory> lowStockItems = new ArrayList<>();
-    final int LOW_STOCK_THRESHOLD = 50; // Defined stock threshold
 
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_LOW_STOCK_ITEMS)) {
 
-      preparedStatement.setInt(1, LOW_STOCK_THRESHOLD);
-      preparedStatement.setInt(2, LOW_STOCK_THRESHOLD);
+      preparedStatement.setInt(1, StockThreshold.REORDER_LEVEL.getValue());
+      preparedStatement.setInt(2, StockThreshold.REORDER_LEVEL.getValue());
 
       ResultSet rs = preparedStatement.executeQuery();
       while (rs.next()) {
