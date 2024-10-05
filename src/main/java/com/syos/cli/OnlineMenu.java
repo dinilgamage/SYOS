@@ -13,7 +13,6 @@ public class OnlineMenu {
   private final UserLoginProcessor userLoginProcessor;
   private final UserMenuProcessor userMenuProcessor;
 
-  // Constructor that accepts the processors as dependencies
   public OnlineMenu(UserRegistrationProcessor userRegistrationProcessor,
                     UserLoginProcessor userLoginProcessor,
                     UserMenuProcessor userMenuProcessor) {
@@ -22,7 +21,6 @@ public class OnlineMenu {
     this.userMenuProcessor = userMenuProcessor;
   }
 
-  // Orchestrating user interactions
   public void displayOnlineMenu() {
     Scanner scanner = new Scanner(System.in);
     int choice;

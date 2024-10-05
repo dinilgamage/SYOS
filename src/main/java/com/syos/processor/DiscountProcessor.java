@@ -1,5 +1,6 @@
 package com.syos.processor;
 
+import com.syos.enums.DiscountType;
 import com.syos.facade.StoreFacade;
 import com.syos.model.Inventory;
 import com.syos.util.InputUtils;
@@ -18,27 +19,28 @@ public class DiscountProcessor {
   public void addDiscounts(Scanner scanner) {
     System.out.println("=== Add Discounts ===");
 
-    // Use the utility method to validate and get the item
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
-    String strategyType = InputUtils.getValidatedStringOption(scanner,
+    String discountTypeStr = InputUtils.getValidatedStringOption(scanner,
       "Enter Discount Strategy (percentage/fixed/none): ",
       "percentage", "fixed", "none");
 
+    DiscountType discountType = DiscountType.fromString(discountTypeStr);
+
     BigDecimal discountValue;
 
-    if ("none".equals(strategyType)) {
+    if (DiscountType.NONE.equals(discountType)) {
       discountValue = BigDecimal.ZERO;
     } else {
       discountValue = InputUtils.getValidatedPositiveBigDecimal(scanner, "Enter Discount Value: ");
 
-      if (!InputUtils.validateDiscount(strategyType, discountValue, inventoryItem)) {
-        return;  // Stop if validation fails
+      if (!InputUtils.validateDiscount(discountType, discountValue, inventoryItem)) {
+        return;
       }
     }
 
     // Apply the discount using StoreFacade
-    storeFacade.addDiscount(inventoryItem.getItemCode(), discountValue, strategyType);
+    storeFacade.addDiscount(inventoryItem.getItemCode(), discountValue, discountType);
     System.out.println("Discount added successfully to item: " + inventoryItem.getItemCode());
   }
 }

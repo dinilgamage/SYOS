@@ -16,11 +16,11 @@ import java.util.List;
 
 public class TransactionDaoImpl implements TransactionDao {
 
-  private static final String INSERT_TRANSACTION_SQL = "INSERT INTO Transactions (transaction_type, user_id, total_amount, created_at) VALUES (?, ?, ?, ?)";
-  private static final String SELECT_TRANSACTIONS_BY_DATE = "SELECT * FROM Transactions WHERE DATE(created_at) = ?";
-  private static final String SELECT_TRANSACTIONS_BY_DATE_AND_TYPE = "SELECT * FROM Transactions WHERE DATE(created_at) = ? AND transaction_type = ?";
-  private static final String SELECT_ALL_TRANSACTIONS = "SELECT * FROM Transactions";
-  private static final String SELECT_TRANSACTIONS_BY_TYPE = "SELECT * FROM Transactions WHERE transaction_type = ?";
+  private static final String INSERT_TRANSACTION_SQL = "INSERT INTO Transaction (transaction_type, user_id, total_amount, created_at) VALUES (?, ?, ?, ?)";
+  private static final String SELECT_TRANSACTIONS_BY_DATE = "SELECT * FROM Transaction WHERE DATE(created_at) = ?";
+  private static final String SELECT_TRANSACTIONS_BY_DATE_AND_TYPE = "SELECT * FROM Transaction WHERE DATE(created_at) = ? AND transaction_type = ?";
+  private static final String SELECT_ALL_TRANSACTIONS = "SELECT * FROM Transaction";
+  private static final String SELECT_TRANSACTIONS_BY_TYPE = "SELECT * FROM Transaction WHERE transaction_type = ?";
 
   @Override
   public void saveTransaction(Transaction transaction) {

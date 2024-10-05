@@ -9,9 +9,9 @@ import java.sql.*;
 
 public class UserDaoImpl implements UserDao {
 
-  private static final String INSERT_USER_SQL = "INSERT INTO Users (name, email, password) VALUES (?, ?, ?)";
-  private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM Users WHERE email = ?";
-  private static final String VERIFY_USER_CREDENTIALS_SQL = "SELECT * FROM Users WHERE email = ? AND password = ?";
+  private static final String INSERT_USER_SQL = "INSERT INTO User (name, email, password) VALUES (?, ?, ?)";
+  private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM User WHERE email = ?";
+  private static final String VERIFY_USER_CREDENTIALS_SQL = "SELECT * FROM User WHERE email = ? AND password = ?";
 
   @Override
   public void saveUser(User user) {

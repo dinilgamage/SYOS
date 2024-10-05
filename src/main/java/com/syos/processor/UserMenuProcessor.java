@@ -44,17 +44,16 @@ public class UserMenuProcessor {
 
   private void displayInventoryWithOnlineStock() {
     System.out.println("=== Available Items (Online Stock) ===");
-    List<Inventory> items = storeFacade.getAllItems(); // Retrieve all inventory items
+    List<Inventory> items = storeFacade.getAllItems();
 
-    // Display items with their online stock
     for (Inventory item : items) {
       System.out.println("Item Code: " + item.getItemCode() + ", Name: " + item.getName() + ", Stock: " + item.getOnlineStock());
     }
   }
 
   private void makePurchase(Scanner scanner, String email) {
-    // Reuse the existing billingProcessor for online purchases
+
     Integer userId = storeFacade.getUserId(email);
-    billingProcessor.processBilling(scanner, TransactionType.ONLINE, userId);  // Pass 'online' as the transaction type
+    billingProcessor.processBilling(scanner, TransactionType.ONLINE, userId);
   }
 }

@@ -12,8 +12,8 @@ import java.util.List;
 
 public class BillItemDaoImpl implements BillItemDao {
 
-  private static final String INSERT_BILL_ITEM_SQL = "INSERT INTO Bill_Items (bill_id, item_id, quantity, item_price, total_price) VALUES (?, ?, ?, ?, ?)";
-  private static final String SELECT_BILL_ITEMS_BY_BILL_ID = "SELECT * FROM Bill_Items WHERE bill_id = ?";
+  private static final String INSERT_BILL_ITEM_SQL = "INSERT INTO Bill_Item (bill_id, item_id, quantity, item_price, total_price) VALUES (?, ?, ?, ?, ?)";
+  private static final String SELECT_BILL_ITEMS_BY_BILL_ID = "SELECT * FROM Bill_Item WHERE bill_id = ?";
 
   @Override
   public void saveBillItem(BillItem billItem) {

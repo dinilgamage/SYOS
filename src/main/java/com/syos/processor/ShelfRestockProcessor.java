@@ -18,14 +18,11 @@ public class ShelfRestockProcessor {
   public void restockShelf(Scanner scanner) {
     System.out.println("=== Restock Shelf ===");
 
-    // Use the utility method to validate and get the item
     Inventory inventoryItem = InputUtils.getValidatedInventoryItem(storeFacade, scanner, "Enter Item Code: ");
 
-    // Use the utility method to validate shelf type (store or online)
     String shelfTypeString = InputUtils.getValidatedStringOption(scanner, "Enter Shelf Type (store/online): ", "store",
       "online");
 
-    // Convert the string shelfType to the ShelfType enum
     ShelfType shelfType = ShelfType.fromString(shelfTypeString);
 
     // Restock the item using StoreFacade

@@ -4,6 +4,7 @@ import com.syos.command.Command;
 import com.syos.command.GenerateBillCommand;
 import com.syos.command.RestockCommand;
 import com.syos.dao.InventoryDao;
+import com.syos.enums.DiscountType;
 import com.syos.enums.ReportType;
 import com.syos.enums.ReportFilterType;
 import com.syos.enums.ShelfType;
@@ -103,31 +104,8 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public int calculateTotalStockFromBatches (int itemId) {
-    return inventoryService.calculateTotalStockFromBatches(itemId);
-  }
-
-  @Override
-  public void updateInventoryStock(String itemCode, int quantity, TransactionType shelfType) {
-    inventoryService.updateInventoryStock(itemCode, quantity, shelfType);
-  }
-
-  @Override
   public void generateReport(ReportType reportType, LocalDate date, ReportFilterType reportFilterType) {
     reportService.generateReport(reportType, date,
-      reportFilterType);
-  }
-
-  // Overloaded method for reports that don't need date and transactionType
-  @Override
-  public void generateReport(ReportType reportType) {
-    reportService.generateReport(reportType);
-  }
-
-  // Overloaded method for reports that only need transactionType
-  @Override
-  public void generateReport(ReportType reportType, ReportFilterType reportFilterType) {
-    reportService.generateReport(reportType,
       reportFilterType);
   }
 
@@ -137,8 +115,8 @@ public class StoreFacadeImpl implements StoreFacade {
   }
 
   @Override
-  public void addDiscount(String itemCode, BigDecimal discountValue, String discountType) {
-    // Retrieve the item from the inventory
+  public void addDiscount(String itemCode, BigDecimal discountValue, DiscountType discountType) {
+
     Inventory inventory = inventoryDao.getItemByCode(itemCode);
 
     if (inventory != null) {

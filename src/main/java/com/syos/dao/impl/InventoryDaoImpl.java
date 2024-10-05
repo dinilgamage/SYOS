@@ -2,6 +2,8 @@ package com.syos.dao.impl;
 
 import com.syos.dao.InventoryDao;
 import com.syos.database.DatabaseConnection;
+import com.syos.enums.DiscountType;
+import com.syos.enums.StockThreshold;
 import com.syos.exception.DaoException;
 import com.syos.model.Inventory;
 
@@ -83,7 +85,7 @@ public class InventoryDaoImpl implements InventoryDao {
 
       preparedStatement.setInt(1, inventory.getStoreStock());
       preparedStatement.setInt(2, inventory.getOnlineStock());
-      preparedStatement.setString(3, inventory.getDiscountType());
+      preparedStatement.setString(3, inventory.getDiscountType().toString());
       preparedStatement.setBigDecimal(4, inventory.getDiscountValue());
       preparedStatement.setString(5, inventory.getItemCode());
 
@@ -100,13 +102,12 @@ public class InventoryDaoImpl implements InventoryDao {
   @Override
   public List<Inventory> getLowStockItems() {
     List<Inventory> lowStockItems = new ArrayList<>();
-    final int LOW_STOCK_THRESHOLD = 50; // Defined stock threshold
 
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(SELECT_LOW_STOCK_ITEMS)) {
 
-      preparedStatement.setInt(1, LOW_STOCK_THRESHOLD);
-      preparedStatement.setInt(2, LOW_STOCK_THRESHOLD);
+      preparedStatement.setInt(1, StockThreshold.REORDER_LEVEL.getValue());
+      preparedStatement.setInt(2, StockThreshold.REORDER_LEVEL.getValue());
 
       ResultSet rs = preparedStatement.executeQuery();
       while (rs.next()) {
@@ -178,14 +179,16 @@ public class InventoryDaoImpl implements InventoryDao {
     String itemCode = rs.getString("item_code");
     String name = rs.getString("name");
     BigDecimal price = rs.getBigDecimal("price");
-    String discountStrategy = rs.getString("discount_strategy");
+    String discountStrategyStr = rs.getString("discount_strategy");
     BigDecimal discountValue = rs.getBigDecimal("discount_value");
     int storeStock = rs.getInt("store_stock");
     int onlineStock = rs.getInt("online_stock");
     int shelfCapacity = rs.getInt("shelf_capacity");
 
+    DiscountType discountType = DiscountType.fromString(discountStrategyStr);  // Convert String to Enum
+
     Inventory inventory = new Inventory(itemCode, name, price, storeStock, onlineStock, shelfCapacity);
-    inventory.setDiscountType(discountStrategy);
+    inventory.setDiscountType(discountType);
     inventory.setDiscountValue(discountValue);
     inventory.setItemId(itemId);
 

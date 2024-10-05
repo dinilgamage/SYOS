@@ -92,7 +92,7 @@ public class BillDaoImplTest {
 
   @Test
   public void testSaveBill_Success() throws Exception {
-    Bill bill = new Bill(1001, LocalDate.now(), BigDecimal.valueOf(500.00), BigDecimal.valueOf(600.00), BigDecimal.valueOf(100.00));
+    Bill bill = new Bill(1001, BigDecimal.valueOf(500.00), BigDecimal.valueOf(600.00), BigDecimal.valueOf(100.00));
     when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS))).thenReturn(mockPreparedStatement);
 
     // Simulate the successful insertion
@@ -112,7 +112,7 @@ public class BillDaoImplTest {
 
   @Test
   public void testSaveBill_Failure_NoRowsAffected() throws Exception {
-    Bill bill = new Bill(1001, LocalDate.now(), BigDecimal.valueOf(500.00), BigDecimal.valueOf(600.00), BigDecimal.valueOf(100.00));
+    Bill bill = new Bill(1001, BigDecimal.valueOf(500.00), BigDecimal.valueOf(600.00), BigDecimal.valueOf(100.00));
     when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS))).thenReturn(mockPreparedStatement);
 
     // Simulate no rows affected

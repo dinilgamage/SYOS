@@ -12,10 +12,10 @@ import java.util.List;
 
 public class StockBatchDaoImpl implements StockBatchDao {
 
-  private static final String SELECT_BATCHES_BY_ITEM_ID = "SELECT * FROM Stock_Batches WHERE item_id = ?";
-  private static final String UPDATE_BATCH_SQL = "UPDATE Stock_Batches SET quantity = ?, expiry_date = ? WHERE batch_id = ?";
-  private static final String SELECT_NEAREST_EXPIRY_BATCH = "SELECT * FROM Stock_Batches WHERE item_id = ? ORDER BY expiry_date ASC LIMIT 1";
-  private static final String SELECT_ALL_STOCK_BATCHES = "SELECT * FROM Stock_Batches";
+  private static final String SELECT_BATCHES_BY_ITEM_ID = "SELECT * FROM Stock_Batch WHERE item_id = ?";
+  private static final String UPDATE_BATCH_SQL = "UPDATE Stock_Batch SET quantity = ?, expiry_date = ? WHERE batch_id = ?";
+  private static final String SELECT_NEAREST_EXPIRY_BATCH = "SELECT * FROM Stock_Batch WHERE item_id = ? ORDER BY expiry_date ASC LIMIT 1";
+  private static final String SELECT_ALL_STOCK_BATCHES = "SELECT * FROM Stock_Batch";
 
   @Override
   public List<StockBatch> getBatchesForItem(int itemId) {

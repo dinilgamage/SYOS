@@ -1,5 +1,6 @@
 package com.syos.factory;
 
+import com.syos.enums.DiscountType;
 import com.syos.model.Inventory;
 import com.syos.strategy.DiscountStrategy;
 import com.syos.strategy.FixedDiscountStrategy;
@@ -20,7 +21,7 @@ public class DiscountStrategyFactoryTest {
   /**
    * Helper method to create an Inventory object.
    */
-  private Inventory createInventory(String discountType, BigDecimal discountValue) {
+  private Inventory createInventory(DiscountType discountType, BigDecimal discountValue) {
     Inventory inventory = new Inventory("ITEM001", "Test Item", new BigDecimal("100.00"), 50, 50, 100);
     inventory.setDiscountType(discountType);
     inventory.setDiscountValue(discountValue);
@@ -38,7 +39,7 @@ public class DiscountStrategyFactoryTest {
   @Test
   public void testGetDiscountStrategy_FixedDiscount() {
     // Arrange
-    inventory = createInventory("fixed", new BigDecimal("10.00"));
+    inventory = createInventory(DiscountType.FIXED, new BigDecimal("10.00"));
 
     // Act
     DiscountStrategy strategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
@@ -54,7 +55,7 @@ public class DiscountStrategyFactoryTest {
   @Test
   public void testGetDiscountStrategy_PercentageDiscount() {
     // Arrange
-    inventory = createInventory("percentage", new BigDecimal("10.00")); // 10% discount
+    inventory = createInventory(DiscountType.PERCENTAGE, new BigDecimal("10.00")); // 10% discount
 
     // Act
     DiscountStrategy strategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
@@ -70,7 +71,7 @@ public class DiscountStrategyFactoryTest {
   @Test
   public void testGetDiscountStrategy_NoDiscount() {
     // Arrange
-    inventory = createInventory("none", BigDecimal.ZERO);
+    inventory = createInventory(DiscountType.NONE, BigDecimal.ZERO);
 
     // Act
     DiscountStrategy strategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
@@ -86,7 +87,7 @@ public class DiscountStrategyFactoryTest {
   @Test
   public void testGetDiscountStrategy_FixedDiscountExceedsTotal() {
     // Arrange
-    inventory = createInventory("fixed", new BigDecimal("150.00"));
+    inventory = createInventory(DiscountType.FIXED, new BigDecimal("150.00"));
 
     // Act
     DiscountStrategy strategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
@@ -102,7 +103,7 @@ public class DiscountStrategyFactoryTest {
   @Test
   public void testGetDiscountStrategy_PercentageDiscount_100Percent() {
     // Arrange
-    inventory = createInventory("percentage", new BigDecimal("100.00")); // 100% discount
+    inventory = createInventory(DiscountType.PERCENTAGE, new BigDecimal("100.00")); // 100% discount
 
     // Act
     DiscountStrategy strategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
@@ -111,20 +112,5 @@ public class DiscountStrategyFactoryTest {
     assertTrue(strategy instanceof PercentageDiscountStrategy);
     assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), strategy.applyDiscount(new BigDecimal("100.00")).setScale(2, RoundingMode.HALF_UP));
   }
-
-  /**
-   * Test when the discount type is invalid (Edge Case).
-   */
-  @Test
-  public void testGetDiscountStrategy_InvalidDiscountType() {
-    // Arrange
-    inventory = createInventory("invalidType", new BigDecimal("50.00"));
-
-    // Act
-    DiscountStrategy strategy = DiscountStrategyFactory.getDiscountStrategy(inventory);
-
-    // Assert
-    assertTrue(strategy instanceof NoDiscountStrategy);  // Default to NoDiscountStrategy
-    assertEquals(new BigDecimal("100.00").setScale(2, RoundingMode.HALF_UP), strategy.applyDiscount(new BigDecimal("100.00")).setScale(2, RoundingMode.HALF_UP));
-  }
+  
 }
