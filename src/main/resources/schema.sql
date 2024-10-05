@@ -176,22 +176,22 @@ VALUES
 -- Insert Transactions with More Current Date and Other Date Transactions
 INSERT INTO Transaction (transaction_type, user_id, total_amount, created_at)
 VALUES
-('online', 1, 320.00, '2024-09-25 10:15:00'),
-('store', NULL, 420.00, '2024-09-26 11:30:00'),
-('online', 2, 700.00, '2024-09-27 12:00:00'),
-('store', NULL, 300.00, '2024-09-28 14:45:00'),
-('online', 3, 580.00, '2024-09-29 15:00:00'),
-('store', NULL, 150.00, '2024-09-30 16:15:00'),
-('online', 1, 750.00, '2024-10-01 17:30:00'),
-('store', NULL, 960.00, '2024-10-02 18:00:00'),
-('online', 4, 880.00, '2024-10-03 19:45:00'),
-('store', NULL, 620.00, CURRENT_TIMESTAMP),
-('online', 1, 460.00, CURRENT_TIMESTAMP),
-('online', 2, 650.00, CURRENT_TIMESTAMP),
-('store', NULL, 550.00, '2024-09-29 11:00:00'),
-('store', NULL, 850.00, CURRENT_TIMESTAMP),
-('online', 3, 950.00, CURRENT_TIMESTAMP),
-('store', NULL, 780.00, '2024-09-28 13:30:00');
+('ONLINE', 1, 320.00, '2024-09-25 10:15:00'),
+('STORE', NULL, 420.00, '2024-09-26 11:30:00'),
+('ONLINE', 2, 700.00, '2024-09-27 12:00:00'),
+('STORE', NULL, 300.00, '2024-09-28 14:45:00'),
+('ONLINE', 3, 580.00, '2024-09-29 15:00:00'),
+('STORE', NULL, 150.00, '2024-09-30 16:15:00'),
+('ONLINE', 1, 750.00, '2024-10-01 17:30:00'),
+('STORE', NULL, 960.00, '2024-10-02 18:00:00'),
+('ONLINE', 4, 880.00, '2024-10-03 19:45:00'),
+('STORE', NULL, 620.00, CURRENT_TIMESTAMP),
+('ONLINE', 1, 460.00, CURRENT_TIMESTAMP),
+('ONLINE', 2, 650.00, CURRENT_TIMESTAMP),
+('STORE', NULL, 550.00, '2024-09-29 11:00:00'),
+('STORE', NULL, 850.00, CURRENT_TIMESTAMP),
+('ONLINE', 3, 950.00, CURRENT_TIMESTAMP),
+('STORE', NULL, 780.00, '2024-09-28 13:30:00');
 
 -- Insert Bills for Transactions
 INSERT INTO Bill (transaction_id, total_amount, cash_tendered, change_amount)
