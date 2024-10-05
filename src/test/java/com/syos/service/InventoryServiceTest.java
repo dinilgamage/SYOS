@@ -256,6 +256,42 @@ public class InventoryServiceTest {
   }
 
   /**
+   * Test restocking item (Happy Path) with multiple batches and correct batch selection
+   */
+  @Test
+  public void testRestockItem_Success_MultipleBatches_CorrectSecondBatch() {
+    // Arrange
+    Inventory inventory = createInventory(1, "ITEM001", "Item One", new BigDecimal("100.00"), 50, 30, 100);
+
+    // First batch has 20 units (nearest expiry), second batch has 30 units (next nearest expiry), third batch has 40 units (furthest expiry)
+    StockBatch batch1 = createStockBatch(1, 1, 20); // Nearest expiry
+    StockBatch batch2 = createStockBatch(2, 1, 30); // Next nearest expiry
+    StockBatch batch3 = createStockBatch(3, 1, 40); // Furthest expiry
+
+    // Mock the inventory and stock batch retrieval
+    when(mockInventoryDao.getItemByCode("ITEM001")).thenReturn(inventory);
+    when(mockStockBatchDao.getBatchesForItem(1)).thenReturn(Arrays.asList(batch1, batch2, batch3));
+
+    // Act
+    inventoryService.restockItem("ITEM001", ShelfType.STORE_SHELF); // Need 50 units
+
+    // Assert:
+    // Check store stock is updated correctly
+    assertEquals(100, inventory.getStoreStock()); // Store stock should now be 100 (50 initially + 50 restocked)
+
+    // Check if batch1 is fully depleted and batch2 is reduced by 30 (since we needed 50 total)
+    assertEquals(0, batch1.getQuantity()); // batch1 should be fully used (20 units)
+    assertEquals(0, batch2.getQuantity()); // batch2 should be fully used (30 units needed to complete restocking)
+    assertEquals(40, batch3.getQuantity()); // batch3 should remain unchanged
+
+    // Verify that only batch1 and batch2 were updated, not batch3
+    verify(mockStockBatchDao, times(1)).updateBatch(batch1);
+    verify(mockStockBatchDao, times(1)).updateBatch(batch2);
+    verify(mockStockBatchDao, never()).updateBatch(batch3);
+  }
+
+
+  /**
    * Test restocking item when stock is insufficient (Edge Case).
    */
   @Test
