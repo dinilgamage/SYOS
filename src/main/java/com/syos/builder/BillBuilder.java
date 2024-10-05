@@ -47,7 +47,7 @@ public class BillBuilder {
 
   public Bill build() {
     // Create the final Bill object
-    Bill bill = new Bill(this.transactionId, LocalDate.now(), this.totalAmount, this.cashTendered, this.changeAmount);
+    Bill bill = new Bill(this.transactionId, this.totalAmount, this.cashTendered, this.changeAmount);
 
     // Add the items to the Bill
     for (BillItem item : this.billItems) {

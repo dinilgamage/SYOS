@@ -8,23 +8,21 @@ import java.util.List;
 public class Bill {
   private int billId;
   private int transactionId;
-  private LocalDate billDate;
   private BigDecimal totalAmount;
   private BigDecimal cashTendered;
   private BigDecimal changeAmount;
   private List<BillItem> billItems;
 
-  public Bill(int transactionId, LocalDate billDate, BigDecimal totalAmount, BigDecimal cashTendered, BigDecimal changeAmount) {
+  public Bill(int transactionId, BigDecimal totalAmount, BigDecimal cashTendered, BigDecimal changeAmount) {
     this.transactionId = transactionId;
-    this.billDate = billDate;
     this.totalAmount = totalAmount;
     this.cashTendered = cashTendered;
     this.changeAmount = changeAmount;
     this.billItems = new ArrayList<>();
   }
 
-  public Bill(int transactionId, LocalDate billDate, BigDecimal totalAmount) {
-    this(transactionId, billDate, totalAmount, null, null);
+  public Bill(int transactionId, BigDecimal totalAmount) {
+    this(transactionId, totalAmount, null, null);
   }
 
   // Getters and Setters
@@ -42,14 +40,6 @@ public class Bill {
 
   public void setTransactionId(int transactionId) {
     this.transactionId = transactionId;
-  }
-
-  public LocalDate getBillDate() {
-    return billDate;
-  }
-
-  public void setBillDate(LocalDate billDate) {
-    this.billDate = billDate;
   }
 
   public BigDecimal getTotalAmount() {
