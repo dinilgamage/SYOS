@@ -21,15 +21,11 @@ public interface StoreFacade {
 
   Inventory getItemByCode(String itemCode);
   boolean checkAvailableStock(Inventory inventoryItem, int quantity, TransactionType transactionType);
-  int calculateTotalStockFromBatches (int itemId);
 
   void generateBill(List<BillItem> billItems, TransactionType transactionType, BigDecimal cashTendered, Integer userId);
 
   void restockItem(String itemCode, ShelfType shelfType);
-  void updateInventoryStock(String itemCode, int quantity, TransactionType shelfType);
 
-  void generateReport(ReportType reportType);
-  void generateReport(ReportType reportType, ReportFilterType reportFilterType);
   void generateReport(ReportType reportType, LocalDate date, ReportFilterType reportFilterType);
 
   void addDiscount(String itemCode, BigDecimal discountValue, DiscountType discountType);
