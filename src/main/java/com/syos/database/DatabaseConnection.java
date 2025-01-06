@@ -17,9 +17,13 @@ public class DatabaseConnection {
 
   public static Connection getConnection() {
     try {
+      // Explicitly load the MySQL JDBC driver
+      Class.forName("com.mysql.cj.jdbc.Driver");
       return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException("MySQL JDBC Driver not found. Make sure mysql-connector-java is in your classpath.", e);
     } catch (SQLException e) {
-      throw new RuntimeException("Error connecting to the database", e);
+      throw new RuntimeException("Error connecting to the database. Check the database URL, username, and password.", e);
     }
   }
 }
