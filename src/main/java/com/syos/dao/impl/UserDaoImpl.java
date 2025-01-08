@@ -12,6 +12,7 @@ public class UserDaoImpl implements UserDao {
   private static final String INSERT_USER_SQL = "INSERT INTO User (name, email, password) VALUES (?, ?, ?)";
   private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM User WHERE email = ?";
   private static final String VERIFY_USER_CREDENTIALS_SQL = "SELECT * FROM User WHERE email = ? AND password = ?";
+  private static final String REGISTER_USER_SQL = "INSERT INTO User (name, email, password) VALUES (?, ?, ?)";
 
   @Override
   public void saveUser(User user) {
@@ -29,6 +30,23 @@ public class UserDaoImpl implements UserDao {
 
     } catch (SQLException e) {
       throw new DaoException("Error saving user with email: " + user.getEmail(), e);
+    }
+  }
+
+  @Override
+  public boolean registerUser(User user) {
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(REGISTER_USER_SQL)) {
+
+      preparedStatement.setString(1, user.getName());
+      preparedStatement.setString(2, user.getEmail());
+      preparedStatement.setString(3, user.getPassword());
+
+      int rowsInserted = preparedStatement.executeUpdate();
+      return rowsInserted > 0;
+
+    } catch (SQLException e) {
+      throw new DaoException("Error registering user with email: " + user.getEmail(), e);
     }
   }
 
@@ -54,6 +72,7 @@ public class UserDaoImpl implements UserDao {
 
   @Override
   public boolean verifyUserCredentials(String email, String password) {
+    System.out.println("INFO: LoginServlet invoked by user: "+ email);
     boolean isValid = false;
 
     try (Connection connection = DatabaseConnection.getConnection();

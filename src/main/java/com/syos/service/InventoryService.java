@@ -26,6 +26,9 @@ public class InventoryService implements StockSubject {
     this.observers = new ArrayList<>();
 
   }
+  public InventoryService(InventoryDao inventoryDao) {
+    this.inventoryDao = inventoryDao;
+  }
 
   @Override
   public void registerObserver(StockObserver observer) {
@@ -45,7 +48,9 @@ public class InventoryService implements StockSubject {
   }
 
   public List<Inventory> getAllItems() {
-    return inventoryDao.getAllItems();
+    List<Inventory> allitems = inventoryDao.getAllItems();
+    System.out.println("All items: " + allitems);
+    return  allitems;
   }
 
   public int calculateTotalStockFromBatches(int itemId) {

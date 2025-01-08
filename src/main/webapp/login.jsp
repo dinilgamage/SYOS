@@ -16,5 +16,6 @@
     <% if (request.getAttribute("error") != null) { %>
         <p style="color: red;"><%= request.getAttribute("error") %></p>
     <% } %>
+    <p>Don't have an account? <a href="register.jsp">Register here</a></p>
 </body>
 </html>

@@ -75,6 +75,7 @@ public class InventoryDaoImpl implements InventoryDao {
     } catch (SQLException e) {
       throw new DaoException("Error retrieving all items", e);
     }
+    System.out.println("All items: " + items);
     return items;
   }
 

@@ -21,6 +21,14 @@ public class UserService {
     userDao.saveUser(user);
   }
 
+  public boolean registerNewUser(User user) {
+    if (userDao.getUserByEmail(user.getEmail()) != null) {
+      throw new UserAlreadyExistsException("Email '" + user.getEmail() + "' is already registered.");
+    }
+
+    return userDao.registerUser(user);
+  }
+
   public boolean loginUser(String email, String password) {
 
     return userDao.verifyUserCredentials(email, password);
