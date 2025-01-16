@@ -16,118 +16,46 @@
     }
 %>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+<jsp:include page="components/head.jsp">
+    <jsp:param name="title" value="Dashboard" />
+</jsp:include>
+<body class="font-sans bg-gray-100">
 
-        h2 {
-            color: #2c3e50;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header a {
-            text-decoration: none;
-            color: #fff;
-            background: #e74c3c;
-            padding: 8px 12px;
-            border-radius: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #3498db;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #7f8c8d;
-        }
-    </style>
-</head>
-<body>
-
-<div class="header">
-    <h2>Welcome, <%= session.getAttribute("userEmail") %></h2>
-    <a href="logout">Logout</a>
+<div class="header flex justify-between items-center p-5 bg-white shadow mb-5">
+    <h2 class="text-2xl text-gray-800">Welcome, <%= session.getAttribute("userName") %></h2>
+    <a href="logout" class="text-white bg-red-500 px-3 py-2 rounded">Logout</a>
 </div>
 
-<h3>Inventory Items</h3>
+<div class="container mx-auto px-4">
+    <h3 class="text-xl mb-3">Inventory Items</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <%
+            List<Inventory> inventoryItems = (List<Inventory>) request.getAttribute("inventoryItems");
 
-<table>
-    <thead>
-    <tr>
-        <th>Item Code</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Discount</th>
-        <th>Store Stock</th>
-        <th>Online Stock</th>
-        <th>Shelf Capacity</th>
-    </tr>
-    </thead>
-    <tbody>
-    <%
-        List<Inventory> inventoryItems =
-                (List<Inventory>) request.getAttribute("inventoryItems");
+            if (inventoryItems != null && !inventoryItems.isEmpty()) {
+                for (Inventory item : inventoryItems) {
+        %>
+        <div class="bg-white p-5 rounded shadow">
+            <h4 class="text-lg font-bold mb-2"><%= item.getName() %></h4>
+            <p class="text-gray-700 mb-1">Item Code: <%= item.getItemCode() %></p>
+            <p class="text-gray-700 mb-1">Price: $<%= item.getPrice() %></p>
+            <p class="text-gray-700 mb-1">Discount: <%= item.getDiscountValue() %> (<%= item.getDiscountType() %>)</p>
+            <p class="text-gray-700 mb-1">Store Stock: <%= item.getStoreStock() %></p>
+            <p class="text-gray-700 mb-1">Online Stock: <%= item.getOnlineStock() %></p>
+            <p class="text-gray-700 mb-1">Shelf Capacity: <%= item.getShelfCapacity() %></p>
+        </div>
+        <%
+            }
+        } else {
+        %>
+        <p class="col-span-full text-center text-gray-700">No inventory items available.</p>
+        <%
+            }
+        %>
+    </div>
+</div>
 
-        if (inventoryItems != null && !inventoryItems.isEmpty()) {
-            for (Inventory item : inventoryItems) {
-    %>
-    <tr>
-        <td><%= item.getItemCode() %></td>
-        <td><%= item.getName() %></td>
-        <td><%= item.getPrice() %></td>
-        <td><%= item.getDiscountValue() %> (<%= item.getDiscountType() %>)</td>
-        <td><%= item.getStoreStock() %></td>
-        <td><%= item.getOnlineStock() %></td>
-        <td><%= item.getShelfCapacity() %></td>
-    </tr>
-    <%
-        }
-    } else {
-    %>
-    <tr>
-        <td colspan="7">No inventory items available.</td>
-    </tr>
-    <%
-        }
-    %>
-    </tbody>
-</table>
-
-<div class="footer">
+<div class="footer mt-8 text-center text-sm text-gray-600">
     <p>&copy; 2024 SYOS. All rights reserved.</p>
 </div>
 

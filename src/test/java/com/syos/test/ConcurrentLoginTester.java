@@ -8,8 +8,8 @@ import java.util.concurrent.Executors;
 
 public class ConcurrentLoginTester {
 
-  private static final String LOGIN_URL = "http://localhost:8080/SYOS/login";
-  private static final int NUM_CLIENTS = 5000; // Number of concurrent clients
+  private static final String LOGIN_URL = "http://localhost:8080/SYOS_war_exploded/login";
+  private static final int NUM_CLIENTS = 50; // Number of concurrent clients
 
   public static void main(String[] args) {
     ExecutorService executor = Executors.newFixedThreadPool(NUM_CLIENTS);

@@ -1,6 +1,7 @@
 package com.syos.servlet;
 
 import com.syos.dao.impl.UserDaoImpl;
+import com.syos.model.User;
 import com.syos.service.UserService;
 
 import javax.servlet.ServletException;
@@ -24,10 +25,12 @@ public class LoginServlet extends HttpServlet {
     String password = request.getParameter("password");
 
     boolean isAuthenticated = userService.loginUser(email, password);
+    User user = userService.getUserByEmail(email);
 
     if (isAuthenticated) {
       HttpSession session = request.getSession();
       session.setAttribute("userEmail", email);
+      session.setAttribute("userName", user.getName());
       response.sendRedirect("dashboard.jsp");
     } else {
       request.setAttribute("error", "Invalid credentials. Please try again.");
