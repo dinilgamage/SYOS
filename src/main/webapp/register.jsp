@@ -4,7 +4,7 @@
 </jsp:include>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 <div class="bg-white p-8 rounded shadow-md w-full max-w-sm">
-    <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center"><Register></Register></h2>
     <form action="register" method="post" class="space-y-4">
         <div>
             <label class="block text-gray-700">Name:</label>

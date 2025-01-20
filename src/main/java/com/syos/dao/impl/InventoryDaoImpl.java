@@ -179,6 +179,7 @@ public class InventoryDaoImpl implements InventoryDao {
     int itemId = rs.getInt("item_id");
     String itemCode = rs.getString("item_code");
     String name = rs.getString("name");
+    String desc = rs.getString("desc");
     BigDecimal price = rs.getBigDecimal("price");
     String discountStrategyStr = rs.getString("discount_strategy");
     BigDecimal discountValue = rs.getBigDecimal("discount_value");
@@ -188,7 +189,7 @@ public class InventoryDaoImpl implements InventoryDao {
 
     DiscountType discountType = DiscountType.fromString(discountStrategyStr);  // Convert String to Enum
 
-    Inventory inventory = new Inventory(itemCode, name, price, storeStock, onlineStock, shelfCapacity);
+    Inventory inventory = new Inventory(itemCode, name, desc, price, storeStock, onlineStock, shelfCapacity);
     inventory.setDiscountType(discountType);
     inventory.setDiscountValue(discountValue);
     inventory.setItemId(itemId);
