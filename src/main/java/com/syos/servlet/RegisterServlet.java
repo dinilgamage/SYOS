@@ -32,6 +32,7 @@ public class RegisterServlet extends HttpServlet {
       if (isRegistered) {
         HttpSession session = request.getSession();
         session.setAttribute("userEmail", email);
+        session.setAttribute("userName", user.getName());
         response.sendRedirect("dashboard.jsp");
       } else {
         request.setAttribute("error", "Registration failed. Email might already exist.");
