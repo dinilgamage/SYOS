@@ -104,4 +104,20 @@ public class CartDaoImpl implements CartDao {
       throw new RuntimeException("Error clearing cart", e);
     }
   }
+
+  @Override
+  public boolean isItemInCart(int userId, String itemCode) {
+    String sql = "SELECT * FROM Cart WHERE user_id = ? AND item_code = ?";
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+      statement.setInt(1, userId);
+      statement.setString(2, itemCode);
+      ResultSet resultSet = statement.executeQuery();
+
+      return resultSet.next();
+    } catch (SQLException e) {
+      throw new RuntimeException("Error checking if item is in cart", e);
+    }
+  }
 }

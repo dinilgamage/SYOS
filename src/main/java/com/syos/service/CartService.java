@@ -35,12 +35,6 @@ public class CartService {
   }
 
   public boolean isItemInCart(int userId, String itemCode) {
-    List<CartItem> cartItems = getCartItems(userId);
-    for (CartItem cartItem : cartItems) {
-      if (cartItem.getItemCode().equals(itemCode)) {
-        return true;
-      }
-    }
-    return false;
+    return cartDao.isItemInCart(userId, itemCode);
   }
 }

@@ -9,12 +9,21 @@ function openProductModal(itemCode, name, price, discount, desc) {
     document.getElementById('product-quantity').textContent = quantity;
 
     const modal = document.getElementById('product-modal');
+    const modalContent = modal.querySelector('.rounded-lg');
+
     modal.classList.remove('hidden');
 
     // Store item details for later use
     modal.dataset.itemCode = itemCode;
     modal.dataset.name = name;
     modal.dataset.price = price;
+
+    // Set visible with transition
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modalContent.classList.remove('scale-95');
+    }, 10); // Small delay to ensure the transition is visible
 
     // Check if the item is already in the cart
     fetch('isItemInCart', {
@@ -56,7 +65,17 @@ function openProductModal(itemCode, name, price, discount, desc) {
 
 function closeProductModal() {
     const modal = document.getElementById('product-modal');
+    const modalContent = modal.querySelector('.rounded-lg');
+
     modal.classList.add('hidden');
+
+    modal.classList.add('opacity-0');
+    modalContent.classList.add('scale-95');
+
+    // Wait for the transition to complete before hiding the modal
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300); // Matches the transition duration
 }
 
 function incrementQuantity() {

@@ -9,4 +9,5 @@ public interface CartDao {
   void removeFromCart(int userId, String itemCode);
   List<CartItem> getCartItems(int userId);
   void clearCart(int userId);
+  boolean isItemInCart(int userId, String itemCode);
 }

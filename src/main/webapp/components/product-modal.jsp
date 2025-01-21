@@ -1,5 +1,6 @@
-<div id="product-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+<div id="product-modal"
+     class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center transition-opacity duration-300 ease-in-out opacity-0">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative transform scale-95 transition-transform duration-300 ease-in-out">
         <img id="modal-product-image" src="#" alt="" class="w-full h-56 object-cover rounded-lg mb-4">
         <div class="flex justify-between items-center">
             <h2 id="modal-product-name" class="text-xl font-semibold"></h2>
