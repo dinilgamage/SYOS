@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
   private UserService userService;
 
@@ -31,6 +32,7 @@ public class LoginServlet extends HttpServlet {
       HttpSession session = request.getSession();
       session.setAttribute("userEmail", email);
       session.setAttribute("userName", user.getName());
+      session.setAttribute("userId", user.getUserId());
       response.sendRedirect("dashboard.jsp");
     } else {
       request.setAttribute("error", "Invalid credentials. Please try again.");

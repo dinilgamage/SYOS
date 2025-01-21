@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
+@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
   private UserService userService;
 
@@ -33,6 +34,7 @@ public class RegisterServlet extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("userEmail", email);
         session.setAttribute("userName", user.getName());
+        session.setAttribute("userId", user.getUserId());
         response.sendRedirect("dashboard.jsp");
       } else {
         request.setAttribute("error", "Registration failed. Email might already exist.");

@@ -1,8 +1,5 @@
 package com.syos.servlet;
 
-import com.syos.dao.impl.StockBatchDaoImpl;
-import com.syos.facade.StoreFacade;
-import com.syos.facade.StoreFacadeImpl;
 import com.syos.dao.impl.InventoryDaoImpl;
 import com.syos.service.InventoryService;
 import com.syos.model.Inventory;
