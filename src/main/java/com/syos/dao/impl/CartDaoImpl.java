@@ -30,25 +30,24 @@ public class CartDaoImpl implements CartDao {
   }
 
   @Override
-  public void updateCartItem(CartItem cartItem) {
-    String sql = "UPDATE Cart SET quantity = ?, price = ? WHERE user_id = ? AND item_code = ?";
-
+  public boolean updateCartItem(int userId, String itemCode, int quantity) {
+    String sql = "UPDATE Cart SET quantity = ? WHERE user_id = ? AND item_code = ?";
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement statement = connection.prepareStatement(sql)) {
 
-      statement.setInt(1, cartItem.getQuantity());
-      statement.setBigDecimal(2, cartItem.getPrice());
-      statement.setInt(3, cartItem.getUserId());
-      statement.setString(4, cartItem.getItemCode());
+      statement.setInt(1, quantity);
+      statement.setInt(2, userId);
+      statement.setString(3, itemCode);
 
       statement.executeUpdate();
+      return true;
     } catch (SQLException e) {
       throw new RuntimeException("Error updating cart item", e);
     }
   }
 
   @Override
-  public void removeFromCart(int userId, String itemCode) {
+  public boolean removeFromCart(int userId, String itemCode) {
     String sql = "DELETE FROM Cart WHERE user_id = ? AND item_code = ?";
 
     try (Connection connection = DatabaseConnection.getConnection();
@@ -58,6 +57,7 @@ public class CartDaoImpl implements CartDao {
       statement.setString(2, itemCode);
 
       statement.executeUpdate();
+      return true;
     } catch (SQLException e) {
       throw new RuntimeException("Error removing item from cart", e);
     }
@@ -119,5 +119,23 @@ public class CartDaoImpl implements CartDao {
     } catch (SQLException e) {
       throw new RuntimeException("Error checking if item is in cart", e);
     }
+  }
+
+  @Override
+  public int getCartSize(int userId) {
+    String sql = "SELECT COUNT(*) FROM Cart WHERE user_id = ?";
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+      statement.setInt(1, userId);
+      ResultSet resultSet = statement.executeQuery();
+
+      if (resultSet.next()) {
+        return resultSet.getInt(1);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Error getting cart size", e);
+    }
+    return 0;
   }
 }

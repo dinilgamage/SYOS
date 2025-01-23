@@ -54,6 +54,7 @@
 
 <!-- Modal Section -->
 <jsp:include page="components/product-modal.jsp" />
+<jsp:include page="components/cart-modal.jsp" />
 
 
 <div class="footer mt-8 text-center text-sm text-gray-600">
@@ -61,7 +62,8 @@
 </div>
 
 <!-- JavaScript for Modal and Cart -->
-<script src="js/modal.js"></script>
+<script src="js/productModal.js"></script>
+<script src="js/cartModal.js"></script>
 
 </body>
 </html>

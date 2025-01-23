@@ -18,12 +18,12 @@ public class CartService {
     cartDao.addToCart(cartItem);
   }
 
-  public void updateCartItem(CartItem cartItem) {
-    cartDao.updateCartItem(cartItem);
+  public boolean updateCartItem(int userId, String itemCode, int quantity) {
+    return cartDao.updateCartItem(userId, itemCode, quantity);
   }
 
-  public void removeFromCart(int userId, String itemCode) {
-    cartDao.removeFromCart(userId, itemCode);
+  public boolean removeFromCart(int userId, String itemCode) {
+    return cartDao.removeFromCart(userId, itemCode);
   }
 
   public List<CartItem> getCartItems(int userId) {
@@ -36,5 +36,9 @@ public class CartService {
 
   public boolean isItemInCart(int userId, String itemCode) {
     return cartDao.isItemInCart(userId, itemCode);
+  }
+
+  public int getCartSize(int userId) {
+    return cartDao.getCartSize(userId);
   }
 }
