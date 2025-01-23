@@ -116,7 +116,7 @@ function addToCart() {
         .then((response) => response.json()) // Parse JSON response
         .then((data) => {
             if (data.success) {
-                alert('Item added to cart!');
+                document.getElementById('cart-count').textContent = data.cartSize;
                 closeProductModal();
             } else {
                 console.error('Failed to add item to cart:', data.message);

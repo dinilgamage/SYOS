@@ -59,9 +59,14 @@ public class AddToCartServlet extends HttpServlet {
       CartItem cartItem = new CartItem(userId, itemCode, itemName, quantity, price);
       cartService.addToCart(cartItem);
 
+      int cartSize = cartService.getCartSize(userId);
+      request.getSession().setAttribute("cartSize", cartSize);
+
+
       // Respond with success
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("success", true);
+      responseJson.addProperty("cartSize", cartSize);
       out.print(responseJson.toString());
     } catch (Exception e) {
       e.printStackTrace();
