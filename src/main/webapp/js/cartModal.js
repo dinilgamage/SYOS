@@ -1,14 +1,31 @@
 function openCartModal() {
     console.log('fetchCartItems called'); // Debug log
     fetchCartItems(); // Fetch cart items dynamically
+
     const modal = document.getElementById('cart-modal');
+
+    // Ensure modal is initially hidden
     modal.classList.remove('hidden');
+
+    // Add visible class with a slight delay to trigger the transition
+    setTimeout(() => {
+        modal.classList.add('visible');
+    }, 10); // Small delay to allow the transition to take effect
 }
 
 function closeCartModal() {
     const modal = document.getElementById('cart-modal');
-    modal.classList.add('hidden');
+
+    // Remove the visible class to trigger fade-out and shrink transition
+    modal.classList.remove('visible');
+
+    // Wait for the transition to finish before hiding the modal
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300); // Matches the duration of the transition in CSS
 }
+
+
 
 function fetchCartItems() {
     console.log("Fetch items called");
@@ -19,12 +36,18 @@ function fetchCartItems() {
         .then((data) => {
             const cartItemsContainer = document.getElementById('cart-items');
             cartItemsContainer.innerHTML = '';
+            const proceedToCheckoutBtn = document.getElementById('proceed-to-checkout-btn');
 
             if (data.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="text-gray-700">Your cart is empty.</p>';
+                cartItemsContainer.innerHTML = '<div class="text-gray-700"> <img src="images/empty-cart.png"' +
+                    ' alt="Empty Cart" class="mx-auto cart-image">\n</div>';
                 document.getElementById('cart-count').textContent = '0';
+                proceedToCheckoutBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                proceedToCheckoutBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
             } else {
                 document.getElementById('cart-count').textContent = data.length;
+                proceedToCheckoutBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                proceedToCheckoutBtn.classList.add('bg-green-500', 'hover:bg-green-600');
                 console.log(data);
                 data.forEach((item) => {
                     const cartItem = document.createElement('div');
@@ -32,15 +55,16 @@ function fetchCartItems() {
                     cartItem.innerHTML = `
                         <div>
                             <h3 class="text-lg font-semibold">${item.itemName}</h3>
-                            <p class="text-gray-600">Price: $${item.price}</p>
-                            <p class="text-gray-600">Quantity: 
-                                <button class="bg-gray-300 px-2 py-1 rounded" onclick="updateCartItem('${item.itemCode}', ${item.quantity - 1})">-</button>
-                                <span>${item.quantity}</span>
-                                <button class="bg-gray-300 px-2 py-1 rounded" onclick="updateCartItem('${item.itemCode}', ${item.quantity + 1})">+</button>
+                            <p class="text-gray-800">Price: $${item.price}</p>
+                            <p class="text-gray-800">Quantity: 
+                                <button class="bg-green-200 hover:bg-green-300 px-2 py-1 rounded-lg font-bold" onclick="updateCartItem('${item.itemCode}', ${item.quantity - 1})">-</button>
+                                <span class="font-semibold mx-1">${item.quantity}</span>
+                                <button class="bg-green-200 hover:bg-green-300 px-2 py-1 rounded-lg font-bold" onclick="updateCartItem('${item.itemCode}', ${item.quantity + 1})">+</button>
                             </p>
                         </div>
-                        <button class="text-red-500" onclick="removeCartItem('${item.itemCode}')">Remove</button>
-                    `;
+                        <button class="text-red-500" onclick="removeCartItem('${item.itemCode}')">
+                            <i style="font-size: 20px" class="fas fa-trash-alt"></i>
+                        </button>                    `;
                     cartItemsContainer.appendChild(cartItem);
                 });
             }
@@ -58,7 +82,7 @@ function updateCartItem(itemCode, quantity) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ itemCode, quantity }),
+        body: JSON.stringify({itemCode, quantity}),
     })
         .then((response) => response.json())
         .then((data) => {
@@ -79,7 +103,7 @@ function removeCartItem(itemCode) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ itemCode }),
+        body: JSON.stringify({itemCode}),
     })
         .then((response) => response.json())
         .then((data) => {
