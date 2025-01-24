@@ -34,16 +34,27 @@ public class UserDaoImpl implements UserDao {
   }
 
   @Override
-  public boolean registerUser(User user) {
+  public int registerUser(User user) {
     try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement preparedStatement = connection.prepareStatement(REGISTER_USER_SQL)) {
+         PreparedStatement preparedStatement = connection.prepareStatement(REGISTER_USER_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
       preparedStatement.setString(1, user.getName());
       preparedStatement.setString(2, user.getEmail());
       preparedStatement.setString(3, user.getPassword());
 
       int rowsInserted = preparedStatement.executeUpdate();
-      return rowsInserted > 0;
+
+      if (rowsInserted > 0) {
+        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+          if (generatedKeys.next()) {
+            return generatedKeys.getInt(1);
+          } else {
+            throw new SQLException("Creating user failed, no ID obtained.");
+          }
+        }
+      } else {
+        throw new SQLException("Creating user failed, no rows affected.");
+      }
 
     } catch (SQLException e) {
       throw new DaoException("Error registering user with email: " + user.getEmail(), e);
