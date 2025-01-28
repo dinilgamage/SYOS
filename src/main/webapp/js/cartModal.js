@@ -37,6 +37,7 @@ function fetchCartItems() {
             const cartItemsContainer = document.getElementById('cart-items');
             cartItemsContainer.innerHTML = '';
             const proceedToCheckoutBtn = document.getElementById('proceed-to-checkout-btn');
+            let totalPrice = 0;
 
             if (data.length === 0) {
                 cartItemsContainer.innerHTML = '<div class="text-gray-700"> <img src="images/empty-cart.png"' +
@@ -66,8 +67,12 @@ function fetchCartItems() {
                             <i style="font-size: 20px" class="fas fa-trash-alt"></i>
                         </button>                    `;
                     cartItemsContainer.appendChild(cartItem);
+                    totalPrice += item.price * item.quantity;
                 });
             }
+
+            // Update the total price in the cart modal
+            document.getElementById('cart-total').textContent = `$${totalPrice.toFixed(2)}`;
         })
         .catch((error) => {
             console.error('Error fetching cart items:', error);
