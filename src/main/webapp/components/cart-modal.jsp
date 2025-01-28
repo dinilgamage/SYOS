@@ -29,7 +29,8 @@
                 <span id="cart-total" class="font-semibold">$0.00</span>
             </div>
             <button id="proceed-to-checkout-btn"
-                    class="bg-green-500 text-white w-full py-2 mt-4 rounded-lg hover:bg-green-600">Proceed to
+                    class="bg-green-500 text-white w-full py-2 mt-4 rounded-lg hover:bg-green-600"
+                    onclick="checkout()">Proceed to
                 Checkout</button>
         </div>
     </div>

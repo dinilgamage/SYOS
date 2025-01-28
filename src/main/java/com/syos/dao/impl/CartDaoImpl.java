@@ -21,7 +21,7 @@ public class CartDaoImpl implements CartDao {
       statement.setString(2, cartItem.getItemCode());
       statement.setString(3, cartItem.getItemName());
       statement.setInt(4, cartItem.getQuantity());
-      statement.setBigDecimal(5, cartItem.getPrice());
+      statement.setDouble(5, cartItem.getPrice());
 
       statement.executeUpdate();
     } catch (SQLException e) {
@@ -80,7 +80,7 @@ public class CartDaoImpl implements CartDao {
           resultSet.getString("item_code"),
           resultSet.getString("item_name"),
           resultSet.getInt("quantity"),
-          resultSet.getBigDecimal("price")
+          resultSet.getDouble("price")
         );
         cartItems.add(cartItem);
       }

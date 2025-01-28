@@ -42,7 +42,7 @@ public class AddToCartServlet extends HttpServlet {
       int userId = (int) request.getSession().getAttribute("userId");
       String itemCode = json.get("itemCode").getAsString();
       String itemName = json.get("name").getAsString();
-      BigDecimal price = json.get("price").getAsBigDecimal();
+      double price = json.get("price").getAsDouble();
       int quantity = json.get("quantity").getAsInt();
 
       // Check if item is already in the cart

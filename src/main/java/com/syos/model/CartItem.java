@@ -7,9 +7,9 @@ public class CartItem {
   private String itemCode;
   private String itemName;
   private int quantity;
-  private BigDecimal price;
+  private double price;
 
-  public CartItem(int userId, String itemCode, String itemName, int quantity, BigDecimal price) {
+  public CartItem(int userId, String itemCode, String itemName, int quantity, double price) {
     this.userId = userId;
     this.itemCode = itemCode;
     this.itemName = itemName;
@@ -50,11 +50,11 @@ public class CartItem {
     this.quantity = quantity;
   }
 
-  public BigDecimal getPrice() {
+  public double getPrice() {
     return price;
   }
 
-  public void setPrice(BigDecimal price) {
+  public void setPrice(double price) {
     this.price = price;
   }
 }

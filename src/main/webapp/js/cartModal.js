@@ -124,5 +124,5 @@ function removeCartItem(itemCode) {
 }
 
 function checkout() {
-    alert('Checkout functionality is not implemented yet.');
+    window.location.href = 'checkout.jsp';
 }
