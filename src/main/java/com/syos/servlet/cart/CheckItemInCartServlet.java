@@ -1,4 +1,4 @@
-package com.syos.servlet;
+package com.syos.servlet.cart;
 
 import com.google.gson.JsonObject;
 import com.syos.service.CartService;

@@ -1,4 +1,4 @@
-package com.syos.servlet;
+package com.syos.servlet.cart;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-@WebServlet("/removeCartItem")
-public class RemoveCartItemServlet extends HttpServlet {
+@WebServlet("/updateCartItem")
+public class UpdateCartItemServlet extends HttpServlet {
   private final CartService cartService = new CartService();
 
   @Override
@@ -27,9 +27,10 @@ public class RemoveCartItemServlet extends HttpServlet {
       // Extract data
       int userId = (int) request.getSession().getAttribute("userId");
       String itemCode = json.get("itemCode").getAsString();
+      int quantity = json.get("quantity").getAsInt();
 
-      // Remove cart item
-      boolean success = cartService.removeFromCart(userId, itemCode);
+      // Update cart item
+      boolean success = cartService.updateCartItem(userId, itemCode, quantity);
 
       // Send response
       JsonObject responseJson = new JsonObject();
