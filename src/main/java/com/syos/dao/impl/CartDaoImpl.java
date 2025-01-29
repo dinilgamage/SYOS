@@ -65,7 +65,10 @@ public class CartDaoImpl implements CartDao {
 
   @Override
   public List<CartItem> getCartItems(int userId) {
-    String sql = "SELECT * FROM Cart WHERE user_id = ?";
+    String sql = "SELECT c.user_id, c.item_code, c.item_name, c.quantity, c.price, i.online_stock AS stock " +
+      "FROM Cart c " +
+      "JOIN Inventory i ON c.item_code = i.item_code " +
+      "WHERE c.user_id = ?";
     List<CartItem> cartItems = new ArrayList<>();
 
     try (Connection connection = DatabaseConnection.getConnection();
@@ -80,7 +83,8 @@ public class CartDaoImpl implements CartDao {
           resultSet.getString("item_code"),
           resultSet.getString("item_name"),
           resultSet.getInt("quantity"),
-          resultSet.getDouble("price")
+          resultSet.getDouble("price"),
+          resultSet.getInt("stock") // Retrieve stock from the result set
         );
         cartItems.add(cartItem);
       }

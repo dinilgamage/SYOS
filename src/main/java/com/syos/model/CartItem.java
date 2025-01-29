@@ -8,6 +8,7 @@ public class CartItem {
   private String itemName;
   private int quantity;
   private double price;
+  private int stock;
 
   public CartItem(int userId, String itemCode, String itemName, int quantity, double price) {
     this.userId = userId;
@@ -15,6 +16,15 @@ public class CartItem {
     this.itemName = itemName;
     this.quantity = quantity;
     this.price = price;
+  }
+
+  public CartItem(int userId, String itemCode, String itemName, int quantity, double price, int stock) {
+    this.userId = userId;
+    this.itemCode = itemCode;
+    this.itemName = itemName;
+    this.quantity = quantity;
+    this.price = price;
+    this.stock = stock;
   }
 
   // Getters and Setters
@@ -56,5 +66,13 @@ public class CartItem {
 
   public void setPrice(double price) {
     this.price = price;
+  }
+
+  public int getStock() {
+    return stock;
+  }
+
+  public void setStock(int stock) {
+    this.stock = stock;
   }
 }

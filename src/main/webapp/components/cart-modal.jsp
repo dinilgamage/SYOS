@@ -12,8 +12,7 @@
         </div>
 
         <!-- Modal Body -->
-        <div id="cart-items" style="max-height: 60vh; overflow-y: auto;"
-             class="p-4 space-y-4 ">
+        <div id="cart-items" style="max-height: 60vh; overflow-y: auto;" class="p-4 space-y-4">
             <!-- Placeholder for Empty Cart -->
             <div id="empty-cart-message" class="text-center py-8 hidden">
                 <img src="images/empty-cart.png" alt="Empty Cart" class="mx-auto w-24 h-24">
@@ -28,10 +27,7 @@
                 <span class="font-semibold">Total:</span>
                 <span id="cart-total" class="font-semibold">$0.00</span>
             </div>
-            <button id="proceed-to-checkout-btn"
-                    class="bg-green-500 text-white w-full py-2 mt-4 rounded-lg hover:bg-green-600"
-                    onclick="checkout()">Proceed to
-                Checkout</button>
+            <button id="proceed-to-checkout-btn" class="bg-green-500 text-white w-full py-2 mt-4 rounded-lg hover:bg-green-600" onclick="checkout()">Proceed to Checkout</button>
         </div>
     </div>
 </div>

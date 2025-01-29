@@ -38,6 +38,7 @@ function fetchCartItems() {
             cartItemsContainer.innerHTML = '';
             const proceedToCheckoutBtn = document.getElementById('proceed-to-checkout-btn');
             let totalPrice = 0;
+            let proceedToCheckout = true;
 
             if (data.length === 0) {
                 cartItemsContainer.innerHTML = '<div class="text-gray-700"> <img src="images/empty-cart.png"' +
@@ -45,34 +46,50 @@ function fetchCartItems() {
                 document.getElementById('cart-count').textContent = '0';
                 proceedToCheckoutBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
                 proceedToCheckoutBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                proceedToCheckoutBtn.disabled = true; // Disable the button
             } else {
                 document.getElementById('cart-count').textContent = data.length;
                 proceedToCheckoutBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
                 proceedToCheckoutBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+                proceedToCheckoutBtn.disabled = false; // Enable the button
                 console.log(data);
                 data.forEach((item) => {
                     const cartItem = document.createElement('div');
                     cartItem.className = 'flex justify-between items-center p-4 border rounded';
+                    cartItem.dataset.stock = item.stock;
                     cartItem.innerHTML = `
                         <div>
                             <h3 class="text-lg font-semibold">${item.itemName}</h3>
                             <p class="text-gray-800">Price: $${item.price}</p>
-                            <p class="text-gray-800">Quantity: 
+                            <p class="text-gray-800">Quantity:
                                 <button class="bg-green-200 hover:bg-green-300 px-2 py-1 rounded-lg font-bold" onclick="updateCartItem('${item.itemCode}', ${item.quantity - 1})">-</button>
-                                <span class="font-semibold mx-1">${item.quantity}</span>
+                                <span class="item-quantity font-semibold mx-1">${item.quantity}</span>
                                 <button class="bg-green-200 hover:bg-green-300 px-2 py-1 rounded-lg font-bold" onclick="updateCartItem('${item.itemCode}', ${item.quantity + 1})">+</button>
+                            </p>
+                            <p class="stock-warning text-red-500 ${item.stock === 0 ? '' : 'hidden'}">
+                              ${item.stock === 0 ? 'No stock available' : `Only ${item.stock} left in stock`}
                             </p>
                         </div>
                         <button class="text-red-500" onclick="removeCartItem('${item.itemCode}')">
                             <i style="font-size: 20px" class="fas fa-trash-alt"></i>
-                        </button>                    `;
+                        </button>`;
                     cartItemsContainer.appendChild(cartItem);
                     totalPrice += item.price * item.quantity;
+
+                    if (item.quantity > item.stock) {
+                        cartItem.querySelector('.stock-warning').classList.remove('hidden');
+                        proceedToCheckout = false;
+                    }
                 });
             }
 
             // Update the total price in the cart modal
             document.getElementById('cart-total').textContent = `$${totalPrice.toFixed(2)}`;
+            proceedToCheckoutBtn.disabled = !proceedToCheckout;
+            if (!proceedToCheckout) {
+                proceedToCheckoutBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                proceedToCheckoutBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+            }
         })
         .catch((error) => {
             console.error('Error fetching cart items:', error);
@@ -87,7 +104,7 @@ function updateCartItem(itemCode, quantity) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({itemCode, quantity}),
+        body: JSON.stringify({ itemCode, quantity }),
     })
         .then((response) => response.json())
         .then((data) => {
@@ -108,7 +125,7 @@ function removeCartItem(itemCode) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({itemCode}),
+        body: JSON.stringify({ itemCode }),
     })
         .then((response) => response.json())
         .then((data) => {
