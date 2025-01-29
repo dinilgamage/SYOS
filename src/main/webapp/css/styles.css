@@ -62,3 +62,13 @@ body {
     pointer-events: auto;
 }
 
+.disabled-button {
+    background-color: #d1d5db; /* Gray color */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.disabled-button:hover {
+    background-color: #d1d5db; /* Same gray color as the disabled state */
+    cursor: not-allowed;
+}

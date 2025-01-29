@@ -62,9 +62,9 @@ function fetchCartItems() {
                             <h3 class="text-lg font-semibold">${item.itemName}</h3>
                             <p class="text-gray-800">Price: $${item.price}</p>
                             <p class="text-gray-800">Quantity:
-                                <button class="bg-green-200 hover:bg-green-300 px-2 py-1 rounded-lg font-bold" onclick="updateCartItem('${item.itemCode}', ${item.quantity - 1})">-</button>
+                                <button class="bg-green-200 hover:bg-green-300 px-2 py-1 rounded-lg font-bold ${item.stock === 0 ? 'disabled-button' : ''}" onclick="updateCartItem('${item.itemCode}', ${item.quantity - 1})" ${item.stock === 0 ? 'disabled' : ''}>-</button>
                                 <span class="item-quantity font-semibold mx-1">${item.quantity}</span>
-                                <button class="bg-green-200 hover:bg-green-300 px-2 py-1 rounded-lg font-bold" onclick="updateCartItem('${item.itemCode}', ${item.quantity + 1})">+</button>
+                                <button class="bg-green-200 hover:bg-green-300 px-2 py-1 rounded-lg font-bold ${item.quantity >= item.stock ? 'disabled-button' : ''}" onclick="updateCartItem('${item.itemCode}', ${item.quantity + 1})" ${item.quantity >= item.stock ? 'disabled' : ''}>+</button>
                             </p>
                             <p class="stock-warning text-red-500 ${item.stock === 0 ? '' : 'hidden'}">
                               ${item.stock === 0 ? 'No stock available' : `Only ${item.stock} left in stock`}
