@@ -26,20 +26,25 @@
 
 <!-- Product Cards Section -->
 <div class="container mx-auto px-4">
-    <h3 class="text-xl mb-3 font-bold">Welcome, <%= session.getAttribute("userName")%>!</h3>
+    <h3 class="text-xl mb-3 font-bold">Welcome, <%= session.getAttribute("userName") %>!</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%
             List<Inventory> inventoryItems = (List<Inventory>) request.getAttribute("inventoryItems");
 
             if (inventoryItems != null && !inventoryItems.isEmpty()) {
                 for (Inventory item : inventoryItems) {
+                    boolean isOutOfStock = item.getOnlineStock() <= 0;
         %>
-        <div class="glass-card bg-white p-4 rounded-xl shadow-lg hover:scale-105 transition-transform cursor-pointer"
-             onclick="openProductModal('<%= item.getItemCode() %>', '<%= item.getName() %>',
-                     '<%= item.getPrice() %>', '<%= item.getDiscountValue() %>', '<%= item.getDesc() %>')">
+        <div class="glass-card bg-white p-4 rounded-xl shadow-lg <%= isOutOfStock ? "" : "hover:scale-105 transition-transform cursor-pointer" %>"
+                <%= isOutOfStock ? "" : "onclick=\"openProductModal('" + item.getItemCode() + "', '" + item.getName() + "', '" + item.getPrice() + "', '" + item.getDiscountValue() + "', '" + item.getDesc() + "')\"" %>>
             <img src="images/products/<%= item.getItemCode() %>.jpg" alt="<%= item.getName() %>" class="w-full h-48 object-cover rounded-lg mb-4">
             <h4 class="font-semibold text-lg mb-2"><%= item.getName() %></h4>
-            <p class="text-primary font-medium text-lg">$<%= item.getPrice() %></p>
+            <div class="flex justify-between items-center">
+                <p class="text-primary font-medium text-lg">$<%= item.getPrice() %></p>
+                <% if (isOutOfStock) { %>
+                <p class="text-red-500 font-medium">Out of Stock</p>
+                <% } %>
+            </div>
         </div>
         <%
             }
