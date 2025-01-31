@@ -66,10 +66,11 @@
     <p>&copy; 2024 SYOS. All rights reserved.</p>
 </div>
 
-<!-- JavaScript for Modal and Cart -->
+
 <script src="js/productModal.js"></script>
 <script src="js/cartModal.js"></script>
 <script src="js/navbar.js"></script>
+<script src="js/checkout.js"></script>
 
 </body>
 </html>

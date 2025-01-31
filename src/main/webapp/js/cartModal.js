@@ -141,5 +141,15 @@ function removeCartItem(itemCode) {
 }
 
 function checkout() {
-    window.location.href = 'checkout.jsp';
+    fetch('getCartItems', {
+        method: 'GET',
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            localStorage.setItem('cartItems', JSON.stringify(data));
+            window.location.href = 'checkout.jsp';
+        })
+        .catch((error) => {
+            console.error('Error fetching cart items:', error);
+        });
 }
