@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const shippingOptions = document.querySelectorAll('input[name="shipping"]');
-    const orderSummary = document.getElementById('order-summary');
     const totalPriceElement = document.getElementById('total-price');
     let shippingCost = 10;
     let totalPrice = 0;
@@ -27,15 +26,30 @@ document.addEventListener("DOMContentLoaded", function () {
         totalPriceElement.textContent = `$${(totalPrice + shippingCost).toFixed(2)}`;
     }
 
+    // Ensure shipping checkmarks toggle properly
+    function updateShippingVisuals(selectedValue) {
+        document.querySelectorAll('.shipping-check').forEach(el => el.classList.add("hidden"));
+        if (selectedValue === "same-day") {
+            document.getElementById("sameDayCheck").classList.remove("hidden");
+        } else {
+            document.getElementById("standardCheck").classList.remove("hidden");
+        }
+        document.getElementById("shipping-cost").textContent = `$${shippingCost.toFixed(2)}`;
+    }
+
+    // Listen for changes in shipping method
     shippingOptions.forEach(option => {
         option.addEventListener('change', function () {
             shippingCost = this.value === 'same-day' ? 20 : 10;
             updateTotalPrice();
+            updateShippingVisuals(this.value);
         });
     });
 
     // Populate order summary with cart items from localStorage
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const orderSummary = document.getElementById('order-summary');
+
     cartItems.forEach(item => {
         const itemElement = document.createElement('div');
         itemElement.className = 'flex justify-between items-center';

@@ -37,11 +37,20 @@
             <div class="mb-6">
                 <h2 class="text-xl font-semibold mb-4">Shipping Method</h2>
                 <label class="flex items-center space-x-3 cursor-pointer">
-                    <input type="radio" name="shipping" class="hidden" checked>
+                    <input type="radio" name="shipping" value="standard" class="hidden" checked>
                     <div class="w-5 h-5 border border-gray-400 rounded-full flex items-center justify-center">
-                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-green-500 rounded-full shipping-check" id="standardCheck"></div>
                     </div>
                     <span>Standard (3-5 Business Days) - $10.00</span>
+                </label>
+
+                <!-- Same-Day Shipping -->
+                <label class="flex items-center space-x-3 cursor-pointer mt-4">
+                    <input type="radio" name="shipping" value="same-day" class="hidden">
+                    <div class="w-5 h-5 border border-gray-400 rounded-full flex items-center justify-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full shipping-check hidden" id="sameDayCheck"></div>
+                    </div>
+                    <span>Same Day Delivery - $20.00</span>
                 </label>
             </div>
 
@@ -89,8 +98,8 @@
                 <!-- Cart items will be dynamically added here -->
             </div>
             <div class="flex justify-between mt-2">
-                <span>Shipping</span>
-                <span>$10.00</span>
+                    <span>Shipping</span>
+                    <span id="shipping-cost">$10.00</span>
             </div>
             <div class="flex justify-between font-semibold mt-2">
                 <span>Total</span>
