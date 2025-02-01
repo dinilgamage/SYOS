@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface OrderDao {
   void saveOrder(Order order, List<OrderItem> orderItems) throws SQLException;
+  Order getOrderById(int orderId);
+  List<Order> getOrdersByUserId(int userId);
 }

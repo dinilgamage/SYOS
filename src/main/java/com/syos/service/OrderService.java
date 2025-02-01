@@ -1,11 +1,15 @@
 package com.syos.service;
 
+import com.syos.dao.OrderDao;
 import com.syos.model.Order;
 import com.syos.model.OrderItem;
 import com.syos.model.CartItem;
-import com.syos.dao.OrderDao;
 import com.syos.dao.CartDao;
+import com.syos.service.TransactionService;
+import com.syos.enums.TransactionType;
+import com.syos.model.Transaction;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,14 +17,16 @@ import java.util.stream.Collectors;
 public class OrderService {
   private OrderDao orderDao;
   private CartDao cartDao;
+  private TransactionService transactionService;
 
-  public OrderService(OrderDao orderDao, CartDao cartDao) {
+  public OrderService(OrderDao orderDao, CartDao cartDao, TransactionService transactionService) {
     this.orderDao = orderDao;
     this.cartDao = cartDao;
+    this.transactionService = transactionService;
   }
 
-  public void processOrder(int userId, String deliveryAddress, String paymentDetails) throws Exception {
-    List<CartItem> cartItems = cartDao.getCartItems(userId);
+  public void processOrder(Order order) throws Exception {
+    List<CartItem> cartItems = cartDao.getCartItems(order.getCustomerId());
     if (cartItems.isEmpty()) {
       throw new Exception("Cart is empty");
     }
@@ -30,19 +36,25 @@ public class OrderService {
       .collect(Collectors.toList());
 
     double totalAmount = orderItems.stream().mapToDouble(OrderItem::getSubtotal).sum();
-    Order order = new Order();
-    order.setCustomerId(userId);
-    order.setTransactionId(generateTransactionId());
+    Transaction transaction = transactionService.createTransaction(TransactionType.ONLINE, BigDecimal.valueOf(totalAmount), order.getCustomerId());
+
+    order.setTransactionId(transaction.getTransactionId());
     order.setOrderDate(new Date());
     order.setDeliveryDate(calculateDeliveryDate());
     order.setTotalAmount(totalAmount);
-    order.setPaymentMethod(paymentDetails);
     order.setOrderStatus("Processing");
-    order.setShippingAddress(deliveryAddress);
-    order.setBillingAddress(deliveryAddress); // Assuming billing address is same as shipping address
+    order.setOrderItems(orderItems);
 
     orderDao.saveOrder(order, orderItems);
-    cartDao.clearCart(userId);
+    cartDao.clearCart(order.getCustomerId());
+  }
+
+  public Order getOrderById(int orderId) throws Exception {
+    return orderDao.getOrderById(orderId);
+  }
+
+  public List<Order> getOrdersByUserId(int userId) throws Exception {
+    return orderDao.getOrdersByUserId(userId);
   }
 
   private OrderItem convertToOrderItem(CartItem cartItem) {
@@ -53,11 +65,6 @@ public class OrderService {
     orderItem.setQuantity(cartItem.getQuantity());
     orderItem.setSubtotal(cartItem.getPrice() * cartItem.getQuantity());
     return orderItem;
-  }
-
-  private int generateTransactionId() {
-    // Implement logic to generate a unique transaction ID
-    return 0;
   }
 
   private Date calculateDeliveryDate() {
