@@ -72,3 +72,8 @@ body {
     background-color: #d1d5db; /* Same gray color as the disabled state */
     cursor: not-allowed;
 }
+
+.invalid {
+    border-color: red;
+    border-width: 2px;
+}

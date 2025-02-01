@@ -21,19 +21,65 @@ document.addEventListener("DOMContentLoaded", function () {
         cardCheck.classList.add("hidden");
         cardDetails.querySelectorAll('input').forEach(input => {
             input.removeAttribute('required');
+            input.classList.remove('invalid');
         });
     });
 
     checkoutForm.addEventListener('submit', function (event) {
         if (cardOption.checked) {
-            cardDetails.querySelectorAll('input').forEach(input => {
-                if (!input.value) {
-                    event.preventDefault();
-                    alert('Please fill in all card details.');
-                }
-            });
+            const cardNumber = document.querySelector('input[name="cardNumber"]');
+            const expirationDate = document.querySelector('input[name="expirationDate"]');
+            const securityCode = document.querySelector('input[name="securityCode"]');
+
+            let valid = true;
+
+            if (!validateCardNumber(cardNumber.value)) {
+                cardNumber.classList.add('invalid');
+                valid = false;
+            } else {
+                cardNumber.classList.remove('invalid');
+            }
+
+            if (!validateExpirationDate(expirationDate.value)) {
+                expirationDate.classList.add('invalid');
+                valid = false;
+            } else {
+                expirationDate.classList.remove('invalid');
+            }
+
+            if (!validateSecurityCode(securityCode.value)) {
+                securityCode.classList.add('invalid');
+                valid = false;
+            } else {
+                securityCode.classList.remove('invalid');
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
         }
     });
+
+    function validateCardNumber(cardNumber) {
+        const regex = /^[0-9]{16}$/;
+        return regex.test(cardNumber);
+    }
+
+    function validateExpirationDate(expirationDate) {
+        const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
+        if (!regex.test(expirationDate)) {
+            return false;
+        }
+        const [month, year] = expirationDate.split('/');
+        const expDate = new Date(`20${year}`, month);
+        const currentDate = new Date();
+        return expDate > currentDate;
+    }
+
+    function validateSecurityCode(securityCode) {
+        const regex = /^[0-9]{3,4}$/;
+        return regex.test(securityCode);
+    }
 
     const shippingOptions = document.querySelectorAll('input[name="shippingMethod"]');
     const totalPriceElement = document.getElementById('total-price');
