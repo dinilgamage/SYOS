@@ -23,8 +23,6 @@ public class OrderDaoImpl implements OrderDao {
          PreparedStatement orderStatement = connection.prepareStatement(INSERT_ORDER_SQL, Statement.RETURN_GENERATED_KEYS);
          PreparedStatement orderItemStatement = connection.prepareStatement(INSERT_ORDER_ITEM_SQL)) {
 
-      connection.setAutoCommit(false);
-
       orderStatement.setInt(1, order.getCustomerId());
       orderStatement.setInt(2, order.getTransactionId());
       orderStatement.setTimestamp(3, new Timestamp(order.getOrderDate().getTime()));
@@ -60,8 +58,6 @@ public class OrderDaoImpl implements OrderDao {
           orderItemStatement.executeBatch();
         }
       }
-
-      connection.commit();
     } catch (SQLException e) {
       throw new DaoException("Error saving order", e);
     }
