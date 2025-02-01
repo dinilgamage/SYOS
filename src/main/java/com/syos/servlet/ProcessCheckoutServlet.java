@@ -1,9 +1,11 @@
 package com.syos.servlet;
 
 import com.syos.dao.impl.CartDaoImpl;
+import com.syos.dao.impl.InventoryDaoImpl;
 import com.syos.dao.impl.OrderDaoImpl;
 import com.syos.dao.impl.TransactionDaoImpl;
 import com.syos.model.Order;
+import com.syos.service.InventoryService;
 import com.syos.service.OrderService;
 import com.syos.service.TransactionService;
 
@@ -21,7 +23,8 @@ public class ProcessCheckoutServlet extends HttpServlet {
   @Override
   public void init() throws ServletException {
     super.init();
-    orderService = new OrderService(new OrderDaoImpl(), new CartDaoImpl(), new TransactionService(new TransactionDaoImpl()));
+    orderService = new OrderService(new OrderDaoImpl(), new CartDaoImpl(),
+      new TransactionService(new TransactionDaoImpl()), new InventoryService(new InventoryDaoImpl()));
   }
 
   @Override

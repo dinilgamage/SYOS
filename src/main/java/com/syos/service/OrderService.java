@@ -5,7 +5,6 @@ import com.syos.model.Order;
 import com.syos.model.OrderItem;
 import com.syos.model.CartItem;
 import com.syos.dao.CartDao;
-import com.syos.service.TransactionService;
 import com.syos.enums.TransactionType;
 import com.syos.model.Transaction;
 
@@ -18,11 +17,13 @@ public class OrderService {
   private OrderDao orderDao;
   private CartDao cartDao;
   private TransactionService transactionService;
+  private InventoryService inventoryService;
 
-  public OrderService(OrderDao orderDao, CartDao cartDao, TransactionService transactionService) {
+  public OrderService(OrderDao orderDao, CartDao cartDao, TransactionService transactionService, InventoryService inventoryService) {
     this.orderDao = orderDao;
     this.cartDao = cartDao;
     this.transactionService = transactionService;
+    this.inventoryService = inventoryService;
   }
 
   public void processOrder(Order order) throws Exception {
@@ -47,6 +48,11 @@ public class OrderService {
 
     orderDao.saveOrder(order, orderItems);
     cartDao.clearCart(order.getCustomerId());
+
+    // Update inventory stock levels
+    for (OrderItem orderItem : orderItems) {
+      inventoryService.updateInventoryStock(orderItem.getProductId(), orderItem.getQuantity(), TransactionType.ONLINE);
+    }
   }
 
   public Order getOrderById(int orderId) throws Exception {
