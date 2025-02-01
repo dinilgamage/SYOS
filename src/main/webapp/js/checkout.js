@@ -26,12 +26,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     checkoutForm.addEventListener('submit', function (event) {
+        const phoneNumber = document.querySelector('input[name="phone"]');
+        let valid = true;
+
+        if (!validatePhoneNumber(phoneNumber.value)) {
+            phoneNumber.classList.add('invalid');
+            valid = false;
+        } else {
+            phoneNumber.classList.remove('invalid');
+        }
+
         if (cardOption.checked) {
             const cardNumber = document.querySelector('input[name="cardNumber"]');
             const expirationDate = document.querySelector('input[name="expirationDate"]');
             const securityCode = document.querySelector('input[name="securityCode"]');
-
-            let valid = true;
 
             if (!validateCardNumber(cardNumber.value)) {
                 cardNumber.classList.add('invalid');
@@ -53,12 +61,17 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 securityCode.classList.remove('invalid');
             }
+        }
 
-            if (!valid) {
-                event.preventDefault();
-            }
+        if (!valid) {
+            event.preventDefault();
         }
     });
+
+    function validatePhoneNumber(phoneNumber) {
+        const regex = /^[0-9]+$/;
+        return regex.test(phoneNumber);
+    }
 
     function validateCardNumber(cardNumber) {
         const regex = /^[0-9]{16}$/;
