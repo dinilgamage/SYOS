@@ -53,7 +53,7 @@ public class ProcessCheckoutServlet extends HttpServlet {
 
     try {
       orderService.processOrder(order);
-      response.sendRedirect("orderConfirmation.jsp");
+      response.sendRedirect("dashboard.jsp");
     } catch (Exception e) {
       e.printStackTrace();
       response.sendRedirect("checkout.jsp?error=true");

@@ -12,10 +12,10 @@ import java.util.List;
 
 public class OrderDaoImpl implements OrderDao {
 
-  private static final String INSERT_ORDER_SQL = "INSERT INTO Orders (customer_id, transaction_id, order_date, delivery_date, total_amount, payment_method, order_status, email, first_name, last_name, address, apartment, city, postal_code, phone, shipping_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  private static final String INSERT_ORDER_ITEM_SQL = "INSERT INTO OrderItems (order_id, item_code, item_name, price, quantity, subtotal) VALUES (?, ?, ?, ?, ?, ?)";
-  private static final String SELECT_ORDER_BY_ID = "SELECT * FROM Orders WHERE order_id = ?";
-  private static final String SELECT_ORDERS_BY_USER_ID = "SELECT * FROM Orders WHERE customer_id = ?";
+  private static final String INSERT_ORDER_SQL = "INSERT INTO `Order` (customer_id, transaction_id, order_date, delivery_date, total_amount, payment_method, order_status, email, first_name, last_name, address, apartment, city, postal_code, phone, shipping_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  private static final String INSERT_ORDER_ITEM_SQL = "INSERT INTO OrderItem (order_id, item_code, item_name, price, quantity, subtotal) VALUES (?, ?, ?, ?, ?, ?)";
+  private static final String SELECT_ORDER_BY_ID = "SELECT * FROM `Order` WHERE order_id = ?";
+  private static final String SELECT_ORDERS_BY_USER_ID = "SELECT * FROM `Order` WHERE customer_id = ?";
 
   @Override
   public void saveOrder(Order order, List<OrderItem> orderItems) {

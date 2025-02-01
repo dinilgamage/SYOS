@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cardCheck.classList.add("hidden");
     });
 
-    const shippingOptions = document.querySelectorAll('input[name="shipping"]');
+    const shippingOptions = document.querySelectorAll('input[name="shippingMethod"]');
     const totalPriceElement = document.getElementById('total-price');
     let shippingCost = 10;
     let totalPrice = 0;
