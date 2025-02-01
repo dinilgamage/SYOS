@@ -6,6 +6,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const codCheck = document.getElementById("codCheck");
     const checkoutForm = document.getElementById("checkoutForm");
 
+    // Ensure COD option is selected by default
+    if (codOption.checked) {
+        codCheck.classList.remove("hidden");
+        cardCheck.classList.add("hidden");
+        cardDetails.classList.add("hidden");
+    }
+
     cardOption.addEventListener("click", function () {
         cardDetails.classList.remove("hidden");
         cardCheck.classList.remove("hidden");
