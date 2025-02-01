@@ -7,7 +7,7 @@
 <div class="container mx-auto p-6">
     <h1 class="text-3xl font-bold text-start mb-6">Checkout</h1>
 
-    <form action="processCheckout" method="post">
+    <form id="checkoutForm" action="processCheckout" method="post">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Left Column (Contact, Delivery, Payment) -->
             <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-md">
@@ -72,12 +72,12 @@
                     </label>
 
                     <div id="cardDetails" class="hidden mt-4">
-                        <input type="text" placeholder="Card Number" class="w-full p-2 border border-gray-300 rounded">
+                        <input type="text" name="cardNumber" placeholder="Card Number" class="w-full p-2 border border-gray-300 rounded">
                         <div class="grid grid-cols-2 gap-4 mt-4">
-                            <input type="text" placeholder="Expiration Date (MM/YY)" class="w-full p-2 border border-gray-300 rounded">
-                            <input type="text" placeholder="Security Code" class="w-full p-2 border border-gray-300 rounded">
+                            <input type="text" name="expirationDate" placeholder="Expiration Date (MM/YY)" class="w-full p-2 border border-gray-300 rounded">
+                            <input type="text" name="securityCode" placeholder="Security Code" class="w-full p-2 border border-gray-300 rounded">
                         </div>
-                        <input type="text" placeholder="Name on Card" class="w-full p-2 border border-gray-300 rounded mt-4">
+                        <input type="text" name="nameOnCard" placeholder="Name on Card" class="w-full p-2 border border-gray-300 rounded mt-4">
                     </div>
 
                     <label class="flex items-center space-x-3 cursor-pointer mt-4">

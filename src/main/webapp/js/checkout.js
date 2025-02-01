@@ -4,17 +4,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const cardDetails = document.getElementById("cardDetails");
     const cardCheck = document.getElementById("cardCheck");
     const codCheck = document.getElementById("codCheck");
+    const checkoutForm = document.getElementById("checkoutForm");
 
     cardOption.addEventListener("click", function () {
         cardDetails.classList.remove("hidden");
         cardCheck.classList.remove("hidden");
         codCheck.classList.add("hidden");
+        cardDetails.querySelectorAll('input').forEach(input => {
+            input.setAttribute('required', 'required');
+        });
     });
 
     codOption.addEventListener("click", function () {
         cardDetails.classList.add("hidden");
         codCheck.classList.remove("hidden");
         cardCheck.classList.add("hidden");
+        cardDetails.querySelectorAll('input').forEach(input => {
+            input.removeAttribute('required');
+        });
+    });
+
+    checkoutForm.addEventListener('submit', function (event) {
+        if (cardOption.checked) {
+            cardDetails.querySelectorAll('input').forEach(input => {
+                if (!input.value) {
+                    event.preventDefault();
+                    alert('Please fill in all card details.');
+                }
+            });
+        }
     });
 
     const shippingOptions = document.querySelectorAll('input[name="shippingMethod"]');
@@ -26,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
         totalPriceElement.textContent = `$${(totalPrice + shippingCost).toFixed(2)}`;
     }
 
-    // Ensure shipping checkmarks toggle properly
     function updateShippingVisuals(selectedValue) {
         document.querySelectorAll('.shipping-check').forEach(el => el.classList.add("hidden"));
         if (selectedValue === "same-day") {
@@ -37,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("shipping-cost").textContent = `$${shippingCost.toFixed(2)}`;
     }
 
-    // Listen for changes in shipping method
     shippingOptions.forEach(option => {
         option.addEventListener('change', function () {
             shippingCost = this.value === 'same-day' ? 20 : 10;
@@ -46,7 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Populate order summary with cart items from localStorage
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     const orderSummary = document.getElementById('order-summary');
 
