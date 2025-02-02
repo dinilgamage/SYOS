@@ -109,3 +109,21 @@ body {
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
+
+/* Custom scrollbar for the dropdown menu */
+#dropdownMenu::-webkit-scrollbar {
+    width: 8px;
+}
+
+#dropdownMenu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#dropdownMenu::-webkit-scrollbar-thumb {
+    background: #32774a;
+    border-radius: 2px;
+}
+
+#dropdownMenu::-webkit-scrollbar-thumb:hover {
+    background: #467036;
+}

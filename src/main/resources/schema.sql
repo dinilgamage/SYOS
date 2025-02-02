@@ -159,9 +159,9 @@ VALUES
     ('V005', 'Onions 1kg', 'Vegetables', 100.00, 0.00, 'NONE', 80, 90, 120, 'Essential ingredient for cooking, available in red and white varieties.'),
 
     -- Meat & Poultry (M)
-    ('M001', 'Chicken Breast 1kg', 'Meat & Poultry', 320.00, 0.00, 'NONE', 50, 60, 80, 'Boneless, skinless chicken breast, high in protein.'),
-    ('M002', 'Beef Mince 1kg', 'Meat & Poultry', 450.00, 0.00, 'NONE', 40, 50, 70, 'Lean ground beef, ideal for burgers and pasta sauces.'),
-    ('M003', 'Steak 500g', 'Meat & Poultry', 600.00, 0.00, 'NONE', 30, 40, 60, 'Tender and juicy beef steak, ready for grilling.'),
+    ('M001', 'Chicken Breast 1kg', 'Meat', 320.00, 0.00, 'NONE', 50, 60, 80, 'Boneless, skinless chicken breast, high in protein.'),
+    ('M002', 'Beef Mince 1kg', 'Meat', 450.00, 0.00, 'NONE', 40, 50, 70, 'Lean ground beef, ideal for burgers and pasta sauces.'),
+    ('M003', 'Steak 500g', 'Meat', 600.00, 0.00, 'NONE', 30, 40, 60, 'Tender and juicy beef steak, ready for grilling.'),
 
     -- Seafood (SF)
     ('SF001', 'Salmon Fillet 500g', 'Seafood', 550.00, 0.00, 'NONE', 40, 50, 60, 'Rich and flavorful salmon fillet, high in Omega-3.'),

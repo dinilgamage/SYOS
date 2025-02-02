@@ -13,6 +13,6 @@ public interface InventoryDao {
   List<Inventory> getItemsToReshelveForOnline();
   List<Inventory> getItemsToReshelveForBoth();
   List<Inventory> getItemsBelowReorderLevel(int threshold);
-
+  List<Inventory> getItemsByCategory(String category);
 }
 

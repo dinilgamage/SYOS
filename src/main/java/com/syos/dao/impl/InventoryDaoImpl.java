@@ -23,6 +23,7 @@ public class InventoryDaoImpl implements InventoryDao {
   private static final String SELECT_ITEMS_TO_RESHELVE_FOR_BOTH = "SELECT * FROM Inventory WHERE store_stock < shelf_capacity OR online_stock < shelf_capacity";
   private static final String SELECT_ITEMS_BELOW_REORDER_LEVEL = "SELECT * FROM Inventory WHERE (store_stock + online_stock) < ?";
   private static final String SELECT_ALL_ITEMS = "SELECT * FROM Inventory";
+  private static final String SELECT_ITEMS_BY_CATEGORY = "SELECT * FROM Inventory WHERE category = ?";
 
   @Override
   public Inventory getItemByCode(String itemCode) {
@@ -76,6 +77,26 @@ public class InventoryDaoImpl implements InventoryDao {
       throw new DaoException("Error retrieving all items", e);
     }
     System.out.println("All items: " + items);
+    return items;
+  }
+
+  @Override
+  public List<Inventory> getItemsByCategory(String category) {
+    List<Inventory> items = new ArrayList<>();
+
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ITEMS_BY_CATEGORY)) {
+
+      preparedStatement.setString(1, category);
+      ResultSet rs = preparedStatement.executeQuery();
+
+      while (rs.next()) {
+        Inventory item = mapRowToInventory(rs);
+        items.add(item);
+      }
+    } catch (SQLException e) {
+      throw new DaoException("Error retrieving items by category: " + category, e);
+    }
     return items;
   }
 

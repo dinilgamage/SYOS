@@ -23,7 +23,6 @@ public class HomeServlet extends HttpServlet {
     this.inventoryService = new InventoryService(new InventoryDaoImpl());
     this.cartService = new CartService();
   }
-
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -33,7 +32,14 @@ public class HomeServlet extends HttpServlet {
       return;
     }
 
-    List<Inventory> inventoryItems = inventoryService.getAllItems();
+    String category = request.getParameter("category");
+    List<Inventory> inventoryItems;
+
+    if (category == null || category.equals("all")) {
+      inventoryItems = inventoryService.getAllItems();
+    } else {
+      inventoryItems = inventoryService.getItemsByCategory(category);
+    }
 
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
