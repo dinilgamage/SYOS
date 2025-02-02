@@ -4,16 +4,17 @@ import com.syos.dao.impl.InventoryDaoImpl;
 import com.syos.service.CartService;
 import com.syos.service.InventoryService;
 import com.syos.model.Inventory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-@WebServlet("/dashboard")
-public class DashboardServlet extends HttpServlet {
+@WebServlet("/home")
+public class HomeServlet extends HttpServlet {
   private InventoryService inventoryService;
   private CartService cartService;
 
@@ -34,12 +35,10 @@ public class DashboardServlet extends HttpServlet {
 
     List<Inventory> inventoryItems = inventoryService.getAllItems();
 
-    // this slows down the login time by 2 sec
-    int cartSize = cartService.getCartSize(userId);
-
-    request.setAttribute("inventoryItems", inventoryItems);
-    request.setAttribute("cartSize", cartSize);
-    request.getSession().setAttribute("cartSize", cartSize);
-    request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+    JsonObject jsonResponse = new JsonObject();
+    jsonResponse.add("inventoryItems", new Gson().toJsonTree(inventoryItems));
+    response.getWriter().write(jsonResponse.toString());
   }
 }

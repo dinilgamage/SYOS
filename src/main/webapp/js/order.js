@@ -1,4 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Fetch and update cart size
+    const cartSizeElement = document.getElementById('cart-count');
+
+    fetch('getCartSize')
+        .then(response => response.json())
+        .then(data => {
+            cartSizeElement.textContent = data.cartSize || 0;
+        })
+        .catch(error => {
+            console.error('Error fetching cart size:', error);
+        });
+
+    // Fetch and display orders
     fetch('viewOrders')
         .then(response => response.json())
         .then(orders => {
@@ -78,7 +91,7 @@ function reorderItems() {
 
             localStorage.removeItem('cartItems');
             localStorage.setItem('reorderItems', JSON.stringify(items));
-            window.location.href = 'checkout.jsp';
+            window.location.href = `checkout.jsp?orderId=${orderId}`;
         })
         .catch(error => console.error('Error fetching order details:', error));
 }

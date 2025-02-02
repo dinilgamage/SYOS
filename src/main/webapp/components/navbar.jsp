@@ -11,7 +11,8 @@
     <div class="flex items-center gap-4 relative">
         <button id="cart-icon" class="relative mx-4" onclick="openCartModal()">
             <i class="fas fa-shopping-cart text-2xl text-gray-700"></i>
-            <span id="cart-count" class="absolute -top-3 -right-3 bg-red-500 text-white text-sm rounded-full px-2 py-1"><%= session.getAttribute("cartSize") %></span>
+            <span id="cart-count"
+                  class="absolute -top-3 -right-3 bg-red-500 text-white text-sm rounded-full px-2 py-1">0</span>
         </button>
         <a href="viewOrders.jsp" class="relative mx-4">
             <i class="fas fa-box-open text-2xl text-gray-700"></i>

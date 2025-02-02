@@ -152,4 +152,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     updateTotalPrice();
+
+    // Add this block to read the orderId parameter from the URL and include it in the form submission
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('orderId');
+
+    if (orderId) {
+        const orderIdInput = document.createElement('input');
+        orderIdInput.type = 'hidden';
+        orderIdInput.name = 'orderId';
+        orderIdInput.value = orderId;
+        checkoutForm.appendChild(orderIdInput);
+    }
 });

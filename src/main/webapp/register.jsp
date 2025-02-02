@@ -27,5 +27,5 @@
     <% } %>
     <p class="mt-4 text-center">Already have an account? <a href="login.jsp" class="text-blue-500 hover:underline">Login here</a></p>
 </div>
+<script src="js/home.js"></script>
 </body>
-</html>

@@ -40,6 +40,7 @@ public class PlaceOrderServlet extends HttpServlet {
     String city = request.getParameter("city");
     String postalCode = request.getParameter("postalCode");
     String phone = request.getParameter("phone");
+    String orderIdParam = request.getParameter("orderId");
 
     Order order = new Order();
     order.setCustomerId(customerId);
@@ -55,8 +56,13 @@ public class PlaceOrderServlet extends HttpServlet {
     order.setPhone(phone);
 
     try {
-      orderService.processOrder(order);
-      response.sendRedirect("dashboard.jsp");
+      if (orderIdParam != null && !orderIdParam.isEmpty()) {
+        int orderId = Integer.parseInt(orderIdParam);
+        orderService.processOrder(order, orderId);
+      } else {
+        orderService.processOrder(order);
+      }
+      response.sendRedirect("home.jsp");
     } catch (Exception e) {
       e.printStackTrace();
       response.sendRedirect("checkout.jsp?error=true");

@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
       session.setAttribute("userEmail", email);
       session.setAttribute("userName", user.getName());
       session.setAttribute("userId", user.getUserId());
-      response.sendRedirect("dashboard.jsp");
+      response.sendRedirect("home.jsp");
     } else {
       request.setAttribute("error", "Invalid credentials. Please try again.");
       request.getRequestDispatcher("login.jsp").forward(request, response);

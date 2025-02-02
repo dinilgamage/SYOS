@@ -16,6 +16,7 @@ public class OrderDaoImpl implements OrderDao {
   private static final String INSERT_ORDER_ITEM_SQL = "INSERT INTO OrderItem (order_id, item_code, item_name, price, quantity, subtotal) VALUES (?, ?, ?, ?, ?, ?)";
   private static final String SELECT_ORDER_BY_ID = "SELECT * FROM `Order` WHERE order_id = ?";
   private static final String SELECT_ORDERS_BY_USER_ID = "SELECT * FROM `Order` WHERE customer_id = ?";
+  private static final String SELECT_ORDER_ITEMS_BY_ORDER_ID = "SELECT * FROM OrderItem WHERE order_id = ?";
 
   @Override
   public void saveOrder(Order order, List<OrderItem> orderItems) {
@@ -115,6 +116,31 @@ public class OrderDaoImpl implements OrderDao {
       throw new DaoException("Error retrieving orders for user ID: " + userId, e);
     }
     return orders;
+  }
+
+  @Override
+  public List<OrderItem> getOrderItems(int orderId) {
+    List<OrderItem> orderItems = new ArrayList<>();
+
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement statement = connection.prepareStatement(SELECT_ORDER_ITEMS_BY_ORDER_ID)) {
+
+      statement.setInt(1, orderId);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        while (resultSet.next()) {
+          OrderItem orderItem = new OrderItem();
+          orderItem.setProductId(resultSet.getString("item_code"));
+          orderItem.setProductName(resultSet.getString("item_name"));
+          orderItem.setPrice(resultSet.getDouble("price"));
+          orderItem.setQuantity(resultSet.getInt("quantity"));
+          orderItem.setSubtotal(resultSet.getDouble("subtotal"));
+          orderItems.add(orderItem);
+        }
+      }
+    } catch (SQLException e) {
+      throw new DaoException("Error retrieving order items for order ID: " + orderId, e);
+    }
+    return orderItems;
   }
 
   private Order mapRowToOrder(ResultSet resultSet) throws SQLException {

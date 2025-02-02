@@ -36,6 +36,20 @@ public class OrderService {
       .map(this::convertToOrderItem)
       .collect(Collectors.toList());
 
+    processOrder(order, orderItems);
+    cartDao.clearCart(order.getCustomerId());
+  }
+
+  public void processOrder(Order order, int orderId) throws Exception {
+    List<OrderItem> orderItems = orderDao.getOrderItems(orderId);
+    if (orderItems.isEmpty()) {
+      throw new Exception("Order is empty");
+    }
+
+    processOrder(order, orderItems);
+  }
+
+  private void processOrder(Order order, List<OrderItem> orderItems) throws Exception {
     double totalAmount = orderItems.stream().mapToDouble(OrderItem::getSubtotal).sum();
     Transaction transaction = transactionService.createTransaction(TransactionType.ONLINE, BigDecimal.valueOf(totalAmount), order.getCustomerId());
 
@@ -47,7 +61,6 @@ public class OrderService {
     order.setOrderItems(orderItems);
 
     orderDao.saveOrder(order, orderItems);
-    cartDao.clearCart(order.getCustomerId());
 
     // Update inventory stock levels
     for (OrderItem orderItem : orderItems) {
