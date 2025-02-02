@@ -118,6 +118,7 @@ function addToCart() {
             if (data.success) {
                 document.getElementById('cart-count').textContent = data.cartSize;
                 closeProductModal();
+                notification();
             } else {
                 console.error('Failed to add item to cart:', data.message);
                 alert(`Failed to add item to cart: ${data.message}`);
@@ -129,3 +130,12 @@ function addToCart() {
         });
 }
 
+function notification() {
+    const cartNotification = document.getElementById('cart-notification');
+    cartNotification.classList.remove('hidden');
+
+    // Hide the notification after 5 seconds
+    setTimeout(() => {
+        cartNotification.classList.add('hidden');
+    }, 5000);
+}
