@@ -29,10 +29,10 @@ CREATE TABLE Inventory
     price             DECIMAL(10, 2)     NOT NULL,
     discount_value    DECIMAL(10, 2) DEFAULT 0.00,
     discount_strategy VARCHAR(50)    DEFAULT 'NONE', -- Strategy can be 'FIXED' or 'PERCENTAGE' or 'NONE'
-    store_stock       INT            DEFAULT 0,      -- Stock for store purchases
-    online_stock      INT            DEFAULT 0,      -- Stock for online purchases
-    shelf_capacity    INT                NOT NULL,   -- Maximum items that can be stocked on a shelf
-    `desc`            VARCHAR(255)   DEFAULT NULL    -- Brief description of the item
+    store_stock       INT            DEFAULT 0 CHECK (store_stock >= 0),
+    online_stock      INT            DEFAULT 0 CHECK (online_stock >= 0),
+    shelf_capacity    INT            NOT NULL CHECK (shelf_capacity >= 0),
+    `desc`            VARCHAR(255)   DEFAULT NULL
 );
 
 -- 3. Transactions Table

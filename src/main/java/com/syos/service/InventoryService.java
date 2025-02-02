@@ -68,6 +68,15 @@ public class InventoryService implements StockSubject {
     return inventoryDao.getItemById(itemId);
   }
 
+  public boolean checkAvailableStock(String itemCode, int quantity, TransactionType transactionType) {
+    Inventory inventoryItem = inventoryDao.getItemByCode(itemCode);
+    if (inventoryItem == null) {
+      throw new IllegalArgumentException("Item not found: " + itemCode);
+    }
+    return checkAvailableStock(inventoryItem, quantity, transactionType);
+  }
+
+
   public boolean checkAvailableStock(Inventory inventoryItem, int quantity, TransactionType transactionType) {
     if (TransactionType.STORE.equals(transactionType)) {
 

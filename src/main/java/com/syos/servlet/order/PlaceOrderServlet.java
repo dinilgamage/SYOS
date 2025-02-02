@@ -4,6 +4,7 @@ import com.syos.dao.impl.CartDaoImpl;
 import com.syos.dao.impl.InventoryDaoImpl;
 import com.syos.dao.impl.OrderDaoImpl;
 import com.syos.dao.impl.TransactionDaoImpl;
+import com.syos.exception.InsufficientStockException;
 import com.syos.model.Order;
 import com.syos.service.InventoryService;
 import com.syos.service.OrderService;
@@ -63,8 +64,9 @@ public class PlaceOrderServlet extends HttpServlet {
         orderService.processOrder(order);
       }
       response.sendRedirect("home.jsp?orderSuccess=true");
+    } catch (InsufficientStockException e) {
+      response.sendRedirect("home.jsp?insufficientStock=true");
     } catch (Exception e) {
-      e.printStackTrace();
       response.sendRedirect("checkout.jsp?error=true");
     }
   }

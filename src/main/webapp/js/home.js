@@ -2,9 +2,24 @@ document.addEventListener("DOMContentLoaded", function () {
     // Check for order success query parameter and display notification
     const urlParams = new URLSearchParams(window.location.search);
     const orderSuccess = urlParams.get('orderSuccess');
+    const insufficientStock = urlParams.get('insufficientStock');
 
     if (orderSuccess) {
         const notification = document.getElementById('notification');
+        console.log("we made it here")
+        notification.classList.remove('hidden');
+
+        // Hide the notification after 5 seconds
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 5000);
+
+        const newUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+    }
+
+    if (insufficientStock) {
+        const notification = document.getElementById('stock-notification');
         console.log("we made it here")
         notification.classList.remove('hidden');
 

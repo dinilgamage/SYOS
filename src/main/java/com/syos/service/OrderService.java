@@ -1,6 +1,7 @@
 package com.syos.service;
 
 import com.syos.dao.OrderDao;
+import com.syos.exception.InsufficientStockException;
 import com.syos.model.Order;
 import com.syos.model.OrderItem;
 import com.syos.model.CartItem;
@@ -19,7 +20,10 @@ public class OrderService {
   private TransactionService transactionService;
   private InventoryService inventoryService;
 
-  public OrderService(OrderDao orderDao, CartDao cartDao, TransactionService transactionService, InventoryService inventoryService) {
+  public OrderService(OrderDao orderDao,
+    CartDao cartDao,
+    TransactionService transactionService,
+    InventoryService inventoryService) {
     this.orderDao = orderDao;
     this.cartDao = cartDao;
     this.transactionService = transactionService;
@@ -36,7 +40,8 @@ public class OrderService {
       .map(this::convertToOrderItem)
       .collect(Collectors.toList());
 
-    processOrder(order, orderItems);
+    processOrder(order,
+      orderItems);
     cartDao.clearCart(order.getCustomerId());
   }
 
@@ -46,12 +51,15 @@ public class OrderService {
       throw new Exception("Order is empty");
     }
 
-    processOrder(order, orderItems);
+    processOrder(order,
+      orderItems);
   }
 
   private void processOrder(Order order, List<OrderItem> orderItems) throws Exception {
     double totalAmount = orderItems.stream().mapToDouble(OrderItem::getSubtotal).sum();
-    Transaction transaction = transactionService.createTransaction(TransactionType.ONLINE, BigDecimal.valueOf(totalAmount), order.getCustomerId());
+    Transaction transaction = transactionService.createTransaction(TransactionType.ONLINE,
+      BigDecimal.valueOf(totalAmount),
+      order.getCustomerId());
 
     order.setTransactionId(transaction.getTransactionId());
     order.setOrderDate(new Date());
@@ -60,12 +68,23 @@ public class OrderService {
     order.setOrderStatus("Processing");
     order.setOrderItems(orderItems);
 
-    orderDao.saveOrder(order, orderItems);
+    orderDao.saveOrder(order,
+      orderItems);
 
     // Update inventory stock levels
     for (OrderItem orderItem : orderItems) {
-      inventoryService.updateInventoryStock(orderItem.getProductId(), orderItem.getQuantity(), TransactionType.ONLINE);
+      if (inventoryService.checkAvailableStock(orderItem.getProductId(),
+        orderItem.getQuantity(),
+        TransactionType.ONLINE)) {
+        inventoryService.updateInventoryStock(orderItem.getProductId(),
+          orderItem.getQuantity(),
+          TransactionType.ONLINE);
+      } else {
+        throw new InsufficientStockException("Insufficient stock");
+      }
+
     }
+
   }
 
   public Order getOrderById(int orderId) throws Exception {
