@@ -14,7 +14,7 @@
 
 <jsp:include page="components/navbar.jsp"/>
 
-<div class="container mx-auto px-4 pb-6">
+<div class="container mx-auto px-4 pb-6 min-h-screen">
     <h1 class="text-3xl font-bold text-start mb-6">Your Orders</h1>
     <div id="orders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Orders will be dynamically added here -->
