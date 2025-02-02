@@ -18,18 +18,28 @@ document.addEventListener("DOMContentLoaded", function () {
             const ordersContainer = document.getElementById('orders-container');
             console.log('Orders:', orders); // Debug log to check if orders are fetched
 
-            orders.forEach(order => {
-                const orderCard = document.createElement('div');
-                orderCard.className = 'bg-white p-6 rounded-lg shadow-md cursor-pointer glass-card';
-                orderCard.innerHTML = `
-                    <h2 class="text-xl font-semibold mb-2">Order #${order.orderId}</h2>
-                    <p><strong>Date:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
-                    <p><strong>Status:</strong> ${order.orderStatus}</p>
-                    <p><strong>Total:</strong> $${order.totalAmount.toFixed(2)}</p>
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = `
+                    <div></div>
+                    <div class="text-center py-8">
+                        <img src="images/empty-orders.svg" alt="No Orders" class="mx-auto w-94 h-94">
+                        <p class="text-gray-700 mt-4">You have no orders yet.</p>
+                    </div>
                 `;
-                orderCard.addEventListener('click', () => openOrderDetailsModal(order));
-                ordersContainer.appendChild(orderCard);
-            });
+            } else {
+                orders.forEach(order => {
+                    const orderCard = document.createElement('div');
+                    orderCard.className = 'bg-white p-6 rounded-lg shadow-md cursor-pointer glass-card';
+                    orderCard.innerHTML = `
+                        <h2 class="text-xl font-semibold mb-2">Order #${order.orderId}</h2>
+                        <p><strong>Date:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
+                        <p><strong>Status:</strong> ${order.orderStatus}</p>
+                        <p><strong>Total:</strong> $${order.totalAmount.toFixed(2)}</p>
+                    `;
+                    orderCard.addEventListener('click', () => openOrderDetailsModal(order));
+                    ordersContainer.appendChild(orderCard);
+                });
+            }
         })
         .catch(error => console.error('Error fetching orders:', error)); // Debug log for errors
 });

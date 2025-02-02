@@ -1,6 +1,6 @@
 <div class="header flex justify-between items-center p-5 bg-white shadow mb-5">
     <div class="flex items-center gap-4">
-        <h2 class="text-2xl text-green-600 font-bold">SYOS</h2>
+        <a href="home.jsp" class="text-3xl text-green-600 font-bold">SYOS</a>
         <form action="search" method="GET" class="flex items-center">
             <input type="text" name="query" placeholder="Search..." class="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-500">
             <button type="submit" class="ml-2 text-white bg-green-500 px-3 py-1 rounded hover:bg-green-600">
