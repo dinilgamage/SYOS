@@ -26,6 +26,7 @@ CREATE TABLE Inventory
     item_id           INT AUTO_INCREMENT PRIMARY KEY,
     item_code         VARCHAR(50) UNIQUE NOT NULL,
     name              VARCHAR(100)       NOT NULL,
+    category          VARCHAR(50),
     price             DECIMAL(10, 2)     NOT NULL,
     discount_value    DECIMAL(10, 2) DEFAULT 0.00,
     discount_strategy VARCHAR(50)    DEFAULT 'NONE', -- Strategy can be 'FIXED' or 'PERCENTAGE' or 'NONE'
@@ -139,23 +140,53 @@ VALUES ('John Doe', 'john.doe@example.com', 'password123!'),
        ('Sara Lee', 'sara.lee@example.com', 'LeeS12345');
 
 -- Insert Inventory with Better Item Codes and More Items
-INSERT INTO Inventory (item_code, name, price, discount_value, discount_strategy, store_stock, online_stock, shelf_capacity, `desc`)
+INSERT INTO Inventory (item_code, name, category, price, discount_value, discount_strategy, store_stock, online_stock, shelf_capacity, `desc`)
 VALUES
-    ('F001', 'Apple 1kg', 150.00, 0.00, 'NONE', 100, 0, 200, 'Fresh and juicy red apples, packed in a 1kg bundle, perfect for snacking or cooking.'),
-    ('F002', 'Banana 1 dozen', 60.00, 0.00, 'NONE', 80, 12, 180, 'A dozen ripe and sweet bananas, ideal for breakfast or smoothies.'),
-    ('S001', 'Chips 200g', 50.00, 10.00, 'PERCENTAGE', 200, 0, 400, 'Crunchy potato chips, lightly salted, packed in a 200g bag, great for munching on-the-go.'),
-    ('S002', 'Biscuits 300g', 80.00, 5.00, 'PERCENTAGE', 150, 250, 300, 'Tasty and crispy biscuits, 300g pack, perfect for tea-time or quick snacks.'),
-    ('B001', 'Bread 500g', 80.00, 0.00, 'NONE', 60, 80, 100, 'Soft and fluffy white bread, 500g loaf, great for sandwiches and toast.'),
-    ('B002', 'Brown Bread 500g', 100.00, 10.00, 'FIXED', 50, 60, 100, 'Healthy brown bread, 500g loaf, rich in fiber and ideal for a wholesome diet.'),
-    ('D001', 'Milk 1L', 100.00, 10.00, 'PERCENTAGE', 200, 250, 300, 'Fresh whole milk, 1L carton, high in calcium and great for daily nutrition.'),
-    ('D002', 'Butter 500g', 250.00, 20.00, 'FIXED', 100, 0, 150, 'Creamy and rich butter, 500g pack, perfect for baking or spreading on bread.'),
-    ('G001', 'Rice 5kg', 800.00, 0.00, 'NONE', 50, 7, 100, 'Long grain basmati rice, 5kg bag, aromatic and ideal for traditional recipes.'),
-    ('G002', 'Wheat Flour 5kg', 400.00, 0.00, 'NONE', 40, 50, 80, 'Fine quality wheat flour, 5kg pack, perfect for baking and cooking needs.'),
-    ('B003', 'Croissant 2pcs', 120.00, 0.00, 'NONE', 70, 90, 100, 'Delicious buttery croissants, 2-piece pack, perfect for a quick snack or breakfast.'),
-    ('S003', 'Peanuts 250g', 60.00, 0.00, 'NONE', 150, 200, 300, 'Roasted and salted peanuts, 250g pack, an excellent source of protein and energy.'),
-    ('S004', 'Chocolate Bar 100g', 100.00, 10.00, 'PERCENTAGE', 180, 220, 250, 'Rich and creamy chocolate bar, 100g pack, made from premium cocoa.'),
-    ('F003', 'Grapes 1kg', 200.00, 0.00, 'NONE', 100, 120, 150, 'Juicy and flavorful purple grapes, 1kg pack, perfect for snacking or adding to salads.'),
-    ('F004', 'Orange 1kg', 140.00, 0.00, 'NONE', 90, 110, 130, 'Sweet and tangy oranges, 1kg pack, great for juicing or eating fresh.');
+    -- Fruits (F)
+    ('F001', 'Apple 1kg', 'Fruits', 150.00, 0.00, 'NONE', 100, 0, 200, 'Fresh and juicy red apples, packed in a 1kg bundle, perfect for snacking or cooking.'),
+    ('F002', 'Banana 1 dozen', 'Fruits', 60.00, 0.00, 'NONE', 80, 12, 180, 'A dozen ripe and sweet bananas, ideal for breakfast or smoothies.'),
+    ('F003', 'Grapes 1kg', 'Fruits', 200.00, 0.00, 'NONE', 100, 120, 150, 'Juicy and flavorful purple grapes, perfect for snacking or adding to salads.'),
+    ('F004', 'Orange 1kg', 'Fruits', 140.00, 0.00, 'NONE', 90, 110, 130, 'Sweet and tangy oranges, great for juicing or eating fresh.'),
+    ('F005', 'Strawberries 500g', 'Fruits', 180.00, 0.00, 'NONE', 70, 90, 120, 'Sweet and tangy strawberries, great for desserts or smoothies.'),
+    ('F006', 'Pineapple 1 piece', 'Fruits', 150.00, 0.00, 'NONE', 60, 70, 90, 'Tropical pineapple, great for fresh juice or fruit salads.'),
+    ('F007', 'Mango 1kg', 'Fruits', 250.00, 0.00, 'NONE', 80, 100, 120, 'Fresh and aromatic mangoes, ideal for desserts or eating fresh.'),
+
+    -- Vegetables (V)
+    ('V001', 'Carrots 1kg', 'Vegetables', 90.00, 0.00, 'NONE', 100, 120, 150, 'Fresh and crunchy carrots, ideal for salads and cooking.'),
+    ('V002', 'Potatoes 2kg', 'Vegetables', 120.00, 0.00, 'NONE', 90, 100, 140, 'Starchy and versatile potatoes, great for fries or mashed potatoes.'),
+    ('V003', 'Tomatoes 1kg', 'Vegetables', 110.00, 0.00, 'NONE', 80, 90, 130, 'Juicy and ripe tomatoes, great for cooking and salads.'),
+    ('V004', 'Spinach 500g', 'Vegetables', 85.00, 0.00, 'NONE', 70, 80, 120, 'Leafy green spinach, high in iron and great for salads.'),
+    ('V005', 'Onions 1kg', 'Vegetables', 100.00, 0.00, 'NONE', 80, 90, 120, 'Essential ingredient for cooking, available in red and white varieties.'),
+
+    -- Meat & Poultry (M)
+    ('M001', 'Chicken Breast 1kg', 'Meat & Poultry', 320.00, 0.00, 'NONE', 50, 60, 80, 'Boneless, skinless chicken breast, high in protein.'),
+    ('M002', 'Beef Mince 1kg', 'Meat & Poultry', 450.00, 0.00, 'NONE', 40, 50, 70, 'Lean ground beef, ideal for burgers and pasta sauces.'),
+    ('M003', 'Steak 500g', 'Meat & Poultry', 600.00, 0.00, 'NONE', 30, 40, 60, 'Tender and juicy beef steak, ready for grilling.'),
+
+    -- Seafood (SF)
+    ('SF001', 'Salmon Fillet 500g', 'Seafood', 550.00, 0.00, 'NONE', 40, 50, 60, 'Rich and flavorful salmon fillet, high in Omega-3.'),
+    ('SF002', 'Shrimp 500g', 'Seafood', 450.00, 0.00, 'NONE', 50, 60, 80, 'Large shrimp, peeled and deveined, perfect for stir-fries.'),
+
+    -- Snacks (S)
+    ('S001', 'Chips 200g', 'Snacks', 50.00, 10.00, 'PERCENTAGE', 200, 0, 400, 'Crunchy potato chips, lightly salted, packed in a 200g bag, great for munching on-the-go.'),
+    ('S002', 'Biscuits 300g', 'Snacks', 80.00, 5.00, 'PERCENTAGE', 150, 250, 300, 'Tasty and crispy biscuits, perfect for tea-time or quick snacks.'),
+    ('S003', 'Peanuts 250g', 'Snacks', 60.00, 0.00, 'NONE', 150, 200, 300, 'Roasted and salted peanuts, 250g pack, an excellent source of protein and energy.'),
+    ('S004', 'Chocolate Bar 100g', 'Snacks', 100.00, 10.00, 'PERCENTAGE', 180, 220, 250, 'Rich and creamy chocolate bar, made from premium cocoa.'),
+
+    -- Bakery (B)
+    ('B001', 'Bread 500g', 'Bakery', 80.00, 0.00, 'NONE', 60, 80, 100, 'Soft and fluffy white bread, great for sandwiches and toast.'),
+    ('B002', 'Brown Bread 500g', 'Bakery', 100.00, 10.00, 'FIXED', 50, 60, 100, 'Healthy brown bread, rich in fiber and ideal for a wholesome diet.'),
+    ('B003', 'Croissant 2pcs', 'Bakery', 120.00, 0.00, 'NONE', 70, 90, 100, 'Delicious buttery croissants, perfect for a quick snack or breakfast.'),
+
+    -- Dairy (D)
+    ('D001', 'Milk 1L', 'Dairy', 100.00, 10.00, 'PERCENTAGE', 200, 250, 300, 'Fresh whole milk, high in calcium.'),
+    ('D002', 'Butter 500g', 'Dairy', 250.00, 20.00, 'FIXED', 100, 0, 150, 'Creamy and rich butter, perfect for baking or spreading on bread.'),
+
+    -- Grains (G)
+    ('G001', 'Rice 5kg', 'Grains', 800.00, 0.00, 'NONE', 50, 7, 100, 'Long grain basmati rice, aromatic and ideal for traditional recipes.'),
+    ('G002', 'Wheat Flour 5kg', 'Grains', 400.00, 0.00, 'NONE', 40, 50, 80, 'Fine quality wheat flour, perfect for baking and cooking needs.');
+
+
 
 -- Insert Stock Batches with More Entries for Each Item
 INSERT INTO Stock_Batch (item_id, quantity, date_received, expiry_date)

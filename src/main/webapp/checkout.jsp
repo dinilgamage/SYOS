@@ -125,9 +125,6 @@
     </form>
 </div>
 
-<!-- Footer Section -->
-<jsp:include page="components/footer.jsp"/>
-
 <script src="js/productModal.js"></script>
 <script src="js/cartModal.js"></script>
 <script src="js/navbar.js"></script>

@@ -9,6 +9,7 @@ public class Inventory {
   private String itemCode;
   private String name;
   private String desc;
+  private String category;
   private BigDecimal price;
   private BigDecimal discountValue;
   private DiscountType discountType; // "fixed" or "percentage"
@@ -27,11 +28,13 @@ public class Inventory {
     this.discountType = DiscountType.NONE;
   }
 
-  public Inventory(String itemCode, String name, String desc, BigDecimal price, Integer storeStock, Integer onlineStock,
+  public Inventory(String itemCode, String name, String desc, String category, BigDecimal price, Integer storeStock,
+    Integer onlineStock,
     int shelfCapacity) {
     this.itemCode = itemCode;
     this.name = name;
     this.desc = desc;
+    this.category = category;
     this.price = price;
     this.storeStock = storeStock;
     this.onlineStock = onlineStock;
@@ -68,6 +71,10 @@ public class Inventory {
   public String getDesc() {return desc;}
 
   public void setDesc(String desc) {this.desc = desc;}
+
+  public String getCategory() {return category;}
+
+  public void setCategory(String category) {this.category = category;}
 
   public BigDecimal getPrice() {
     return price;
