@@ -54,15 +54,7 @@ function closeOrderDetailsModal() {
     modal.classList.remove('visible');
     setTimeout(() => {
         modal.classList.add('hidden');
+        // Reset the modal state
+        modal.classList.remove('visible');
     }, 300);
-}
-
-function closeOrderDetailsModal() {
-    const modal = document.getElementById('order-details-modal');
-    modal.classList.add('hidden');
-}
-
-function closeOrderDetailsModal() {
-    const modal = document.getElementById('order-details-modal');
-    modal.classList.add('hidden');
 }
