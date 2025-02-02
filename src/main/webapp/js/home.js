@@ -44,8 +44,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     // Fetch and display inventory items
-    function fetchInventoryItems(category = 'all') {
-        fetch(`home?category=${category}`)
+    function fetchInventoryItems(category = 'all', query = '') {
+        let url = `home?category=${category}`;
+        if (query) {
+            url += `&query=${query}`;
+        }
+
+        fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -114,5 +119,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
             dropdownMenu.classList.add('hidden');
         }
+    });
+
+    // Search functionality
+    const searchForm = document.querySelector('form[action="search"]');
+    searchForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const query = searchForm.querySelector('input[name="query"]').value;
+        fetchInventoryItems(null, query);
     });
 });

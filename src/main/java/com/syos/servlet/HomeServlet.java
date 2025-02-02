@@ -33,9 +33,12 @@ public class HomeServlet extends HttpServlet {
     }
 
     String category = request.getParameter("category");
+    String query = request.getParameter("query");
     List<Inventory> inventoryItems;
 
-    if (category == null || category.equals("all")) {
+    if (query != null && !query.isEmpty()) {
+      inventoryItems = inventoryService.searchItemsByName(query);
+    } else if (category == null || category.equals("all")) {
       inventoryItems = inventoryService.getAllItems();
     } else {
       inventoryItems = inventoryService.getItemsByCategory(category);

@@ -58,6 +58,10 @@ public class InventoryService implements StockSubject {
     return itemsByCategory;
   }
 
+  public List<Inventory> searchItemsByName(String name) {
+    return inventoryDao.searchItemsByName(name);
+  }
+
   public int calculateTotalStockFromBatches(int itemId) {
     List<StockBatch> stockBatches = stockBatchDao.getBatchesForItem(itemId);
     return stockBatches.stream()

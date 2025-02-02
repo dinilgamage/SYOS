@@ -14,5 +14,6 @@ public interface InventoryDao {
   List<Inventory> getItemsToReshelveForBoth();
   List<Inventory> getItemsBelowReorderLevel(int threshold);
   List<Inventory> getItemsByCategory(String category);
+  List<Inventory> searchItemsByName(String name);
 }
 

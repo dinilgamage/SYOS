@@ -24,6 +24,7 @@ public class InventoryDaoImpl implements InventoryDao {
   private static final String SELECT_ITEMS_BELOW_REORDER_LEVEL = "SELECT * FROM Inventory WHERE (store_stock + online_stock) < ?";
   private static final String SELECT_ALL_ITEMS = "SELECT * FROM Inventory";
   private static final String SELECT_ITEMS_BY_CATEGORY = "SELECT * FROM Inventory WHERE category = ?";
+  private static final String SELECT_ITEMS_BY_NAME = "SELECT * FROM Inventory WHERE name LIKE ?";
 
   @Override
   public Inventory getItemByCode(String itemCode) {
@@ -96,6 +97,25 @@ public class InventoryDaoImpl implements InventoryDao {
       }
     } catch (SQLException e) {
       throw new DaoException("Error retrieving items by category: " + category, e);
+    }
+    return items;
+  }
+
+  @Override
+  public List<Inventory> searchItemsByName(String name) {
+    List<Inventory> items = new ArrayList<>();
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ITEMS_BY_NAME)) {
+
+      preparedStatement.setString(1, "%" + name + "%");
+      try (ResultSet rs = preparedStatement.executeQuery()) {
+        while (rs.next()) {
+          Inventory item = mapRowToInventory(rs);
+          items.add(item);
+        }
+      }
+    } catch (SQLException e) {
+      throw new DaoException("Error searching items by name: " + name, e);
     }
     return items;
   }
