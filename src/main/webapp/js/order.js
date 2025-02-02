@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const ordersContainer = document.getElementById('orders-container');
             console.log('Orders:', orders); // Debug log to check if orders are fetched
 
+            // Sort orders by orderDate in descending order
+            orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+
             if (orders.length === 0) {
                 ordersContainer.innerHTML = `
                     <div></div>
