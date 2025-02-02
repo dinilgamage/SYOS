@@ -2,10 +2,19 @@
     <jsp:param name="title" value="View Orders" />
 </jsp:include>
 
-<jsp:include page="components/navbar.jsp" />
+<%
+    // Check if the session exists and userEmail is set
+    if (session == null || session.getAttribute("userEmail") == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 
 <body class="bg-gray-100 text-gray-900">
-<div class="container mx-auto p-6">
+
+<jsp:include page="components/navbar.jsp" />
+
+<div class="container mx-auto px-4">
     <h1 class="text-3xl font-bold text-start mb-6">Your Orders</h1>
     <div id="orders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Orders will be dynamically added here -->

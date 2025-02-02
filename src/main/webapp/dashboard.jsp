@@ -26,7 +26,7 @@
 
 <!-- Product Cards Section -->
 <div class="container mx-auto px-4">
-    <h3 class="text-xl mb-3 font-bold">Welcome, <%= session.getAttribute("userName") %>!</h3>
+    <h3 class="text-3xl font-bold text-start mb-6">Welcome, <%= session.getAttribute("userName") %>!</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <%
             List<Inventory> inventoryItems = (List<Inventory>) request.getAttribute("inventoryItems");
@@ -73,4 +73,3 @@
 <script src="js/checkout.js"></script>
 
 </body>
-</html>
