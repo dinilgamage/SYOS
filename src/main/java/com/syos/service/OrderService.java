@@ -68,9 +68,6 @@ public class OrderService {
     order.setOrderStatus("Processing");
     order.setOrderItems(orderItems);
 
-    orderDao.saveOrder(order,
-      orderItems);
-
     // Update inventory stock levels
     for (OrderItem orderItem : orderItems) {
       if (inventoryService.checkAvailableStock(orderItem.getProductId(),
@@ -84,7 +81,7 @@ public class OrderService {
       }
 
     }
-
+    orderDao.saveOrder(order, orderItems);
   }
 
   public Order getOrderById(int orderId) throws Exception {
