@@ -25,6 +25,7 @@ function openOrderDetailsModal(order) {
     const modal = document.getElementById('order-details-modal');
     const orderDetailsContent = document.getElementById('order-details-content');
     const orderDetailsTitle = document.getElementById('order-details-title');
+    const orderTotal = document.getElementById('order-total');
 
     fetch(`orderDetails?orderId=${order.orderId}`)
         .then(response => response.json())
@@ -42,11 +43,8 @@ function openOrderDetailsModal(order) {
                         </li>
                     `).join('') : '<li>No items found</li>'}
                 </ul>
-                <div class="flex justify-between pt-1">
-                    <strong>Total:</strong>
-                    <strong>$${orderDetails.totalAmount.toFixed(2)}</strong>
-                </div>
             `;
+            orderTotal.textContent = `$${orderDetails.totalAmount.toFixed(2)}`;
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.add('visible');
