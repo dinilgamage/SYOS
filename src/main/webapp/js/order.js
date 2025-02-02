@@ -62,3 +62,23 @@ function closeOrderDetailsModal() {
         modal.classList.remove('visible');
     }, 300);
 }
+
+function reorderItems() {
+    const orderId = document.getElementById('order-details-title').textContent.split('#')[1].trim();
+
+    fetch(`orderDetails?orderId=${orderId}`)
+        .then(response => response.json())
+        .then(orderDetails => {
+            const items = orderDetails.orderItems.map(item => ({
+                itemCode: item.itemCode,
+                itemName: item.itemName,
+                quantity: item.quantity,
+                price: item.price
+            }));
+
+            localStorage.removeItem('cartItems');
+            localStorage.setItem('reorderItems', JSON.stringify(items));
+            window.location.href = 'checkout.jsp';
+        })
+        .catch(error => console.error('Error fetching order details:', error));
+}

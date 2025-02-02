@@ -46,7 +46,7 @@
                 <span class="font-semibold">Total:</span>
                 <span id="order-total" class="font-semibold">$0.00</span>
             </div>
-            <button onclick="closeOrderDetailsModal()" class="bg-red-500 hover:bg-red-600 text-white w-full py-2 rounded-lg">Close</button>
+            <button onclick="reorderItems()" class="bg-red-500 bg-green-500 hover:bg-green-600 text-white w-full py-2 rounded-lg">Reorder</button>
         </div>
     </div>
 </div>

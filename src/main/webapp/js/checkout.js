@@ -128,10 +128,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const orderItems = JSON.parse(localStorage.getItem('cartItems')) || JSON.parse(localStorage.getItem('reorderItems')) || [];
     const orderSummary = document.getElementById('order-summary');
 
-    cartItems.forEach(item => {
+    orderItems.forEach(item => {
         const itemElement = document.createElement('div');
         itemElement.className = 'flex justify-between items-center';
         itemElement.innerHTML = `

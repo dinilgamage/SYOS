@@ -146,6 +146,7 @@ function checkout() {
     })
         .then((response) => response.json())
         .then((data) => {
+            localStorage.removeItem('reorderItems');
             localStorage.setItem('cartItems', JSON.stringify(data));
             window.location.href = 'checkout.jsp';
         })
