@@ -62,7 +62,7 @@ public class PlaceOrderServlet extends HttpServlet {
       } else {
         orderService.processOrder(order);
       }
-      response.sendRedirect("home.jsp");
+      response.sendRedirect("home.jsp?orderSuccess=true");
     } catch (Exception e) {
       e.printStackTrace();
       response.sendRedirect("checkout.jsp?error=true");
