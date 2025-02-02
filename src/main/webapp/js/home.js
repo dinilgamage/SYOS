@@ -63,7 +63,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 inventoryContainer.innerHTML = '';
 
                 if (inventoryItems.length === 0) {
-                    inventoryContainer.innerHTML = '<p class="col-span-full text-center text-gray-700">No inventory items available.</p>';
+                    inventoryContainer.innerHTML = `
+                    <div class="col-span-full text-center">
+                        <img src="images/empty-orders.svg" alt="No inventory items" class="mx-auto mb-4">
+                        <p class="text-gray-700">No inventory items available.</p>
+                    </div>`;
                     return;
                 }
 
