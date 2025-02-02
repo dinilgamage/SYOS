@@ -14,7 +14,7 @@
 
 <jsp:include page="components/navbar.jsp" />
 
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 pb-6">
     <h1 class="text-3xl font-bold text-start mb-6">Your Orders</h1>
     <div id="orders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Orders will be dynamically added here -->
@@ -36,7 +36,7 @@
         </div>
 
         <!-- Modal Body -->
-        <div id="order-details-content" style="max-height: 60vh; overflow-y: auto;" class="p-4 space-y-4">
+        <div id="order-details-content" style="max-height: 60vh; overflow-y: auto;" class="p-6 space-y-4">
             <!-- Order details will be dynamically added here -->
         </div>
 

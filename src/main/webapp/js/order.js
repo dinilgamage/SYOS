@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             orders.forEach(order => {
                 const orderCard = document.createElement('div');
-                orderCard.className = 'bg-white p-6 rounded-lg shadow-md cursor-pointer';
+                orderCard.className = 'bg-white p-6 rounded-lg shadow-md cursor-pointer glass-card';
                 orderCard.innerHTML = `
                     <h2 class="text-xl font-semibold mb-2">Order #${order.orderId}</h2>
                     <p><strong>Date:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
@@ -33,13 +33,19 @@ function openOrderDetailsModal(order) {
             orderDetailsContent.innerHTML = `
                 <p><strong>Date:</strong> ${new Date(orderDetails.orderDate).toLocaleDateString()}</p>
                 <p><strong>Status:</strong> ${orderDetails.orderStatus}</p>
-                <p><strong>Total:</strong> $${orderDetails.totalAmount.toFixed(2)}</p>
                 <h4 class="text-md font-semibold mt-4">Items:</h4>
                 <ul class="list-disc list-inside">
                     ${Array.isArray(orderDetails.orderItems) ? orderDetails.orderItems.map(item => `
-                        <li>${item.itemName} - ${item.quantity} x $${item.price.toFixed(2)}</li>
+                        <li class="flex justify-between pt-1">
+                            <span>${item.itemName}</span>
+                            <span>${item.quantity} x $${item.price.toFixed(2)}</span>
+                        </li>
                     `).join('') : '<li>No items found</li>'}
                 </ul>
+                <div class="flex justify-between pt-1">
+                    <strong>Total:</strong>
+                    <strong>$${orderDetails.totalAmount.toFixed(2)}</strong>
+                </div>
             `;
             modal.classList.remove('hidden');
             setTimeout(() => {
