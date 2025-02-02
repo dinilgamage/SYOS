@@ -1,5 +1,5 @@
 <jsp:include page="components/head.jsp">
-    <jsp:param name="title" value="Checkout" />
+    <jsp:param name="title" value="Checkout"/>
 </jsp:include>
 
 <body class="bg-gray-100 text-gray-900 p-4">
@@ -15,23 +15,31 @@
                 <!-- Contact Section -->
                 <div class="mb-6">
                     <h2 class="text-xl font-semibold mb-4">Contact</h2>
-                    <input type="email" name="email" placeholder="Email" class="w-full p-2 border border-gray-300 rounded" required>
+                    <input type="email" name="email" placeholder="Email"
+                           class="w-full p-2 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Delivery Section -->
                 <div class="mb-6">
                     <h2 class="text-xl font-semibold mb-4">Delivery</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" name="firstName" placeholder="First Name" class="w-full p-2 border border-gray-300 rounded" required>
-                        <input type="text" name="lastName" placeholder="Last Name" class="w-full p-2 border border-gray-300 rounded" required>
+                        <input type="text" name="firstName" placeholder="First Name"
+                               class="w-full p-2 border border-gray-300 rounded" required>
+                        <input type="text" name="lastName" placeholder="Last Name"
+                               class="w-full p-2 border border-gray-300 rounded" required>
                     </div>
-                    <input type="text" name="address" placeholder="Address" class="w-full p-2 border border-gray-300 rounded mt-4" required>
-                    <input type="text" name="apartment" placeholder="Apartment, suite, etc. (optional)" class="w-full p-2 border border-gray-300 rounded mt-4">
+                    <input type="text" name="address" placeholder="Address"
+                           class="w-full p-2 border border-gray-300 rounded mt-4" required>
+                    <input type="text" name="apartment" placeholder="Apartment, suite, etc. (optional)"
+                           class="w-full p-2 border border-gray-300 rounded mt-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <input type="text" name="city" placeholder="City" class="w-full p-2 border border-gray-300 rounded" required>
-                        <input type="text" name="postalCode" placeholder="Postal Code (optional)" class="w-full p-2 border border-gray-300 rounded">
+                        <input type="text" name="city" placeholder="City"
+                               class="w-full p-2 border border-gray-300 rounded" required>
+                        <input type="text" name="postalCode" placeholder="Postal Code (optional)"
+                               class="w-full p-2 border border-gray-300 rounded">
                     </div>
-                    <input type="text" name="phone" placeholder="Phone" class="w-full p-2 border border-gray-300 rounded mt-4" required>
+                    <input type="text" name="phone" placeholder="Phone"
+                           class="w-full p-2 border border-gray-300 rounded mt-4" required>
                 </div>
 
                 <!-- Shipping Method -->
@@ -49,7 +57,8 @@
                     <label class="flex items-center space-x-3 cursor-pointer mt-4">
                         <input type="radio" name="shippingMethod" value="same-day" class="hidden">
                         <div class="w-5 h-5 border border-gray-400 rounded-full flex items-center justify-center">
-                            <div class="w-3 h-3 bg-green-500 rounded-full shipping-check hidden" id="sameDayCheck"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full shipping-check hidden"
+                                 id="sameDayCheck"></div>
                         </div>
                         <span>Same Day Delivery - $20.00</span>
                     </label>
@@ -72,12 +81,16 @@
                     </label>
 
                     <div id="cardDetails" class="hidden mt-4">
-                        <input type="text" name="cardNumber" placeholder="Card Number" class="w-full p-2 border border-gray-300 rounded">
+                        <input type="text" name="cardNumber" placeholder="Card Number"
+                               class="w-full p-2 border border-gray-300 rounded">
                         <div class="grid grid-cols-2 gap-4 mt-4">
-                            <input type="text" name="expirationDate" placeholder="Expiration Date (MM/YY)" class="w-full p-2 border border-gray-300 rounded">
-                            <input type="text" name="securityCode" placeholder="Security Code" class="w-full p-2 border border-gray-300 rounded">
+                            <input type="text" name="expirationDate" placeholder="Expiration Date (MM/YY)"
+                                   class="w-full p-2 border border-gray-300 rounded">
+                            <input type="text" name="securityCode" placeholder="Security Code"
+                                   class="w-full p-2 border border-gray-300 rounded">
                         </div>
-                        <input type="text" name="nameOnCard" placeholder="Name on Card" class="w-full p-2 border border-gray-300 rounded mt-4">
+                        <input type="text" name="nameOnCard" placeholder="Name on Card"
+                               class="w-full p-2 border border-gray-300 rounded mt-4">
                     </div>
 
                     <label class="flex items-center space-x-3 cursor-pointer mt-4">
@@ -89,7 +102,8 @@
                     </label>
                 </div>
 
-                <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg">Pay Now</button>
+                <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg">Pay Now
+                </button>
             </div>
 
             <!-- Right Column: Order Summary -->
@@ -110,6 +124,9 @@
         </div>
     </form>
 </div>
+
+<!-- Footer Section -->
+<jsp:include page="components/footer.jsp"/>
 
 <script src="js/productModal.js"></script>
 <script src="js/cartModal.js"></script>
