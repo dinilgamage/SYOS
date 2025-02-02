@@ -7,7 +7,7 @@
 <div class="container mx-auto p-6">
     <h1 class="text-3xl font-bold text-start mb-6">Checkout</h1>
 
-    <form id="checkoutForm" action="processCheckout" method="post">
+    <form id="checkoutForm" action="placeOrder" method="post">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Left Column (Contact, Delivery, Payment) -->
             <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-md">

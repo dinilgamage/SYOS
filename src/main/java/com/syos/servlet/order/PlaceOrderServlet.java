@@ -1,4 +1,4 @@
-package com.syos.servlet;
+package com.syos.servlet.order;
 
 import com.syos.dao.impl.CartDaoImpl;
 import com.syos.dao.impl.InventoryDaoImpl;
@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-@WebServlet("/processCheckout")
-public class ProcessCheckoutServlet extends HttpServlet {
+@WebServlet("/placeOrder")
+public class PlaceOrderServlet extends HttpServlet {
   private OrderService orderService;
 
   @Override
