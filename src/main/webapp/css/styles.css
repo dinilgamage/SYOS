@@ -77,3 +77,23 @@ body {
     border-color: red;
     border-width: 3px;
 }
+
+#order-details-modal {
+    z-index: 1100;
+    transition: opacity 0.3s ease;
+}
+
+#order-details-modal.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#order-details-content {
+    height: 50vh;
+}
+
+#order-details-modal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}

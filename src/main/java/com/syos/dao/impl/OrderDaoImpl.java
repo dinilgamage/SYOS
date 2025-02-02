@@ -66,12 +66,29 @@ public class OrderDaoImpl implements OrderDao {
   @Override
   public Order getOrderById(int orderId) {
     try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(SELECT_ORDER_BY_ID)) {
+         PreparedStatement orderStatement = connection.prepareStatement(SELECT_ORDER_BY_ID);
+         PreparedStatement orderItemsStatement = connection.prepareStatement("SELECT * FROM OrderItem WHERE order_id = ?")) {
 
-      statement.setInt(1, orderId);
-      try (ResultSet resultSet = statement.executeQuery()) {
-        if (resultSet.next()) {
-          return mapRowToOrder(resultSet);
+      orderStatement.setInt(1, orderId);
+      try (ResultSet orderResultSet = orderStatement.executeQuery()) {
+        if (orderResultSet.next()) {
+          Order order = mapRowToOrder(orderResultSet);
+
+          orderItemsStatement.setInt(1, orderId);
+          try (ResultSet orderItemsResultSet = orderItemsStatement.executeQuery()) {
+            List<OrderItem> orderItems = new ArrayList<>();
+            while (orderItemsResultSet.next()) {
+              OrderItem orderItem = new OrderItem();
+              orderItem.setProductId(orderItemsResultSet.getString("item_code"));
+              orderItem.setProductName(orderItemsResultSet.getString("item_name"));
+              orderItem.setPrice(orderItemsResultSet.getDouble("price"));
+              orderItem.setQuantity(orderItemsResultSet.getInt("quantity"));
+              orderItem.setSubtotal(orderItemsResultSet.getDouble("subtotal"));
+              orderItems.add(orderItem);
+            }
+            order.setOrderItems(orderItems);
+          }
+          return order;
         } else {
           throw new DaoException("Order not found");
         }

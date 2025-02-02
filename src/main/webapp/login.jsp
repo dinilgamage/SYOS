@@ -2,7 +2,7 @@
 <jsp:include page="components/head.jsp">
     <jsp:param name="title" value="Login" />
 </jsp:include>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body class="bg-gray-100 flex items-center justify-center h-screen p-4">
 <div class="bg-white p-8 rounded shadow-md w-full max-w-sm">
     <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
     <form action="login" method="post" class="space-y-4">
