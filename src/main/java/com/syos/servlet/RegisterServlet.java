@@ -40,7 +40,7 @@ public class RegisterServlet extends HttpServlet {
         request.setAttribute("error", "Registration failed. Email might already exist.");
         request.getRequestDispatcher("register.jsp").forward(request, response);
       }
-    } catch (UserAlreadyExistsException e) {
+    } catch (UserAlreadyExistsException | IllegalArgumentException e) {
       request.setAttribute("error", e.getMessage());
       request.getRequestDispatcher("register.jsp").forward(request, response);
     } catch (Exception e) {

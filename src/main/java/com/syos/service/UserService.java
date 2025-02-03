@@ -14,6 +14,12 @@ public class UserService {
 
   public void registerUser(User user) {
 
+    if (user.getName() == null || user.getName().isEmpty() ||
+      user.getEmail() == null || !user.getEmail().matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$") ||
+      user.getPassword() == null || user.getPassword().length() < 6) {
+      throw new IllegalArgumentException("Invalid input. Please ensure all fields are filled correctly.");
+    }
+
     if (userDao.getUserByEmail(user.getEmail()) != null) {
       throw new UserAlreadyExistsException("Email '" + user.getEmail() + "' is already registered.");
     }

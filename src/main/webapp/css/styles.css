@@ -90,6 +90,11 @@ body {
     border-width: 3px;
 }
 
+.invalid:focus {
+    border-color: red;
+    outline: none;
+}
+
 #order-details-modal {
     z-index: 1100;
     transition: opacity 0.3s ease;

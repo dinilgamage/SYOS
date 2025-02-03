@@ -12,7 +12,7 @@
     <div class="w-1/2 p-8 flex flex-col justify-center">
         <h2 class="text-3xl font-bold mb-10 text-center text-green-600">Sign up for SYOS!</h2>
         <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
-        <form action="register" method="post" class="space-y-4">
+        <form name="registerForm" action="register" method="post" class="space-y-4" onsubmit="return validateForm()">
             <div>
                 <input type="text" name="name" placeholder="Name" required class="w-full px-3 py-2 border rounded">
             </div>
@@ -22,6 +22,7 @@
             <div>
                 <input type="password" name="password" placeholder="Password" required class="w-full px-3 py-2 border rounded">
             </div>
+            <div id="error-message" class="text-red-500 text-center"></div>
             <% if (request.getAttribute("error") != null) { %>
             <p class="mt-4 text-red-500 text-center"><%= request.getAttribute("error") %></p>
             <% } %>
@@ -33,4 +34,5 @@
     </div>
 </div>
 <script src="js/home.js"></script>
+<script src="js/register.js"></script>
 </body>
