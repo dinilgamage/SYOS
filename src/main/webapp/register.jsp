@@ -22,6 +22,9 @@
             <div>
                 <input type="password" name="password" placeholder="Password" required class="w-full px-3 py-2 border rounded">
             </div>
+            <div>
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" required class="w-full px-3 py-2 border rounded">
+            </div>
             <div id="error-message" class="text-red-500 text-center"></div>
             <% if (request.getAttribute("error") != null) { %>
             <p class="mt-4 text-red-500 text-center"><%= request.getAttribute("error") %></p>

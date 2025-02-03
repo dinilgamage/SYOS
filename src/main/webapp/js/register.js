@@ -2,6 +2,7 @@ function validateForm() {
     const name = document.forms["registerForm"]["name"];
     const email = document.forms["registerForm"]["email"];
     const password = document.forms["registerForm"]["password"];
+    const confirmPassword = document.forms["registerForm"]["confirmPassword"];
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let isValid = true;
 
@@ -9,6 +10,7 @@ function validateForm() {
     name.classList.remove("invalid");
     email.classList.remove("invalid");
     password.classList.remove("invalid");
+    confirmPassword.classList.remove("invalid");
     document.getElementById("error-message").innerHTML = "";
 
     if (name.value === "") {
@@ -24,6 +26,11 @@ function validateForm() {
     if (password.value.length < 6) {
         password.classList.add("invalid");
         document.getElementById("error-message").innerHTML += "Password must be at least 6 characters long<br>";
+        isValid = false;
+    }
+    if (password.value !== confirmPassword.value) {
+        confirmPassword.classList.add("invalid");
+        document.getElementById("error-message").innerHTML += "Passwords do not match<br>";
         isValid = false;
     }
     return isValid;
