@@ -39,7 +39,11 @@ public class AddToCartServlet extends HttpServlet {
       JsonObject json = JsonParser.parseString(stringBuilder.toString()).getAsJsonObject();
 
       // Extract cart item data
-      int userId = (int) request.getSession().getAttribute("userId");
+      Integer userId = (Integer) request.getSession().getAttribute("userId");
+      if (userId == null) {
+        throw new IllegalStateException("User is not logged in.");
+      }
+
       String itemCode = json.get("itemCode").getAsString();
       String itemName = json.get("name").getAsString();
       double price = json.get("price").getAsDouble();
@@ -62,14 +66,12 @@ public class AddToCartServlet extends HttpServlet {
       int cartSize = cartService.getCartSize(userId);
       request.getSession().setAttribute("cartSize", cartSize);
 
-
       // Respond with success
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("success", true);
       responseJson.addProperty("cartSize", cartSize);
       out.print(responseJson.toString());
     } catch (Exception e) {
-      e.printStackTrace();
 
       // Respond with failure
       JsonObject responseJson = new JsonObject();

@@ -25,7 +25,10 @@ public class UpdateCartItemServlet extends HttpServlet {
       JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
 
       // Extract data
-      int userId = (int) request.getSession().getAttribute("userId");
+      Integer userId = (Integer) request.getSession().getAttribute("userId");
+      if (userId == null) {
+        throw new IllegalStateException("User is not logged in.");
+      }
       String itemCode = json.get("itemCode").getAsString();
       int quantity = json.get("quantity").getAsInt();
 
@@ -37,7 +40,6 @@ public class UpdateCartItemServlet extends HttpServlet {
       responseJson.addProperty("success", success);
       response.getWriter().write(responseJson.toString());
     } catch (Exception e) {
-      e.printStackTrace();
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("success", false);
