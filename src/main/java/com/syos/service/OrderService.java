@@ -30,7 +30,7 @@ public class OrderService {
     this.inventoryService = inventoryService;
   }
 
-  public void processOrder(Order order) throws Exception {
+  public synchronized void processOrder(Order order) throws Exception {
     List<CartItem> cartItems = cartDao.getCartItems(order.getCustomerId());
     if (cartItems.isEmpty()) {
       throw new Exception("Cart is empty");
@@ -45,7 +45,7 @@ public class OrderService {
     cartDao.clearCart(order.getCustomerId());
   }
 
-  public void processOrder(Order order, int orderId) throws Exception {
+  public synchronized void processOrder(Order order, int orderId) throws Exception {
     List<OrderItem> orderItems = orderDao.getOrderItems(orderId);
     if (orderItems.isEmpty()) {
       throw new Exception("Order is empty");

@@ -4,7 +4,7 @@ import com.syos.model.CartItem;
 import java.util.List;
 
 public interface CartDao {
-  void addToCart(CartItem cartItem);
+  boolean addToCart(CartItem cartItem);
   boolean updateCartItem(int userId, String itemCode, int quantity);
   boolean removeFromCart(int userId, String itemCode);
   List<CartItem> getCartItems(int userId);

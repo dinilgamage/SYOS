@@ -17,8 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 @WebServlet("/placeOrder")
 public class PlaceOrderServlet extends HttpServlet {
+  private static final Logger logger = Logger.getLogger(PlaceOrderServlet.class.getName());
   private OrderService orderService;
 
   @Override
@@ -65,9 +69,11 @@ public class PlaceOrderServlet extends HttpServlet {
       }
       response.sendRedirect("home.jsp?orderSuccess=true");
     } catch (InsufficientStockException e) {
+      logger.log(Level.WARNING, "Insufficient stock for order: " + order, e);
       response.sendRedirect("home.jsp?insufficientStock=true");
     } catch (Exception e) {
-      response.sendRedirect("checkout.jsp?error=true");
+      logger.log(Level.SEVERE, "Error processing order: " + order, e);
+      response.sendRedirect("checkout.jsp?orderSuccess=false");
     }
   }
 }

@@ -11,8 +11,10 @@ import java.util.List;
 public class CartDaoImpl implements CartDao {
 
   @Override
-  public void addToCart(CartItem cartItem) {
-    String sql = "INSERT INTO Cart (user_id, item_code, item_name, quantity, price) VALUES (?, ?, ?, ?, ?)";
+  public boolean addToCart(CartItem cartItem) {
+    String sql = "INSERT INTO Cart (user_id, item_code, item_name, quantity, price) " +
+      "VALUES (?, ?, ?, ?, ?) " +
+      "ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)";
 
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -23,7 +25,8 @@ public class CartDaoImpl implements CartDao {
       statement.setInt(4, cartItem.getQuantity());
       statement.setDouble(5, cartItem.getPrice());
 
-      statement.executeUpdate();
+      int rowsAffected = statement.executeUpdate();
+      return rowsAffected > 0;
     } catch (SQLException e) {
       throw new RuntimeException("Error adding item to cart", e);
     }

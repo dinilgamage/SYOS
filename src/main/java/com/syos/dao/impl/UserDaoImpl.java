@@ -83,7 +83,6 @@ public class UserDaoImpl implements UserDao {
 
   @Override
   public boolean verifyUserCredentials(String email, String password) {
-    System.out.println("INFO: LoginServlet invoked by user: "+ email);
     boolean isValid = false;
 
     try (Connection connection = DatabaseConnection.getConnection();

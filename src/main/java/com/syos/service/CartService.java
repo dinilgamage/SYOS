@@ -14,15 +14,15 @@ public class CartService {
     this.cartDao = new CartDaoImpl();
   }
 
-  public void addToCart(CartItem cartItem) {
-    cartDao.addToCart(cartItem);
+  public synchronized boolean addToCart(CartItem cartItem) {
+    return cartDao.addToCart(cartItem);
   }
 
-  public boolean updateCartItem(int userId, String itemCode, int quantity) {
+  public synchronized boolean updateCartItem(int userId, String itemCode, int quantity) {
     return cartDao.updateCartItem(userId, itemCode, quantity);
   }
 
-  public boolean removeFromCart(int userId, String itemCode) {
+  public synchronized boolean removeFromCart(int userId, String itemCode) {
     return cartDao.removeFromCart(userId, itemCode);
   }
 
