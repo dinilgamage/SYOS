@@ -12,7 +12,7 @@ public class DatabaseConnection {
   private static final String URL = "jdbc:mysql://localhost:3306/syos_db_dinil";
   private static final String USERNAME = "root";
   private static final String PASSWORD = "mysql123";
-  private static final int MAX_POOL_SIZE = 10;
+  private static final int MAX_POOL_SIZE = 20;
 
   private static final LinkedList<Connection> connectionPool = new LinkedList<>();
 
@@ -39,7 +39,6 @@ public class DatabaseConnection {
       throw new RuntimeException("Failed to initialize the connection pool: no connections available.");
     }
   }
-
 
   private static Connection createNewConnection() throws SQLException {
     return DriverManager.getConnection(URL, USERNAME, PASSWORD);
