@@ -29,10 +29,15 @@ public class LoginServlet extends HttpServlet {
     User user = userService.getUserByEmail(email);
 
     if (isAuthenticated) {
-      HttpSession session = request.getSession();
-      session.setAttribute("userEmail", email);
-      session.setAttribute("userName", user.getName());
-      session.setAttribute("userId", user.getUserId());
+      HttpSession oldSession = request.getSession(false);
+      if (oldSession != null) {
+        oldSession.invalidate();
+      }
+
+      HttpSession newSession = request.getSession(true);
+      newSession.setAttribute("userEmail", email);
+      newSession.setAttribute("userName", user.getName());
+      newSession.setAttribute("userId", user.getUserId());
       response.sendRedirect("home.jsp");
     } else {
       request.setAttribute("error", "Invalid credentials. Please try again.");
