@@ -13,12 +13,15 @@ import com.syos.observer.StockSubject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InventoryService implements StockSubject {
 
   private InventoryDao inventoryDao;
   private StockBatchDao stockBatchDao;
   private List<StockObserver> observers;
+  private final ConcurrentHashMap<String, Object> locks = new ConcurrentHashMap<>();
+
 
   public InventoryService(InventoryDao inventoryDao, StockBatchDao stockBatchDao) {
     this.inventoryDao = inventoryDao;
@@ -45,6 +48,10 @@ public class InventoryService implements StockSubject {
     for (StockObserver observer : observers) {
       observer.update(inventory);
     }
+  }
+
+  public Object getLock(String productId) {
+    return locks.computeIfAbsent(productId, k -> new Object());
   }
 
   public List<Inventory> getAllItems() {

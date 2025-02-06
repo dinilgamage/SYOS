@@ -30,7 +30,7 @@ public class OrderService {
     this.inventoryService = inventoryService;
   }
 
-  public synchronized void processOrder(Order order) throws Exception {
+  public void processOrder(Order order) throws Exception {
     List<CartItem> cartItems = cartDao.getCartItems(order.getCustomerId());
     if (cartItems.isEmpty()) {
       throw new Exception("Cart is empty");
@@ -45,7 +45,7 @@ public class OrderService {
     cartDao.clearCart(order.getCustomerId());
   }
 
-  public synchronized void processOrder(Order order, int orderId) throws Exception {
+  public void processOrder(Order order, int orderId) throws Exception {
     List<OrderItem> orderItems = orderDao.getOrderItems(orderId);
     if (orderItems.isEmpty()) {
       throw new Exception("Order is empty");
@@ -68,21 +68,21 @@ public class OrderService {
     order.setOrderStatus("Processing");
     order.setOrderItems(orderItems);
 
-    // Update inventory stock levels
+    // Lock only on the specific product
     for (OrderItem orderItem : orderItems) {
-      if (inventoryService.checkAvailableStock(orderItem.getProductId(),
-        orderItem.getQuantity(),
-        TransactionType.ONLINE)) {
+      synchronized (inventoryService.getLock(orderItem.getProductId())) {
+        if (!inventoryService.checkAvailableStock(orderItem.getProductId(),
+          orderItem.getQuantity(), TransactionType.ONLINE)) {
+          throw new InsufficientStockException("Insufficient stock");
+        }
         inventoryService.updateInventoryStock(orderItem.getProductId(),
-          orderItem.getQuantity(),
-          TransactionType.ONLINE);
-      } else {
-        throw new InsufficientStockException("Insufficient stock");
+          orderItem.getQuantity(), TransactionType.ONLINE);
       }
-
     }
+
     orderDao.saveOrder(order, orderItems);
   }
+
 
   public Order getOrderById(int orderId) throws Exception {
     return orderDao.getOrderById(orderId);
