@@ -1,5 +1,6 @@
 package com.syos.dao.impl;
 
+import com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException;
 import com.syos.dao.InventoryDao;
 import com.syos.database.DatabaseConnection;
 import com.syos.enums.DiscountType;
@@ -122,24 +123,75 @@ public class InventoryDaoImpl implements InventoryDao {
 
   @Override
   public void updateInventory(Inventory inventory) {
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_INVENTORY_SQL)) {
+    int maxRetries = 3; // Maximum retry attempts
+    for (int attempt = 1; attempt <= maxRetries; attempt++) {
+      Connection connection = null;
+      try {
+        connection = DatabaseConnection.getConnection();
+        connection.setAutoCommit(false); // Begin transaction
 
-      preparedStatement.setInt(1, inventory.getStoreStock());
-      preparedStatement.setInt(2, inventory.getOnlineStock());
-      preparedStatement.setString(3, inventory.getDiscountType().toString());
-      preparedStatement.setBigDecimal(4, inventory.getDiscountValue());
-      preparedStatement.setString(5, inventory.getItemCode());
+        // Step 1: Ensure item exists & lock row for update
+        String lockSql = "SELECT store_stock, online_stock FROM Inventory WHERE item_code = ? FOR UPDATE";
+        try (PreparedStatement lockStmt = connection.prepareStatement(lockSql)) {
+          lockStmt.setString(1, inventory.getItemCode());
+          try (ResultSet resultSet = lockStmt.executeQuery()) {
+            if (!resultSet.next()) {
+              throw new DaoException("Item not found for update: " + inventory.getItemCode());
+            }
+          }
+        }
 
-      int rowsUpdated = preparedStatement.executeUpdate();
-      if (rowsUpdated == 0) {
-        throw new DaoException("Update failed, no rows affected for item code: " + inventory.getItemCode());
+        // Step 2: Perform the inventory update
+        try (PreparedStatement updateStmt = connection.prepareStatement(UPDATE_INVENTORY_SQL)) {
+          updateStmt.setInt(1, inventory.getStoreStock());
+          updateStmt.setInt(2, inventory.getOnlineStock());
+          updateStmt.setString(3, inventory.getDiscountType().toString());
+          updateStmt.setBigDecimal(4, inventory.getDiscountValue());
+          updateStmt.setString(5, inventory.getItemCode());
+
+          int rowsUpdated = updateStmt.executeUpdate();
+          if (rowsUpdated == 0) {
+            throw new DaoException("Update failed, no rows affected for item code: " + inventory.getItemCode());
+          }
+        }
+
+        connection.commit(); // Commit if everything succeeds
+        return; // Exit successfully
+
+      } catch (MySQLTransactionRollbackException e) {
+        // Deadlock detected, retry
+        if (attempt == maxRetries) {
+          throw new DaoException("Deadlock detected, retries exhausted for item code: " + inventory.getItemCode(), e);
+        }
+        try {
+          Thread.sleep(100); // Small delay before retrying
+        } catch (InterruptedException ignored) {}
+
+      } catch (SQLException e) {
+        // Rollback if any other exception occurs
+        if (connection != null) {
+          try {
+            connection.rollback();
+          } catch (SQLException rollbackEx) {
+            throw new DaoException("Transaction rollback failed", rollbackEx);
+          }
+        }
+        throw new DaoException("Error updating inventory for item code: " + inventory.getItemCode(), e);
+
+      } finally {
+        // Ensure connection is properly closed
+        if (connection != null) {
+          try {
+            connection.setAutoCommit(true);
+            connection.close();
+          } catch (SQLException closeEx) {
+            throw new DaoException("Error closing connection", closeEx);
+          }
+        }
       }
-
-    } catch (SQLException e) {
-      throw new DaoException("Error updating inventory for item code: " + inventory.getItemCode(), e);
     }
   }
+
 
   @Override
   public List<Inventory> getLowStockItems() {

@@ -20,49 +20,81 @@ public class OrderDaoImpl implements OrderDao {
 
   @Override
   public void saveOrder(Order order, List<OrderItem> orderItems) {
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement orderStatement = connection.prepareStatement(INSERT_ORDER_SQL, Statement.RETURN_GENERATED_KEYS);
-         PreparedStatement orderItemStatement = connection.prepareStatement(INSERT_ORDER_ITEM_SQL)) {
+    Connection connection = null;
+    try {
+      connection = DatabaseConnection.getConnection();
+      connection.setAutoCommit(false); // Begin transaction
 
-      orderStatement.setInt(1, order.getCustomerId());
-      orderStatement.setInt(2, order.getTransactionId());
-      orderStatement.setTimestamp(3, new Timestamp(order.getOrderDate().getTime()));
-      orderStatement.setTimestamp(4, new Timestamp(order.getDeliveryDate().getTime()));
-      orderStatement.setDouble(5, order.getTotalAmount());
-      orderStatement.setString(6, order.getPaymentMethod());
-      orderStatement.setString(7, order.getOrderStatus());
-      orderStatement.setString(8, order.getEmail());
-      orderStatement.setString(9, order.getFirstName());
-      orderStatement.setString(10, order.getLastName());
-      orderStatement.setString(11, order.getAddress());
-      orderStatement.setString(12, order.getApartment());
-      orderStatement.setString(13, order.getCity());
-      orderStatement.setString(14, order.getPostalCode());
-      orderStatement.setString(15, order.getPhone());
-      orderStatement.setString(16, order.getShippingMethod());
-      orderStatement.executeUpdate();
+      // Insert Order
+      try (PreparedStatement orderStatement = connection.prepareStatement(
+        INSERT_ORDER_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
-      try (ResultSet generatedKeys = orderStatement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          int orderId = generatedKeys.getInt(1);
-          order.setOrderId(orderId);
+        orderStatement.setInt(1, order.getCustomerId());
+        orderStatement.setInt(2, order.getTransactionId());
+        orderStatement.setTimestamp(3, new Timestamp(order.getOrderDate().getTime()));
+        orderStatement.setTimestamp(4, new Timestamp(order.getDeliveryDate().getTime()));
+        orderStatement.setDouble(5, order.getTotalAmount());
+        orderStatement.setString(6, order.getPaymentMethod());
+        orderStatement.setString(7, order.getOrderStatus());
+        orderStatement.setString(8, order.getEmail());
+        orderStatement.setString(9, order.getFirstName());
+        orderStatement.setString(10, order.getLastName());
+        orderStatement.setString(11, order.getAddress());
+        orderStatement.setString(12, order.getApartment());
+        orderStatement.setString(13, order.getCity());
+        orderStatement.setString(14, order.getPostalCode());
+        orderStatement.setString(15, order.getPhone());
+        orderStatement.setString(16, order.getShippingMethod());
 
-          for (OrderItem item : orderItems) {
-            orderItemStatement.setInt(1, orderId);
-            orderItemStatement.setString(2, item.getProductId());
-            orderItemStatement.setString(3, item.getProductName());
-            orderItemStatement.setDouble(4, item.getPrice());
-            orderItemStatement.setInt(5, item.getQuantity());
-            orderItemStatement.setDouble(6, item.getSubtotal());
-            orderItemStatement.addBatch();
+        orderStatement.executeUpdate();
+
+        // Get Generated Order ID
+        try (ResultSet generatedKeys = orderStatement.getGeneratedKeys()) {
+          if (generatedKeys.next()) {
+            int orderId = generatedKeys.getInt(1);
+            order.setOrderId(orderId);
+
+            // Insert Order Items
+            try (PreparedStatement orderItemStatement = connection.prepareStatement(INSERT_ORDER_ITEM_SQL)) {
+              for (OrderItem item : orderItems) {
+                orderItemStatement.setInt(1, orderId);
+                orderItemStatement.setString(2, item.getProductId());
+                orderItemStatement.setString(3, item.getProductName());
+                orderItemStatement.setDouble(4, item.getPrice());
+                orderItemStatement.setInt(5, item.getQuantity());
+                orderItemStatement.setDouble(6, item.getSubtotal());
+                orderItemStatement.addBatch();
+              }
+              orderItemStatement.executeBatch();
+            }
+          } else {
+            throw new DaoException("Failed to retrieve order ID");
           }
-          orderItemStatement.executeBatch();
         }
       }
+
+      connection.commit();  // Commit everything together
     } catch (SQLException e) {
+      if (connection != null) {
+        try {
+          connection.rollback();  // Rollback transaction on failure
+        } catch (SQLException rollbackEx) {
+          throw new DaoException("Transaction rollback failed", rollbackEx);
+        }
+      }
       throw new DaoException("Error saving order", e);
+    } finally {
+      if (connection != null) {
+        try {
+          connection.setAutoCommit(true);
+          connection.close();
+        } catch (SQLException closeEx) {
+          throw new DaoException("Error closing connection", closeEx);
+        }
+      }
     }
   }
+
 
   @Override
   public Order getOrderById(int orderId) {
