@@ -26,13 +26,10 @@ public class UpdateCartItemServlet extends HttpServlet {
 
       // Extract data
       Integer userId = (Integer) request.getSession().getAttribute("userId");
-      if (userId == null) {
-        throw new IllegalStateException("User is not logged in.");
-      }
+
       String itemCode = json.get("itemCode").getAsString();
       int quantity = json.get("quantity").getAsInt();
 
-      // Update cart item
       boolean success = cartService.updateCartItem(userId, itemCode, quantity);
 
       // Send response

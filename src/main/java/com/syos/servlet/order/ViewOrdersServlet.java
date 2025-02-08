@@ -21,6 +21,7 @@ import java.util.List;
 public class ViewOrdersServlet extends HttpServlet {
   private OrderService orderService;
 
+
   @Override
   public void init() {
     orderService = new OrderService(new OrderDaoImpl(), new CartDaoImpl(),
@@ -35,7 +36,6 @@ public class ViewOrdersServlet extends HttpServlet {
       response.setContentType("application/json");
       response.getWriter().write(new Gson().toJson(orders));
     } catch (Exception e) {
-      e.printStackTrace();
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to fetch orders");
     }
   }

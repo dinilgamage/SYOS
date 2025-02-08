@@ -40,9 +40,6 @@ public class AddToCartServlet extends HttpServlet {
 
       // Extract cart item data
       Integer userId = (Integer) request.getSession().getAttribute("userId");
-      if (userId == null) {
-        throw new IllegalStateException("User is not logged in.");
-      }
 
       String itemCode = json.get("itemCode").getAsString();
       String itemName = json.get("name").getAsString();
@@ -61,6 +58,7 @@ public class AddToCartServlet extends HttpServlet {
 
       // Create CartItem and save to DB
       CartItem cartItem = new CartItem(userId, itemCode, itemName, quantity, price);
+
       cartService.addToCart(cartItem);
 
       int cartSize = cartService.getCartSize(userId);

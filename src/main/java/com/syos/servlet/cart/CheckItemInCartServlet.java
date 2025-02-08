@@ -30,7 +30,6 @@ public class CheckItemInCartServlet extends HttpServlet {
       jsonResponse.addProperty("isInCart", isInCart);
       out.print(jsonResponse.toString());
     } catch (Exception e) {
-      e.printStackTrace();
 
       JsonObject jsonResponse = new JsonObject();
       jsonResponse.addProperty("error", "Failed to check item in cart.");

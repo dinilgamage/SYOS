@@ -26,9 +26,6 @@ public class RemoveCartItemServlet extends HttpServlet {
 
       // Extract data
       Integer userId = (Integer) request.getSession().getAttribute("userId");
-      if (userId == null) {
-        throw new IllegalStateException("User is not logged in.");
-      }
 
       String itemCode = json.get("itemCode").getAsString();
 

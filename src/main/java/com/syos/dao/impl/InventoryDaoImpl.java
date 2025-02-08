@@ -130,7 +130,6 @@ public class InventoryDaoImpl implements InventoryDao {
         connection = DatabaseConnection.getConnection();
         connection.setAutoCommit(false); // Begin transaction
 
-        // Step 1: Ensure item exists & lock row for update
         String lockSql = "SELECT store_stock, online_stock FROM Inventory WHERE item_code = ? FOR UPDATE";
         try (PreparedStatement lockStmt = connection.prepareStatement(lockSql)) {
           lockStmt.setString(1, inventory.getItemCode());
@@ -156,19 +155,16 @@ public class InventoryDaoImpl implements InventoryDao {
         }
 
         connection.commit(); // Commit if everything succeeds
-        return; // Exit successfully
-
+        return;
       } catch (MySQLTransactionRollbackException e) {
-        // Deadlock detected, retry
         if (attempt == maxRetries) {
           throw new DaoException("Deadlock detected, retries exhausted for item code: " + inventory.getItemCode(), e);
         }
         try {
-          Thread.sleep(100); // Small delay before retrying
+          Thread.sleep(100);
         } catch (InterruptedException ignored) {}
 
       } catch (SQLException e) {
-        // Rollback if any other exception occurs
         if (connection != null) {
           try {
             connection.rollback();
@@ -179,7 +175,6 @@ public class InventoryDaoImpl implements InventoryDao {
         throw new DaoException("Error updating inventory for item code: " + inventory.getItemCode(), e);
 
       } finally {
-        // Ensure connection is properly closed
         if (connection != null) {
           try {
             connection.setAutoCommit(true);

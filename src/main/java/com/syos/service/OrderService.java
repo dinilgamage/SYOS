@@ -32,6 +32,7 @@ public class OrderService {
 
   public void processOrder(Order order) throws Exception {
     List<CartItem> cartItems = cartDao.getCartItems(order.getCustomerId());
+
     if (cartItems.isEmpty()) {
       throw new Exception("Cart is empty");
     }
@@ -40,19 +41,20 @@ public class OrderService {
       .map(this::convertToOrderItem)
       .collect(Collectors.toList());
 
-    processOrder(order,
-      orderItems);
+    order.setOrderItems(orderItems);
+
+    validateOrder(order);
+    processOrder(order, orderItems);
     cartDao.clearCart(order.getCustomerId());
   }
 
   public void processOrder(Order order, int orderId) throws Exception {
     List<OrderItem> orderItems = orderDao.getOrderItems(orderId);
-    if (orderItems.isEmpty()) {
-      throw new Exception("Order is empty");
-    }
 
-    processOrder(order,
-      orderItems);
+    order.setOrderItems(orderItems);
+
+    validateOrder(order);
+    processOrder(order, orderItems);
   }
 
   private void processOrder(Order order, List<OrderItem> orderItems) throws Exception {
@@ -68,7 +70,6 @@ public class OrderService {
     order.setOrderStatus("Processing");
     order.setOrderItems(orderItems);
 
-    // Lock only on the specific product
     for (OrderItem orderItem : orderItems) {
       synchronized (inventoryService.getLock(orderItem.getProductId())) {
         if (!inventoryService.checkAvailableStock(orderItem.getProductId(),
@@ -83,12 +84,13 @@ public class OrderService {
     orderDao.saveOrder(order, orderItems);
   }
 
-
   public Order getOrderById(int orderId) throws Exception {
+    validateOrderId(orderId);
     return orderDao.getOrderById(orderId);
   }
 
   public List<Order> getOrdersByUserId(int userId) throws Exception {
+    validateUserId(userId);
     return orderDao.getOrdersByUserId(userId);
   }
 
@@ -103,7 +105,28 @@ public class OrderService {
   }
 
   private Date calculateDeliveryDate() {
-    // Implement logic to calculate the delivery date
     return new Date();
+  }
+
+  private void validateOrder(Order order) {
+    if (order == null) {
+      throw new IllegalArgumentException("Order cannot be null");
+    }
+    validateUserId(order.getCustomerId());
+    if (order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
+      throw new IllegalArgumentException("Order items cannot be null or empty");
+    }
+  }
+
+  private void validateOrderId(int orderId) {
+    if (orderId <= 0) {
+      throw new IllegalArgumentException("Invalid orderId: " + orderId);
+    }
+  }
+
+  private void validateUserId(int userId) {
+    if (userId <= 0) {
+      throw new IllegalArgumentException("Invalid userId: " + userId);
+    }
   }
 }

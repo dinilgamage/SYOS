@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Level;
 
 @WebServlet("/orderDetails")
 public class OrderDetailsServlet extends HttpServlet {
@@ -47,7 +48,6 @@ public class OrderDetailsServlet extends HttpServlet {
     } catch (NumberFormatException e) {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Order ID");
     } catch (Exception e) {
-      e.printStackTrace();
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to fetch order details");
     }
   }

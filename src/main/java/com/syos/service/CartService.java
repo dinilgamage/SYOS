@@ -23,6 +23,7 @@ public class CartService {
   }
 
   public boolean addToCart(CartItem cartItem) {
+    validateCartItem(cartItem);
     Lock lock = getUserLock(cartItem.getUserId());
     lock.lock();
     try {
@@ -33,6 +34,9 @@ public class CartService {
   }
 
   public boolean updateCartItem(int userId, String itemCode, int quantity) {
+    validateUserId(userId);
+    validateItemCode(itemCode);
+    validateQuantity(quantity);
     Lock lock = getUserLock(userId);
     lock.lock();
     try {
@@ -43,6 +47,8 @@ public class CartService {
   }
 
   public boolean removeFromCart(int userId, String itemCode) {
+    validateUserId(userId);
+    validateItemCode(itemCode);
     Lock lock = getUserLock(userId);
     lock.lock();
     try {
@@ -53,6 +59,7 @@ public class CartService {
   }
 
   public List<CartItem> getCartItems(int userId) {
+    validateUserId(userId);
     Lock lock = getUserLock(userId);
     lock.lock();
     try {
@@ -63,6 +70,7 @@ public class CartService {
   }
 
   public void clearCart(int userId) {
+    validateUserId(userId);
     Lock lock = getUserLock(userId);
     lock.lock();
     try {
@@ -73,6 +81,8 @@ public class CartService {
   }
 
   public boolean isItemInCart(int userId, String itemCode) {
+    validateUserId(userId);
+    validateItemCode(itemCode);
     Lock lock = getUserLock(userId);
     lock.lock();
     try {
@@ -83,12 +93,43 @@ public class CartService {
   }
 
   public int getCartSize(int userId) {
+    validateUserId(userId);
     Lock lock = getUserLock(userId);
     lock.lock();
     try {
       return cartDao.getCartSize(userId);
     } finally {
       lock.unlock();
+    }
+  }
+
+  private void validateUserId(int userId) {
+    if (userId <= 0) {
+      throw new IllegalArgumentException("Invalid userId: " + userId);
+    }
+  }
+
+  private void validateItemCode(String itemCode) {
+    if (itemCode == null || itemCode.trim().isEmpty()) {
+      throw new IllegalArgumentException("Invalid itemCode: " + itemCode);
+    }
+  }
+
+  private void validateQuantity(int quantity) {
+    if (quantity < 0) {
+      throw new IllegalArgumentException("Quantity cannot be negative: " + quantity);
+    }
+  }
+
+  private void validateCartItem(CartItem cartItem) {
+    validateUserId(cartItem.getUserId());
+    validateItemCode(cartItem.getItemCode());
+    validateQuantity(cartItem.getQuantity());
+    if (cartItem.getItemName() == null || cartItem.getItemName().trim().isEmpty()) {
+      throw new IllegalArgumentException("Invalid itemName: " + cartItem.getItemName());
+    }
+    if (cartItem.getPrice() < 0) {
+      throw new IllegalArgumentException("Price cannot be negative: " + cartItem.getPrice());
     }
   }
 }
