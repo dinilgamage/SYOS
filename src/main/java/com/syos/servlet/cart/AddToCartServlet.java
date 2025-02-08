@@ -56,7 +56,6 @@ public class AddToCartServlet extends HttpServlet {
         return;
       }
 
-      // Create CartItem and save to DB
       CartItem cartItem = new CartItem(userId, itemCode, itemName, quantity, price);
 
       cartService.addToCart(cartItem);

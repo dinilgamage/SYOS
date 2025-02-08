@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
 @WebServlet("/placeOrder")
 public class PlaceOrderServlet extends HttpServlet {
   private OrderService orderService;
