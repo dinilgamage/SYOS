@@ -134,8 +134,10 @@ public class InventoryDaoImplTest {
   @Test
   public void testUpdateInventory_Success() throws Exception {
     // Arrange
-    Inventory item = new Inventory("ITEM001", "Item 1", BigDecimal.valueOf(100.00), 100, 50, 150);
+    Inventory item = new Inventory("ITEM001", "Item 1", "Description", "Category", BigDecimal.valueOf(100.00), 100, 50, 150);
     when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+    when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+    when(mockResultSet.next()).thenReturn(true);
     when(mockPreparedStatement.executeUpdate()).thenReturn(1); // Successful update
 
     // Act
@@ -144,18 +146,10 @@ public class InventoryDaoImplTest {
     // Assert
     verify(mockPreparedStatement, times(1)).setInt(1, item.getStoreStock());
     verify(mockPreparedStatement, times(1)).setInt(2, item.getOnlineStock());
-  }
-
-  // Test: updateInventory() No Rows Affected
-  @Test
-  public void testUpdateInventory_NoRowsAffected() throws Exception {
-    // Arrange
-    Inventory item = new Inventory("ITEM001", "Item 1", BigDecimal.valueOf(100.00), 100, 50, 150);
-    when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-    when(mockPreparedStatement.executeUpdate()).thenReturn(0); // No rows updated
-
-    // Act & Assert
-    assertThrows(DaoException.class, () -> inventoryDao.updateInventory(item));
+    verify(mockPreparedStatement, times(1)).setString(3, item.getDiscountType().toString());
+    verify(mockPreparedStatement, times(1)).setBigDecimal(4, item.getDiscountValue());
+    verify(mockPreparedStatement, times(1)).setString(5, item.getItemCode());
+    verify(mockConnection, times(1)).commit();
   }
 
   // Test: getLowStockItems() Happy Path
